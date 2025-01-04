@@ -1,0 +1,40 @@
+/* Basic styling for the contact section */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .social-icons {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .contact-info h3 {
+      font-size: 1.5rem;
+    }
+  
+    .contact-info p {
+      font-size: 0.9rem;
+    }
+  
+    .social-icons {
+      gap: 20px;
+    }
+  }
+  
+  /* For tablet views */
+  @media (max-width: 1024px) {
+    .contact-info {
+      flex-direction: column;
+    }
+  
+    .social-icons {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
