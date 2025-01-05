@@ -268,7 +268,9 @@ function Ordera() {
             </Typography>
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <InputLabel id="order-status" sx={{ color: "red" }}>Select Orders</InputLabel>
+              <InputLabel id="order-status" sx={{ color: "red" }}>
+                Select Orders
+              </InputLabel>
               <Select
                 labelId="order-status-select-label"
                 id="order-status-select"
@@ -285,7 +287,7 @@ function Ordera() {
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                     borderColor: "red", // Change border color on focus
                   },
-            
+
                   "&.MuiFormLabel-root": {
                     color: "red !important",
                   },

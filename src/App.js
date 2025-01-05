@@ -40,6 +40,8 @@ function App() {
           <Route path="/Admin/Ordera" Component={Ordera} />
           <Route path="/Admin/Carouselimg" Component={Carouselimg} />
           <Route path="/Admin/Login" Component={Loginpage} />
+
+          
         </Routes>
         {checkuser ? <Footer /> : ""}
       </BrowserRouter>

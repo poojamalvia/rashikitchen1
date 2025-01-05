@@ -1,140 +1,138 @@
-import React from 'react'
+import React from "react";
 import Rating from "@mui/material/Rating";
 import Avatar from "@mui/material/Avatar";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 import {
-    TextField,
-    IconButton,
-    TableCell,
-    TableBody,
-    TableRow,
-    TableHead,
-    Table,
-    Paper,
-    TableContainer,
-    Button,
-    Box,
-    Container,
-    Select,
-    MenuItem,
-    InputLabel,
-    FormControl,
-    Typography,
-    Dialog,
-  } from "@mui/material";
-  import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-  import { styled } from "@mui/material/styles";
+  TextField,
+  IconButton,
+  TableCell,
+  TableBody,
+  TableRow,
+  TableHead,
+  Table,
+  Paper,
+  TableContainer,
+  Button,
+  Box,
+  Container,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Typography,
+  Dialog,
+} from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { styled } from "@mui/material/styles";
 
 function Cateringa() {
-    const VisuallyHiddenInput = styled("input")({
-        clip: "rect(0 0 0 0)",
-        clipPath: "inset(50%)",
-        height: 1,
-        overflow: "hidden",
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        whiteSpace: "nowrap",
-        width: 1,
-      });
-      const [cmenu, setCmenu] = React.useState([
-          {
-            tokenid: "1",
-            category: "Appetizer",
-            item: "samosa",
-            desc:"It is delicious product made with milk and palm sugar decorated with cashews and almonds",
-            image:`https://static.toiimg.com/thumb/61050397.cms?imgsize=246859&width=800&height=800`,
-            price:"10"
-          },
-          {
-            tokenid: "2",
-            category: "50",
-            item: "3.5",
-            desc: "confirmed",
-            price:"10"
-          },
-          {
-            tokenid: "3",
-            category: "50",
-            item: "3.5",
-            desc: "confirmed",
-            price:"10"
-          },
-          {
-            tokenid: "4",
-            category: "50",
-            item: "3.5",
-            desc: "confirmed",
-            price:"10"
-          },
-          {
-            tokenid: "5",
-            category: "50",
-            item: "3.5",
-            desc: "confirmed",
-            price:"10"
-          },
-        ]);
-      
-       const [age, setAge] = React.useState("");
-      
-        const handleChange = (event) => {
-          setAge(event.target.value);
-        };
-        
-     const [open, setOpen] = React.useState(false);
-      const handleClickOpen = () => {
-        setOpen(true);
-      };
-      const handleClose = () => {
-        setOpen(false);
-      };
-      const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-          // Set the preview image state
-          const imageUrl = URL.createObjectURL(file);
-          setImagePreview(imageUrl);
-        }
-      };
-      const [imagePreview, setImagePreview] = React.useState(null);
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
+  const [cmenu, setCmenu] = React.useState([
+    {
+      tokenid: "1",
+      category: "Appetizer",
+      item: "samosa",
+      desc: "It is delicious product made with milk and palm sugar decorated with cashews and almonds",
+      image: `https://static.toiimg.com/thumb/61050397.cms?imgsize=246859&width=800&height=800`,
+      price: "10",
+    },
+    {
+      tokenid: "2",
+      category: "50",
+      item: "3.5",
+      desc: "confirmed",
+      price: "10",
+    },
+    {
+      tokenid: "3",
+      category: "50",
+      item: "3.5",
+      desc: "confirmed",
+      price: "10",
+    },
+    {
+      tokenid: "4",
+      category: "50",
+      item: "3.5",
+      desc: "confirmed",
+      price: "10",
+    },
+    {
+      tokenid: "5",
+      category: "50",
+      item: "3.5",
+      desc: "confirmed",
+      price: "10",
+    },
+  ]);
 
-      function AddItemDialog(props)
-      {
-        const { onClose, open } = props;
-        
-        return(
-          <Dialog
-          onClose={handleClose}
-          open={open}
-         PaperProps={{
+  const [age, setAge] = React.useState("");
+
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
+
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Set the preview image state
+      const imageUrl = URL.createObjectURL(file);
+      setImagePreview(imageUrl);
+    }
+  };
+  const [imagePreview, setImagePreview] = React.useState(null);
+
+  function AddItemDialog(props) {
+    const { onClose, open } = props;
+
+    return (
+      <Dialog
+        onClose={handleClose}
+        open={open}
+        PaperProps={{
           style: {
-        margin: 0,
-       // width: "600px",
-       // height: "600px",
-        maxWidth: "100%",
-        //overflow: "hidden",
-        borderRadius: "12px", // Rounded corners
-        boxShadow: "0px 8px 16px rgba(0,0,0,0.1)", // Soft shadow
-      },
-    }}>
+            margin: 0,
+            // width: "600px",
+            // height: "600px",
+            maxWidth: "100%",
+            //overflow: "hidden",
+            borderRadius: "12px", // Rounded corners
+            boxShadow: "0px 8px 16px rgba(0,0,0,0.1)", // Soft shadow
+          },
+        }}
+      >
+        <Container maxWidth="sm" style={{ padding: "40px 20px" }}>
+          <Box
+            sx={{
+              border: "2px solid #f57c00",
+              borderRadius: "8px",
+              padding: "30px",
+              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <Typography variant="h4" align="center" gutterBottom>
+              Update Catering Menu Item
+            </Typography>
 
-       <Container maxWidth="sm" style={{ padding: "40px 20px" }}>
-        <Box
-          sx={{
-            border: "2px solid #f57c00",
-            borderRadius: "8px",
-            padding: "30px",
-            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-         <Typography variant="h4" align="center" gutterBottom>
-            Update Catering Menu Item
-          </Typography>
-
-          <form>
             {/* Catering Category Selection */}
             <Box mb={3}>
               <FormControl fullWidth>
@@ -240,7 +238,6 @@ function Cateringa() {
                 color="primary"
                 fullWidth
                 type="submit"
-           
                 style={{
                   backgroundColor: "#f57c00",
                   padding: "12px 0",
@@ -249,114 +246,120 @@ function Cateringa() {
               >
                 Add/Update Item
               </Button>
-              
             </Box>
-          </form>
-        </Box>
-       </Container>
-    </Dialog>
-  )
-
-      }
+          </Box>
+        </Container>
+      </Dialog>
+    );
+  }
   return (
     <div>
-         <Typography variant="h4" align="center" gutterBottom>
-            Update Catering Menu Item
-          </Typography>
-            <Button 
-            type="button"
-                  style={{
-                    backgroundColor:"#f57c00",
-                    border: "none",
-                    color: "white",
-                    marginBottom: "20px" ,
-                    borderRadius: "5px"}}
+      <Typography variant="h4" align="center" gutterBottom>
+        Update Catering Menu Item
+      </Typography>
+      <Button
+        type="button"
+        style={{
+          backgroundColor: "#f57c00",
+          border: "none",
+          color: "white",
+          marginBottom: "20px",
+          borderRadius: "5px",
+        }}
+        onClick={handleClickOpen}
+        startIcon={<EditIcon />}
+      >
+        Add Item
+      </Button>
 
-                    onClick={handleClickOpen} startIcon={<EditIcon />} >
-                Add Item
-            </Button>
-
-        <AddItemDialog
-         open={open}
-         onClose={handleClose}/>
-
-
-           
+      <AddItemDialog open={open} onClose={handleClose} />
 
       <Box>
-      <TableContainer component={Paper}>
-        <Table aria-label="customer order table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Number</TableCell>
-              <TableCell>Image</TableCell>
-              <TableCell>
-              <InputLabel id="demo-simple-select-standard-label">Choose Category</InputLabel>
-        <Select
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          value={age}
-          onChange={handleChange}
-          label="Choose Category"
-          sx={{ width: '200px', height: '40px' }}
-        >
-                           <MenuItem value="appetizer">Appetizer</MenuItem>
-                           <MenuItem value="chef_special">Drink</MenuItem>
-                           <MenuItem value="sabz_e_bahar">Paneer ke Pakwan</MenuItem>
-                           <MenuItem value="dal">Sabz e Bahar</MenuItem>
-                           <MenuItem value="rice">Yogurts</MenuItem>
-                           <MenuItem value="bread">Scent of Rice</MenuItem>
-                           <MenuItem value="beverages">Dal Ranga Rang</MenuItem>
-                           <MenuItem value="dessert">Special Food</MenuItem>
-                           <MenuItem value="dal">Breads Delight</MenuItem>
-                           <MenuItem value="bread">Sweet Dessert</MenuItem>
-                           <MenuItem value="beverages">Healthy Salad</MenuItem>
-                           <MenuItem value="dessert">Tangy Pickles</MenuItem>
-        </Select></TableCell>
-              <TableCell>Item Name</TableCell>
-              <TableCell>Description</TableCell>
-              
-              <TableCell>Price</TableCell>
-              <TableCell>Update/Delete Item</TableCell>
-            </TableRow>
-          </TableHead>
-          {cmenu.map((val,index) => (
-            <TableBody>
+        <TableContainer component={Paper}>
+          <Table aria-label="customer order table">
+            <TableHead>
               <TableRow>
-                <TableCell component="th" scope="row">{val.tokenid}</TableCell>
-                <TableCell><Avatar variant="rounded" src={val.image}/></TableCell>
-                <TableCell>{val.category}</TableCell>
-                <TableCell>{val.item}</TableCell>
-                <TableCell>{val.desc}</TableCell>
-                
-                <TableCell>${val.price}</TableCell>
+                <TableCell>Number</TableCell>
+                <TableCell>Image</TableCell>
                 <TableCell>
-                  <Button 
-                  type="button"
-                  style={{
-                    backgroundColor:"#f57c00",
-                    border: "none",
-                    color: "white",
-                    borderRadius: "5px"}}
-                    startIcon={<EditIcon />}
-                    onClick={handleClickOpen}>Update</Button>
-                   <IconButton color="error" onClick={() => alert('Delete item')}><DeleteIcon /></IconButton>
-                   
+                  <InputLabel id="demo-simple-select-standard-label">
+                    Choose Category
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={age}
+                    onChange={handleChange}
+                    label="Choose Category"
+                    sx={{ width: "200px", height: "40px" }}
+                  >
+                    <MenuItem value="appetizer">Appetizer</MenuItem>
+                    <MenuItem value="chef_special">Drink</MenuItem>
+                    <MenuItem value="sabz_e_bahar">Paneer ke Pakwan</MenuItem>
+                    <MenuItem value="dal">Sabz e Bahar</MenuItem>
+                    <MenuItem value="rice">Yogurts</MenuItem>
+                    <MenuItem value="bread">Scent of Rice</MenuItem>
+                    <MenuItem value="beverages">Dal Ranga Rang</MenuItem>
+                    <MenuItem value="dessert">Special Food</MenuItem>
+                    <MenuItem value="dal">Breads Delight</MenuItem>
+                    <MenuItem value="bread">Sweet Dessert</MenuItem>
+                    <MenuItem value="beverages">Healthy Salad</MenuItem>
+                    <MenuItem value="dessert">Tangy Pickles</MenuItem>
+                  </Select>
                 </TableCell>
+                <TableCell>Item Name</TableCell>
+                <TableCell>Description</TableCell>
+
+                <TableCell>Price</TableCell>
+                <TableCell>Update/Delete Item</TableCell>
               </TableRow>
-            </TableBody>
-          ))}
-        </Table>
-      </TableContainer>
+            </TableHead>
+            {cmenu.map((val, index) => (
+              <TableBody>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    {val.tokenid}
+                  </TableCell>
+                  <TableCell>
+                    <Avatar variant="rounded" src={val.image} />
+                  </TableCell>
+                  <TableCell>{val.category}</TableCell>
+                  <TableCell>{val.item}</TableCell>
+                  <TableCell>{val.desc}</TableCell>
 
-     
-    </Box>
-
+                  <TableCell>${val.price}</TableCell>
+                  <TableCell>
+                    <Button
+                      type="button"
+                      style={{
+                        backgroundColor: "#f57c00",
+                        border: "none",
+                        color: "white",
+                        borderRadius: "5px",
+                      }}
+                      startIcon={<EditIcon />}
+                      onClick={handleClickOpen}
+                    >
+                      Update
+                    </Button>
+                    <IconButton
+                      color="error"
+                      onClick={() => alert("Delete item")}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            ))}
+          </Table>
+        </TableContainer>
+      </Box>
     </div>
-  )
+  );
 }
 
-export default Cateringa
+export default Cateringa;
 
 // import React from 'react'
 // import Rating from "@mui/material/Rating";

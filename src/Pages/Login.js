@@ -55,10 +55,14 @@ function Login() {
       (admin) => admin.loginid === adminid && admin.pswd === adminpswd
     );
 
+    //vbfcvbfcgb
+    //dvdfvbdfvbcd
+    //
+
     if (foundAdmin) {
       // If credentials match, navigate to the next page (e.g., admin dashboard)
       console.log("pswd mathch");
-    //  navigate("/Admin/Menua");
+     navigate("/Admin/Menua");
     } else {
       // If credentials don't match, show error message.
       setErrorMessage("Invalid login credentials. Please try again.");
