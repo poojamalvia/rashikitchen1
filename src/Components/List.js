@@ -51,7 +51,7 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
                 <Avatar variant="rounded" src={data.img} />
               </ListItemAvatar>
               <ListItemText
-                primary={data.name}
+                primary={data.itemname}
                 secondary={
                   <div className="row">
                     <div className="col-md-9">
@@ -60,8 +60,7 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
                         variant="body2"
                         sx={{ color: "text.primary", display: "inline" }}
                       >
-                    
-                        {isAdd && " - $" + data.Price}
+                        {isAdd && " - $" + data.price}
                       </Typography>
                       <br />
                       <Typography
@@ -71,8 +70,7 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
                       >
                         {data.desc}
                       </Typography>
-                    
-                     
+
                       {data.availibity == "no" ? (
                         <label
                           style={{
@@ -102,10 +100,7 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
                         justifyContent: "end",
                       }}
                     >
-                      {isAdd && (
-                        <AddBtn data={data} />
-                      )}{" "}
-                      &nbsp;&nbsp;
+                      {isAdd && <AddBtn data={data} />} &nbsp;&nbsp;
                       {isAdd && (
                         <button
                           type="button"
@@ -145,7 +140,7 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
   );
 }
 
-function AddBtn({ data}) {
+function AddBtn({ data }) {
   const [count, setCount] = React.useState(0);
 
   //const [detail, setDetail] = React.useState();
@@ -159,7 +154,7 @@ function AddBtn({ data}) {
         class="btn-group"
         role="group"
         aria-label="Button group with nested dropdown"
-        style={{ display: "inline-flex",borderRadius:"3px" }}
+        style={{ display: "inline-flex", borderRadius: "3px" }}
       >
         <button
           type="button"

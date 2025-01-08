@@ -1,13 +1,8 @@
 import React, { useEffect } from "react";
-import Rating from "@mui/material/Rating";
 import Avatar from "@mui/material/Avatar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import { db } from "../../firebase-config";
 
 import {
@@ -43,10 +38,6 @@ import {
 } from "firebase/firestore";
 
 function Menua() {
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
-
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -58,51 +49,53 @@ function Menua() {
     whiteSpace: "nowrap",
     width: 1,
   });
-  const [cmenu, setCmenu] = React.useState([
-    {
-      tokenid: "1",
-      category: "Appetizer",
-      item: "samosa",
-      desc: "It is delicious product made with milk and palm sugar decorated with cashews and almonds",
-      image: `https://static.toiimg.com/thumb/61050397.cms?imgsize=246859&width=800&height=800`,
-      price: "10",
-    },
-    {
-      tokenid: "2",
-      category: "50",
-      item: "3.5",
-      desc: "confirmed",
-      price: "10",
-    },
-    {
-      tokenid: "3",
-      category: "50",
-      item: "3.5",
-      desc: "confirmed",
-      price: "10",
-    },
-    {
-      tokenid: "4",
-      category: "50",
-      item: "3.5",
-      desc: "confirmed",
-      price: "10",
-    },
-    {
-      tokenid: "5",
-      category: "50",
-      item: "3.5",
-      desc: "confirmed",
-      price: "10",
-    },
-  ]);
-
-  const [age, setAge] = React.useState("");
+  // const [cmenu, setCmenu] = React.useState([
+  //   {
+  //     tokenid: "1",
+  //     category: "Appetizer",
+  //     item: "samosa",
+  //     desc: "It is delicious product made with milk and palm sugar decorated with cashews and almonds",
+  //     image: `https://static.toiimg.com/thumb/61050397.cms?imgsize=246859&width=800&height=800`,
+  //     price: "10",
+  //   },
+  //   {
+  //     tokenid: "2",
+  //     category: "50",
+  //     item: "3.5",
+  //     desc: "confirmed",
+  //     price: "10",
+  //   },
+  //   {
+  //     tokenid: "3",
+  //     category: "50",
+  //     item: "3.5",
+  //     desc: "confirmed",
+  //     price: "10",
+  //   },
+  //   {
+  //     tokenid: "4",
+  //     category: "50",
+  //     item: "3.5",
+  //     desc: "confirmed",
+  //     price: "10",
+  //   },
+  //   {
+  //     tokenid: "5",
+  //     category: "50",
+  //     item: "3.5",
+  //     desc: "confirmed",
+  //     price: "10",
+  //   },
+  // ]);
 
   const AdiningCollectionRef = collection(db, "Diningmenu");
   const [diningdata, setDiningdata] = React.useState([]);
   const [data, setData] = React.useState({});
-  const [no, setNo] = React.useState(1);
+
+  const AcateringCollectionRef = collection(db, "Cateringmenu");
+  const [cateringdata, setCateringdata] = React.useState([]);
+  const [datacater, setDatacater] = React.useState({});
+  const [updateid, setUpdateid] = React.useState();
 
   const validateFields = () => {
     return data.itemname && data.category && data.price && data.desc;
@@ -110,7 +103,6 @@ function Menua() {
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
-    console.log(data);
   };
 
   const getdiningmenudata = async () => {
@@ -118,9 +110,17 @@ function Menua() {
     setDiningdata(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
+  const getcateringmenudata = async () => {
+    const data = await getDocs(AcateringCollectionRef);
+    setCateringdata(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
+
   useEffect(() => {
-    console.log("sad");
-    getdiningmenudata();
+    // console.log("sad");
+
+     getdiningmenudata();
+
+    getcateringmenudata();
   }, []);
 
   // Add item in firebase Database   await addDoc(usersCollectionRef, { name: newName, age: newAge });
@@ -154,6 +154,43 @@ function Menua() {
     //setNo(no + 1);
     createDiningmenu(data); // Add item to Firebase
     setData({ itemname: "", price: "", category: "", desc: "" }); // Clear form
+  };
+
+  const handleUpdateClick = async () => {
+    if (!validateFields()) {
+      alert("Please fill in all fields before updating.");
+      return; // Prevent further execution if fields are not valid
+    }
+
+    // Find the document in your local state by its ID
+    let obj = diningdata.find((val1) => val1.id === updateid);
+
+    // Update the fields of the object
+    obj.category = data.category;
+    obj.itemname = data.itemname;
+    obj.price = data.price;
+    obj.desc = data.desc;
+
+    // Create a reference to the specific document to update in Firebase
+    const docRef = doc(db, "Diningmenu", updateid); // Use the updateid for the specific document
+
+    // Update the document in Firebase
+    await updateDoc(docRef, {
+      category: obj.category,
+      itemname: obj.itemname,
+      price: obj.price,
+      desc: obj.desc,
+    });
+
+    // Update the local state to reflect the changes
+    setDiningdata(
+      diningdata.map((item) =>
+        item.id === updateid ? { ...item, ...obj } : item
+      )
+    );
+
+    // Clear the input fields
+    //  setData({ exp: "", credeb: "", amt: "", desc: "" });
   };
 
   const [open, setOpen] = React.useState(false);
@@ -226,7 +263,7 @@ function Menua() {
                   <MenuItem value="">
                     <em>Choose a category</em>
                   </MenuItem>
-                  <MenuItem value="appetizer">Appetizer</MenuItem>
+                  <MenuItem value="Appetizer">Appetizer</MenuItem>
                   <MenuItem value="Drink">Drink</MenuItem>
                   <MenuItem value="Paneer ke Pakwan">Paneer ke Pakwan</MenuItem>
                   <MenuItem value="Sabz e Bahar">Sabz e Bahar</MenuItem>
@@ -344,6 +381,7 @@ function Menua() {
                   padding: "12px 0",
                   fontSize: "16px",
                 }}
+                onClick={handleAddClick}
               >
                 Add/Update Item
               </Button>
@@ -417,49 +455,68 @@ function Menua() {
                 </TableCell>
                 <TableCell>Item Name</TableCell>
                 <TableCell>Description</TableCell>
-
-                <TableCell>Price</TableCell>
+                {window.location.pathname.includes("menua") ? (
+                  <TableCell>Price</TableCell>
+                ) : (
+                  ""
+                )}
                 <TableCell>Update</TableCell>
                 <TableCell>Delete</TableCell>
               </TableRow>
             </TableHead>
-            {diningdata &&
-              diningdata.length > 0 &&
-              diningdata.map((val, index) => (
-                <TableBody>
-                  <TableRow>
-                    <TableCell component="th" scope="row">
-                      {val.tokenid}
-                    </TableCell>
-                    <TableCell>
-                      <Avatar variant="rounded" src={val.image} />
-                    </TableCell>
-                    <TableCell>{val.category}</TableCell>
-                    <TableCell>{val.itemname}</TableCell>
-                    <TableCell>{val.desc}</TableCell>
-
-                    <TableCell>${val.price}</TableCell>
-                    <TableCell>
-                      <IconButton color="secondary" onClick={handleClickOpen}>
-                        <EditIcon />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        color="error"
-                        onClick={() => alert("Delete item")}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              ))}
+            <TableBody>
+              <TableRecords
+                data={
+                  window.location.pathname.includes("menua")
+                    ? diningdata
+                    : cateringdata
+                }
+                handleClickOpen={handleClickOpen}
+              />
+            </TableBody>
           </Table>
         </TableContainer>
       </Box>
     </div>
   );
+}
+
+function TableRecords({ data, handleClickOpen }) {
+  if (data && data.length > 0) {
+    return (
+      <>
+        {data.map((val, index) => {
+          return (
+            <TableRow>
+              <TableCell component="th" scope="row">
+                {val.tokenid}
+              </TableCell>
+              <TableCell>
+                <Avatar variant="rounded" src={val.image} />
+              </TableCell>
+              <TableCell>{val.category}</TableCell>
+              <TableCell>{val.itemname}</TableCell>
+              <TableCell>{val.desc}</TableCell>
+              {window.location.pathname.includes("menua") ? <TableCell>{val.price}</TableCell>:""}
+              
+              <TableCell>
+                <IconButton color="secondary" onClick={handleClickOpen}>
+                  <EditIcon />
+                </IconButton>
+              </TableCell>
+              <TableCell>
+                <IconButton color="error" onClick={() => alert("Delete item")}>
+                  <DeleteIcon />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          );
+        })}
+      </>
+    );
+  } else {
+    return <div>No data found</div>;
+  }
 }
 
 export default Menua;

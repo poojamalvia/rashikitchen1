@@ -14,7 +14,6 @@ import Footer from "./Pages/Footer";
 import Checkout from "./Pages/Checkout";
 import Menua from "./Pages/Admin/Menua";
 import Ordera from "./Pages/Admin/Ordera";
-import Cateringa from "./Pages/Admin/Cateringa";
 import Carouselimg from "./Pages/Admin/Carouselimg";
 
 function App() {
@@ -40,8 +39,6 @@ function App() {
           <Route path="/Admin/Ordera" Component={Ordera} />
           <Route path="/Admin/Carouselimg" Component={Carouselimg} />
           <Route path="/Admin/Login" Component={Loginpage} />
-
-          
         </Routes>
         {checkuser ? <Footer /> : ""}
       </BrowserRouter>
