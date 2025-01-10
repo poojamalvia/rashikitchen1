@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -12,6 +12,15 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Rating from "@mui/material/Rating";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { db } from "../../firebase-config";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 
 import {
   Button,
@@ -40,6 +49,8 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 function Ordera() {
   const [search, setSearch] = React.useState("");
   const [selectorder, setSelectorder] = React.useState("");
+  const AorderCollectionRef = collection(db, "Orderdetailadmin");
+  const [orderadmindata, setOrderadmindata] = React.useState([]);
 
   const handleChange1 = (event) => {
     setSearch(event.target.value);
@@ -103,6 +114,14 @@ function Ordera() {
     },
   ]);
 
+  const getorderdata = async () => {
+    const data = await getDocs(AorderCollectionRef);
+    setOrderadmindata(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
+
+  useEffect(() => {
+    getorderdata();
+  },[]);
   function AddStatusbtn() {
     return (
       <div>
@@ -179,15 +198,17 @@ function Ordera() {
               <TableCell>Order Details</TableCell>
             </TableRow>
           </TableHead>
-          {CustOrder.map((val) => (
-            <TableBody>
-              <TableRow>
+          <TableBody>
+            {orderadmindata.map((val) => (
+                            <TableRow key={val.id}>
+
                 <TableCell component="th" scope="row">
-                  {val.tokenid}
+                  {/* {val.tokenid} */}
                 </TableCell>
-                <TableCell>{val.datetime}</TableCell>
+
+                <TableCell>{val.odate ? new Date(val.odate.seconds * 1000).toLocaleString() : 'N/A'}</TableCell> 
                 <TableCell>{val.custname}</TableCell>
-                <TableCell>${val.amount}</TableCell>
+                <TableCell>${val.totalamt}</TableCell>
                 <TableCell>
                   <Rating
                     style={{ color: redcolor }}
@@ -214,8 +235,8 @@ function Ordera() {
                   </IconButton>
                 </TableCell>
               </TableRow>
-            </TableBody>
-          ))}
+            ))}
+          </TableBody>
         </Table>
       </TableContainer>
 

@@ -36,6 +36,7 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+let redcolor = "#FF1B1C";
 
 function Menua() {
   const VisuallyHiddenInput = styled("input")({
@@ -118,7 +119,7 @@ function Menua() {
   useEffect(() => {
     // console.log("sad");
 
-     getdiningmenudata();
+    getdiningmenudata();
 
     getcateringmenudata();
   }, []);
@@ -497,15 +498,25 @@ function TableRecords({ data, handleClickOpen }) {
               <TableCell>{val.category}</TableCell>
               <TableCell>{val.itemname}</TableCell>
               <TableCell>{val.desc}</TableCell>
-              {window.location.pathname.includes("menua") ? <TableCell>{val.price}</TableCell>:""}
-              
+              {window.location.pathname.includes("menua") ? (
+                <TableCell>{val.price}</TableCell>
+              ) : (
+                ""
+              )}
+
               <TableCell>
-                <IconButton color="secondary" onClick={handleClickOpen}>
+                <IconButton
+                  style={{ color: redcolor }}
+                  onClick={handleClickOpen}
+                >
                   <EditIcon />
                 </IconButton>
               </TableCell>
               <TableCell>
-                <IconButton color="error" onClick={() => alert("Delete item")}>
+                <IconButton
+                  style={{ color: redcolor }}
+                  onClick={() => alert("Delete item")}
+                >
                   <DeleteIcon />
                 </IconButton>
               </TableCell>
