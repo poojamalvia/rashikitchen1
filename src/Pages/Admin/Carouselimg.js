@@ -16,8 +16,6 @@ import {
 import { db } from "../../firebase-config";
 
 function Carouselimg() {
-  const [imagePreview, setImagePreview] = React.useState(null);
-
   const imgCollectionRef = collection(db, "carouselimage");
   const [image, setImage] = React.useState([]);
   const VisuallyHiddenInput = styled("input")({
@@ -32,36 +30,68 @@ function Carouselimg() {
     width: 1,
   });
 
+  // const handleFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     // Set the preview image state
+  //     var reader = new FileReader();
+  //     reader.onloadend = function () {
+  //       setImage([...image, reader.result]);
+  //       addDoc("imgCollectionRef", reader.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Set the preview image state
-      const imageUrl = URL.createObjectURL(file);
-      setImagePreview(imageUrl);
+      var reader = new FileReader();
+      reader.onloadend = async function () {
+        const imageData = reader.result; // This is the base64 data of the image
+
+        // Add to Firestore
+        try {
+          await addDoc(imgCollectionRef, {
+            image: imageData, // Store the image data in Firestore
+          });
+
+          // Update the local state with the new image for preview
+          setImage((prevImages) => [...prevImages, imageData]);
+        } catch (error) {
+          console.error("Error adding document: ", error);
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
+
   const handleDelete = (index) => {
-    const newImages = updateimg.filter((item, i) => i !== index);
-    setUpdateimg(newImages);
+     const newImages = image.filter((item, i) => i !== index);
+     setImage(newImages);
   };
-  const [updateimg, setUpdateimg] = React.useState([
-    { no: "1", img: "img1.jpg" },
-    { no: "2", img: "img2.jpg" },
-    { no: "3", img: "img3.jpg" },
-    { no: "4", img: "img4.jpg" },
-    { no: "5", img: "img5.jpg" },
-    { no: "6", img: "img6.jpg" },
-    { no: "7", img: "img7.jpg" },
-  ]);
+
+  //const addcarouselimage = async (data) => {
+  // await addDoc(imgCollectionRef, reader.result);
+
+  //     setDiningdata([
+  //       ...diningdata,
+  //       {
+  //         // no: no, // This will be the new no
+  //         category: data.category,
+  //         itemname: data.itemname,
+  //         price: data.price,
+  //         desc: data.desc,
+  //       },
+  //     ]);
+  // };
 
   useEffect(() => {
-    const getCarouselimage = async () => {
-      const data = await getDocs(imgCollectionRef);
-      setImage(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      //   console.log(data);
-      // console.log(data.docs.data);
-    };
-    getCarouselimage();
+    // const getCarouselimage = async () => {
+    //   const data = await getDocs(imgCollectionRef);
+    //   setImage(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    // };
+    // getCarouselimage();
   }, []);
 
   return (
@@ -106,27 +136,22 @@ function Carouselimg() {
               <th scope="col">Actions</th>
             </tr>
           </thead>
-          {updateimg.map((val, index) => (
-            <tbody>
+          <tbody>
+            {image.map((val, index) => (
               <tr>
-                <th scope="row">{val.no}</th>
+                <td scope="row">{val.no}</td>
                 <td>
-                  {imagePreview && (
-                    <Box textAlign="center" mb={4}>
-                      <Typography variant="h6" sx={{ color: blueGrey[700] }}>
-                        Image Preview:
-                      </Typography>
-                      <img
-                        src={imagePreview}
-                        alt="Preview"
-                        style={{
-                          maxWidth: "80%",
-                          maxHeight: "200px",
-                          objectFit: "cover",
-                        }}
-                      />
-                    </Box>
-                  )}
+                  <Box textAlign="center" mb={4}>
+                    <img
+                      src={val}
+                      alt="Preview"
+                      style={{
+                        maxWidth: "80%",
+                        maxHeight: "200px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Box>
 
                   {/* <img
                     src={val.img}
@@ -149,8 +174,8 @@ function Carouselimg() {
                   </IconButton>
                 </td>
               </tr>
-            </tbody>
-          ))}
+            ))}
+          </tbody>
         </table>
       </Paper>
     </div>

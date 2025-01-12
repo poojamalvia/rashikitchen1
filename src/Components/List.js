@@ -30,7 +30,7 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
   );
 
   const handleAddToCartClick = (index, availability) => {
-    if (availability === "no") {
+    if (availability === "false") {
       const updatedDisabledItems = [...disabledItems];
       updatedDisabledItems[index] = true;
       setDisabledItems(updatedDisabledItems);
@@ -71,7 +71,7 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
                         {data.desc}
                       </Typography>
 
-                      {data.availibity == "no" ? (
+                      {data.availibity == "false" ? (
                         <label
                           style={{
                             top: "30px", // Center it vertically for better alignment
@@ -112,12 +112,12 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
                             color: "white",
                             borderRadius: "5px",
                             cursor:
-                              data.availibity === "no"
+                              data.availibity === "false"
                                 ? "not-allowed"
                                 : "pointer", // Change cursor when unavailable
-                            opacity: data.availibity === "no" ? 0.6 : 1, // Reduce opacity for unavailable items
+                            opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
                           }}
-                          disabled={data.availibity === "no"} // Disable button if unavailable
+                          disabled={data.availibity === "false"} // Disable button if unavailable
                           onMouseEnter={() => handleMouseEnter(index)} // use index here
                           onMouseLeave={() => handleMouseLeave(index)}
                           onClick={() => {
@@ -162,13 +162,13 @@ function AddBtn({ data }) {
           style={{
             border: "none",
             backgroundColor: isHovered ? "#FF1B1C" : "#f57c00",
-            cursor: data.availibity === "no" ? "not-allowed" : "pointer", // Change cursor when unavailable
-            opacity: data.availibity === "no" ? 0.6 : 1, // Reduce opacity for unavailable items
+            cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
+            opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={() => {
-            if (count > 0 && data.availibity !== "no") {
+            if (count > 0 && data.availibity !== "false") {
               setCount(count - 1);
 
               // <Cart data={data} />;
@@ -183,8 +183,8 @@ function AddBtn({ data }) {
           style={{
             border: "none",
             backgroundColor: isHovered ? "#FF1B1C" : "#f57c00",
-            cursor: data.availibity === "no" ? "not-allowed" : "pointer", // Change cursor when unavailable
-            opacity: data.availibity === "no" ? 0.6 : 1, // Reduce opacity for unavailable items
+            cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
+            opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -198,15 +198,15 @@ function AddBtn({ data }) {
           style={{
             border: "none",
             backgroundColor: isHovered ? "#FF1B1C" : "#f57c00",
-            cursor: data.availibity === "no" ? "not-allowed" : "pointer", // Change cursor when unavailable
-            opacity: data.availibity === "no" ? 0.6 : 1, // Reduce opacity for unavailable items
+            cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
+            opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
             borderTopRightRadius: "5px", // Apply radius to top-right corner
             borderBottomRightRadius: "5px", // Apply radius to bottom-right corner
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={() => {
-            if (data.availibity !== "no") {
+            if (data.availibity !== "false") {
               setIsHovered(true);
               setCount(count + 1);
             }

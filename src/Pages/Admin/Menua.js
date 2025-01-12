@@ -4,6 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
 import { db } from "../../firebase-config";
+//import redcolor from "../../Design";
 
 import {
   TextField,
@@ -117,11 +118,11 @@ function Menua() {
   };
 
   useEffect(() => {
-    // console.log("sad");
-
-    getdiningmenudata();
-
-    getcateringmenudata();
+    {
+      window.location.pathname.includes("menua")
+        ? getdiningmenudata()
+        : getcateringmenudata();
+    }
   }, []);
 
   // Add item in firebase Database   await addDoc(usersCollectionRef, { name: newName, age: newAge });
@@ -330,6 +331,19 @@ function Menua() {
               />
             </Box>
 
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="flexSwitchCheckChecked"
+                checked
+                onChange={(e) => {}}
+              />
+              <label class="form-check-label" for="flexSwitchCheckChecked">
+                Item Availability
+              </label>
+            </div>
             {/* Image Preview Section */}
             {imagePreview && (
               <Box mb={3} textAlign="center">
@@ -393,7 +407,7 @@ function Menua() {
     );
   }
   return (
-    <div>
+    <div style={{ margin: "2%" }}>
       {window.location.pathname.includes("menua") ? (
         <Typography variant="h4" align="center" gutterBottom>
           Update Dining Menu Item
@@ -423,37 +437,49 @@ function Menua() {
 
       <Box>
         <TableContainer component={Paper}>
-          <Table aria-label="customer order table">
+          <InputLabel
+            style={{ fontWeight: "bold" }}
+            id="demo-simple-select-standard-label"
+          >
+            Choose Category
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-standard-label"
+            id="demo-simple-select-standard"
+            // value={age}
+            onChange={handleChange}
+            label="Choose Category"
+            sx={{ width: "200px", height: "40px", marginBottom: "20px" }}
+          >
+            <MenuItem value="appetizer">Appetizer</MenuItem>
+            <MenuItem value="chef_special">Drink</MenuItem>
+            <MenuItem value="sabz_e_bahar">Paneer ke Pakwan</MenuItem>
+            <MenuItem value="dal">Sabz e Bahar</MenuItem>
+            <MenuItem value="rice">Yogurts</MenuItem>
+            <MenuItem value="bread">Scent of Rice</MenuItem>
+            <MenuItem value="beverages">Dal Ranga Rang</MenuItem>
+            <MenuItem value="dessert">Special Food</MenuItem>
+            <MenuItem value="dal">Breads Delight</MenuItem>
+            <MenuItem value="bread">Sweet Dessert</MenuItem>
+            <MenuItem value="beverages">Healthy Salad</MenuItem>
+            <MenuItem value="dessert">Tangy Pickles</MenuItem>
+          </Select>
+
+          <Table aria-label="customer order table" sx={{ minWidth: 650 }}>
             <TableHead>
-              <TableRow>
+              <TableRow
+                sx={{
+                  backgroundColor: redcolor, // Background color for the header
+                  "& th": {
+                    fontWeight: "bold", // Bold font weight for header cells
+                    fontSize: "16px",
+                    color: "#ffffff"
+                  },
+                }}
+              >
                 <TableCell>Number</TableCell>
                 <TableCell>Image</TableCell>
-                <TableCell>
-                  <InputLabel id="demo-simple-select-standard-label">
-                    Choose Category
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
-                    // value={age}
-                    onChange={handleChange}
-                    label="Choose Category"
-                    sx={{ width: "200px", height: "40px" }}
-                  >
-                    <MenuItem value="appetizer">Appetizer</MenuItem>
-                    <MenuItem value="chef_special">Drink</MenuItem>
-                    <MenuItem value="sabz_e_bahar">Paneer ke Pakwan</MenuItem>
-                    <MenuItem value="dal">Sabz e Bahar</MenuItem>
-                    <MenuItem value="rice">Yogurts</MenuItem>
-                    <MenuItem value="bread">Scent of Rice</MenuItem>
-                    <MenuItem value="beverages">Dal Ranga Rang</MenuItem>
-                    <MenuItem value="dessert">Special Food</MenuItem>
-                    <MenuItem value="dal">Breads Delight</MenuItem>
-                    <MenuItem value="bread">Sweet Dessert</MenuItem>
-                    <MenuItem value="beverages">Healthy Salad</MenuItem>
-                    <MenuItem value="dessert">Tangy Pickles</MenuItem>
-                  </Select>
-                </TableCell>
+                <TableCell>Category</TableCell>
                 <TableCell>Item Name</TableCell>
                 <TableCell>Description</TableCell>
                 {window.location.pathname.includes("menua") ? (
@@ -526,7 +552,7 @@ function TableRecords({ data, handleClickOpen }) {
       </>
     );
   } else {
-    return <div>No data found</div>;
+    return <div></div>;
   }
 }
 

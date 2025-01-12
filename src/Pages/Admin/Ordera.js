@@ -121,7 +121,7 @@ function Ordera() {
 
   useEffect(() => {
     getorderdata();
-  },[]);
+  }, []);
   function AddStatusbtn() {
     return (
       <div>
@@ -141,13 +141,13 @@ function Ordera() {
     );
   }
   return (
-    <Box>
+    <Box style={{margin:"1%"}}>
       <Typography variant="h4" align="center" gutterBottom>
         Customer Order Details
       </Typography>
 
       <Box>
-        <FormControl sx={{ width: "30%", margin: "2%" }}>
+        <FormControl sx={{ width: "30%",marginBottom:"2%"}}>
           <InputLabel id="order-status-label" sx={{ color: "red" }}>
             Search Orders
           </InputLabel>
@@ -186,7 +186,15 @@ function Ordera() {
       <TableContainer component={Paper}>
         <Table aria-label="customer order table">
           <TableHead>
-            <TableRow>
+            <TableRow  sx={{
+                  backgroundColor: "#f57c00", // Background color for the header
+                  color: "white", // Text color for better contrast
+                  "& th": {
+                    fontWeight: "bold", // Bold font weight for header cells
+                    fontSize: "16px",
+                  },
+                }}
+ >
               <TableCell>Token Number</TableCell>
               <TableCell>Order Date/Time</TableCell>
 
@@ -200,13 +208,16 @@ function Ordera() {
           </TableHead>
           <TableBody>
             {orderadmindata.map((val) => (
-                            <TableRow key={val.id}>
-
+              <TableRow key={val.id}>
                 <TableCell component="th" scope="row">
                   {/* {val.tokenid} */}
                 </TableCell>
 
-                <TableCell>{val.odate ? new Date(val.odate.seconds * 1000).toLocaleString() : 'N/A'}</TableCell> 
+                <TableCell>
+                  {val.odate
+                    ? new Date(val.odate.seconds * 1000).toLocaleString()
+                    : "N/A"}
+                </TableCell>
                 <TableCell>{val.custname}</TableCell>
                 <TableCell>${val.totalamt}</TableCell>
                 <TableCell>

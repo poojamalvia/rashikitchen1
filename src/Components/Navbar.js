@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -30,25 +30,36 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Carouselimg from "../Pages/Admin/Carouselimg";
 import { Login } from "@mui/icons-material";
 import Logo from "../Rashilogo.png";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import { db } from "../firebase-config"
+
 let redcolor = "#FF1B1C";
+
 
 function Navbar(props) {
   const [auth, setAuth] = React.useState(true);
-
+const imgCollectionRef = collection(db, "carouselimage");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [cartCount, setCartCount] = React.useState(4);
   const [checkadminlogin, setCheckadminlogin] = React.useState(true);
+ const [image, setImage] = React.useState([])
 
-  const [image, setImage] = React.useState([
-    { img: "img1.jpg" },
-    { img: "img2.jpg" },
-    { img: "img3.jpg" },
-    { img: "img4.jpg" },
-    { img: "img5.jpg" },
-    { img: "img6.jpg" },
-    { img: "img7.jpg" },
-  ]);
+  useEffect(()=>{
+      const getCarouselimage = async()=>{
+        const data = await getDocs(imgCollectionRef);
+        setImage(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    
+      }
+      getCarouselimage()
+    })
 
   const StyledIconButton = styled(IconButton)(({ theme }) => ({
     transition: "all 0.3s ease",
@@ -294,7 +305,7 @@ function Navbar(props) {
                   data-bs-interval="2000"
                 >
                   <img
-                    src={val.img}
+                    src={val.image}
                     style={{
                       width: "20%",
                       maxHeight: "400px",
