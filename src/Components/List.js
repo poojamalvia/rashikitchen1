@@ -48,7 +48,7 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
           <>
             <ListItem alignItems="flex-start">
               <ListItemAvatar>
-                <Avatar variant="rounded" src={data.img} />
+                <Avatar variant="rounded" src={data.image} />
               </ListItemAvatar>
               <ListItemText
                 primary={data.itemname}

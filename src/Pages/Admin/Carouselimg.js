@@ -30,18 +30,6 @@ function Carouselimg() {
     width: 1,
   });
 
-  // const handleFileChange = (event) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     // Set the preview image state
-  //     var reader = new FileReader();
-  //     reader.onloadend = function () {
-  //       setImage([...image, reader.result]);
-  //       addDoc("imgCollectionRef", reader.result);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];

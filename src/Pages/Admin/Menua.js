@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import NoMealsIcon from "@mui/icons-material/NoMeals";
 
 import { db } from "../../firebase-config";
-//import redcolor from "../../Design";
+import { redcolor } from "../../Design";
 
 import {
   TextField,
@@ -25,6 +26,7 @@ import {
   FormControl,
   Typography,
   Dialog,
+  Switch,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
@@ -37,7 +39,6 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-let redcolor = "#FF1B1C";
 
 function Menua() {
   const VisuallyHiddenInput = styled("input")({
@@ -51,44 +52,6 @@ function Menua() {
     whiteSpace: "nowrap",
     width: 1,
   });
-  // const [cmenu, setCmenu] = React.useState([
-  //   {
-  //     tokenid: "1",
-  //     category: "Appetizer",
-  //     item: "samosa",
-  //     desc: "It is delicious product made with milk and palm sugar decorated with cashews and almonds",
-  //     image: `https://static.toiimg.com/thumb/61050397.cms?imgsize=246859&width=800&height=800`,
-  //     price: "10",
-  //   },
-  //   {
-  //     tokenid: "2",
-  //     category: "50",
-  //     item: "3.5",
-  //     desc: "confirmed",
-  //     price: "10",
-  //   },
-  //   {
-  //     tokenid: "3",
-  //     category: "50",
-  //     item: "3.5",
-  //     desc: "confirmed",
-  //     price: "10",
-  //   },
-  //   {
-  //     tokenid: "4",
-  //     category: "50",
-  //     item: "3.5",
-  //     desc: "confirmed",
-  //     price: "10",
-  //   },
-  //   {
-  //     tokenid: "5",
-  //     category: "50",
-  //     item: "3.5",
-  //     desc: "confirmed",
-  //     price: "10",
-  //   },
-  // ]);
 
   const AdiningCollectionRef = collection(db, "Diningmenu");
   const [diningdata, setDiningdata] = React.useState([]);
@@ -96,15 +59,22 @@ function Menua() {
 
   const AcateringCollectionRef = collection(db, "Cateringmenu");
   const [cateringdata, setCateringdata] = React.useState([]);
-  const [datacater, setDatacater] = React.useState({});
   const [updateid, setUpdateid] = React.useState();
+  const [image, setImage] = React.useState([]);
 
-  const validateFields = () => {
-    return data.itemname && data.category && data.price && data.desc;
+  const validatediningFields = () => {
+    return (
+      data.itemname && data.category && data.price && data.desc && data.image
+    );
+  };
+
+  const validatecateringFields = () => {
+    return data.itemname && data.category && data.desc && data.image;
   };
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
+    console.log(data.availibity);
   };
 
   const getdiningmenudata = async () => {
@@ -133,6 +103,8 @@ function Menua() {
       itemname: data.itemname,
       price: data.price,
       desc: data.desc,
+      availibity: data.availibity,
+      image: data.image,
     });
 
     setDiningdata([
@@ -143,23 +115,39 @@ function Menua() {
         itemname: data.itemname,
         price: data.price,
         desc: data.desc,
+        availibity: data.availibity,
+        image: data.image,
       },
     ]);
   };
 
   const handleAddClick = () => {
-    if (!validateFields()) {
-      alert("Please fill in all fields before adding.");
-      return; // Prevent further execution if fields are not valid
+    if (window.location.pathname.includes("menua")) {
+      if (!validatediningFields()) {
+        alert("Please fill in all dining fields before adding.");
+        return; // Prevent further execution if fields are not valid
+      }
+    } else {
+      if (!validatecateringFields()) {
+        alert("Please fill in all catering fields before adding.");
+        return; // Prevent further execution if fields are not valid
+      }
     }
 
     //setNo(no + 1);
     createDiningmenu(data); // Add item to Firebase
-    setData({ itemname: "", price: "", category: "", desc: "" }); // Clear form
+    setData({
+      itemname: "",
+      price: "",
+      category: "",
+      desc: "",
+      availibity: "false",
+      image: "",
+    }); // Clear form
   };
 
   const handleUpdateClick = async () => {
-    if (!validateFields()) {
+    if (!validatediningFields()) {
       alert("Please fill in all fields before updating.");
       return; // Prevent further execution if fields are not valid
     }
@@ -195,6 +183,15 @@ function Menua() {
     //  setData({ exp: "", credeb: "", amt: "", desc: "" });
   };
 
+  const deleteUser = async (id) => {
+    const expDoc = doc(db, "Diningmenu", id);
+    await deleteDoc(expDoc);
+
+    // After deleting the document, update the local state to remove the deleted item
+    const updatediningdata = diningdata.filter((item) => item.id !== id);
+    setDiningdata(updatediningdata); // Re-render the table with the updated data
+  };
+
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -202,18 +199,28 @@ function Menua() {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Set the preview image state
-      const imageUrl = URL.createObjectURL(file);
-      setImagePreview(imageUrl);
+      try {
+        var reader = new FileReader();
+        reader.onloadend = async function () {
+          const imageData = reader.result; // This is the base64 data of the image
+
+          // Add to Firestore
+
+          setData({ ...data, image: reader.result });
+        };
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error("Error adding file: ", error);
+      }
     }
   };
-  const [imagePreview, setImagePreview] = React.useState(null);
 
   function AddItemDialog(props) {
     const { onClose, open } = props;
+    const label = { inputProps: { "aria-label": "Switch demo" } };
 
     return (
       <Dialog
@@ -331,27 +338,39 @@ function Menua() {
               />
             </Box>
 
-            <div class="form-check form-switch">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                role="switch"
-                id="flexSwitchCheckChecked"
-                checked
-                onChange={(e) => {}}
-              />
-              <label class="form-check-label" for="flexSwitchCheckChecked">
-                Item Availability
-              </label>
-            </div>
+            {/* set availibity */}
+            {window.location.pathname.includes("menua") ? (
+              <div class="form-check form-switch">
+                <Switch
+                  {...label}
+                  checked={
+                    data.availibity === "true" || data.availibity === true
+                  } // Ensure it's a boolean value
+                  name="availibity"
+                  onChange={(e) => {
+                    setData({
+                      ...data,
+                      availibity: e.target.checked ? "true" : "false",
+                    }); // Update availibity as "true" or "false"
+                  }}
+                />
+
+                <label class="form-check-label" for="flexSwitchCheckChecked">
+                  Item Availability
+                </label>
+              </div>
+            ) : (
+              ""
+            )}
+
             {/* Image Preview Section */}
-            {imagePreview && (
+            {data.image && (
               <Box mb={3} textAlign="center">
                 <Typography variant="subtitle1" gutterBottom>
                   Image Preview:
                 </Typography>
                 <img
-                  src={imagePreview}
+                  src={data.image}
                   alt="Uploaded Preview"
                   style={{
                     maxWidth: "100%",
@@ -421,7 +440,7 @@ function Menua() {
       <Button
         type="button"
         style={{
-          backgroundColor: "#f57c00",
+          backgroundColor: redcolor,
           border: "none",
           color: "white",
           marginBottom: "20px",
@@ -449,7 +468,23 @@ function Menua() {
             // value={age}
             onChange={handleChange}
             label="Choose Category"
-            sx={{ width: "200px", height: "40px", marginBottom: "20px" }}
+            sx={{
+              width: "200px",
+              height: "40px",
+              marginBottom: "20px",
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "red", // Change border color here
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "red", // Change border color on hover
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "red", // Change border color on focus
+              },
+              "&.MuiFormLabel-root": {
+                color: "red !important",
+              },
+            }}
           >
             <MenuItem value="appetizer">Appetizer</MenuItem>
             <MenuItem value="chef_special">Drink</MenuItem>
@@ -473,7 +508,7 @@ function Menua() {
                   "& th": {
                     fontWeight: "bold", // Bold font weight for header cells
                     fontSize: "16px",
-                    color: "#ffffff"
+                    color: "#ffffff",
                   },
                 }}
               >
@@ -499,6 +534,7 @@ function Menua() {
                     : cateringdata
                 }
                 handleClickOpen={handleClickOpen}
+                deleteUser={deleteUser}
               />
             </TableBody>
           </Table>
@@ -508,7 +544,7 @@ function Menua() {
   );
 }
 
-function TableRecords({ data, handleClickOpen }) {
+function TableRecords({ data, handleClickOpen, deleteUser }) {
   if (data && data.length > 0) {
     return (
       <>
@@ -516,7 +552,16 @@ function TableRecords({ data, handleClickOpen }) {
           return (
             <TableRow>
               <TableCell component="th" scope="row">
-                {val.tokenid}
+                {/* {val.tokenid} */}
+                {val.availibity == "false" ? (
+                  <IconButton style={{ color: redcolor }}>
+                    {" "}
+                    <NoMealsIcon />{" "}
+                  </IconButton>
+                ) : (
+                  ""
+                )} 
+
               </TableCell>
               <TableCell>
                 <Avatar variant="rounded" src={val.image} />
@@ -541,11 +586,12 @@ function TableRecords({ data, handleClickOpen }) {
               <TableCell>
                 <IconButton
                   style={{ color: redcolor }}
-                  onClick={() => alert("Delete item")}
+                  onClick={() => deleteUser(val.id)}
                 >
                   <DeleteIcon />
                 </IconButton>
-              </TableCell>
+                
+                           </TableCell>
             </TableRow>
           );
         })}

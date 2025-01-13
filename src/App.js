@@ -18,11 +18,14 @@ import Carouselimg from "./Pages/Admin/Carouselimg";
 
 function App() {
   const [checkuser, setCheckuser] = React.useState(false);
+  const checkuserlogin =()=>{
+    setCheckuser(!checkuser)
+  }
 
   return (
     <div className="App">
       <BrowserRouter>
-        <NavBar checkuser={checkuser} />
+        <NavBar checkuser={checkuser} checkuserlogin={checkuserlogin} />
         <Routes>
           <Route path="/home" Component={Homepage} />
           <Route path="/menu" Component={MenuPage} />

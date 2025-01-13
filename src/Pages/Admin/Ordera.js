@@ -13,6 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Rating from "@mui/material/Rating";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { db } from "../../firebase-config";
+import { redcolor } from "../../Design";
 import {
   collection,
   getDocs,
@@ -35,7 +36,6 @@ import {
 } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
-let redcolor = "#FF1B1C";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
