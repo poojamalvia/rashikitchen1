@@ -3,8 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import NoMealsIcon from "@mui/icons-material/NoMeals";
-import { debounce } from 'lodash';
-
 
 import { db } from "../../firebase-config";
 import { redcolor } from "../../Design";
@@ -55,88 +53,65 @@ function Menua() {
     width: 1,
   });
 
-  const AdiningCollectionRef = collection(db, "Diningmenu");
-  const [diningdata, setDiningdata] = React.useState([]);
-  const [updateid, setUpdateid] = React.useState();
-  const [image, setImage] = React.useState([]);
   const [data, setData] = React.useState({});
 
+  const AcateringCollectionRef = collection(db, "Cateringmenu");
+  const [cateringdata, setCateringdata] = React.useState([]);
+  const [updateid, setUpdateid] = React.useState();
+  const [image, setImage] = React.useState([]);
+
   const validateFields = () => {
-    return (
-      data.itemname && data.category && data.price && data.desc && data.image
-    );
+    return data.itemname && data.category && data.desc && data.image;
   };
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
+  };
 
-
-    // setData((data) => ({
-    //   ...data,
-    //   [e.target.name]: e.target.value,
-    // }));
-    console.log(data.availibity);
-  }
-
-  const getdiningmenudata = async () => {
-    const data = await getDocs(AdiningCollectionRef);
-    setDiningdata(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  const getcateringmenudata = async () => {
+    const data = await getDocs(AcateringCollectionRef);
+    setCateringdata(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
   useEffect(() => {
     {
-      getdiningmenudata();
+      getcateringmenudata();
     }
   }, []);
 
   // Add item in firebase Database   await addDoc(usersCollectionRef, { name: newName, age: newAge });
-  const createDiningmenu = async (data) => {
-    await addDoc(AdiningCollectionRef, {
+  const createCateringmenu = async (data) => {
+    await addDoc(AcateringCollectionRef, {
       // no: data.no,
       category: data.category,
       itemname: data.itemname,
-      price: data.price,
       desc: data.desc,
-      availibity: data.availibity,
       image: data.image,
     });
 
-    setDiningdata([
-      ...diningdata,
+    setCateringdata([
+      ...cateringdata,
       {
         // no: no, // This will be the new no
         category: data.category,
         itemname: data.itemname,
-        price: data.price,
         desc: data.desc,
-        availibity: data.availibity,
         image: data.image,
       },
     ]);
   };
 
-  const handleAddclick = (e) => {
-    e.preventDefault(); // Prevent form from refreshing on submit
+  const handleAddclick = () => {
     if (!validateFields()) {
-      alert("Please fill in all dining fields before adding.");
+      alert("Please fill in all catering fields before adding.");
       return; // Prevent further execution if fields are not valid
     }
 
-    createDiningmenu(data); // Add item to Firebase
+    createCateringmenu(data); // Add item to Firebase
     setData({
       itemname: "",
       category: "",
       desc: "",
-      image: "",
-    }); // Clear form
-
-    //setNo(no + 1);
-    setData({
-      itemname: "",
-      price: "",
-      category: "",
-      desc: "",
-      availibity: "true",
       image: "",
     }); // Clear form
   };
@@ -148,28 +123,28 @@ function Menua() {
     }
 
     // Find the document in your local state by its ID
-    let obj = diningdata.find((val1) => val1.id === updateid);
+    let obj = cateringdata.find((val1) => val1.id === updateid);
 
     // Update the fields of the object
     obj.category = data.category;
     obj.itemname = data.itemname;
-    obj.price = data.price;
     obj.desc = data.desc;
+    obj.image = data.image;
 
     // Create a reference to the specific document to update in Firebase
-    const docRef = doc(db, "Diningmenu", updateid); // Use the updateid for the specific document
+    const docRef = doc(db, "Cateringmenu", updateid); // Use the updateid for the specific document
 
     // Update the document in Firebase
     await updateDoc(docRef, {
       category: obj.category,
       itemname: obj.itemname,
-      price: obj.price,
       desc: obj.desc,
+      image: obj.image,
     });
 
     // Update the local state to reflect the changes
-    setDiningdata(
-      diningdata.map((item) =>
+    setCateringdata(
+      cateringdata.map((item) =>
         item.id === updateid ? { ...item, ...obj } : item
       )
     );
@@ -179,12 +154,12 @@ function Menua() {
   };
 
   const deleteUser = async (id) => {
-    const expDoc = doc(db, "Diningmenu", id);
-    await deleteDoc(expDoc);
+    const cateringDoc = doc(db, "Cateringmenu", id);
+    await deleteDoc(cateringDoc);
 
     // After deleting the document, update the local state to remove the deleted item
-    const updatediningdata = diningdata.filter((item) => item.id !== id);
-    setDiningdata(updatediningdata); // Re-render the table with the updated data
+    const updatecateringdata = cateringdata.filter((item) => item.id !== id);
+    setCateringdata(updatecateringdata); // Re-render the table with the updated data
   };
 
   const [open, setOpen] = React.useState(false);
@@ -242,9 +217,10 @@ function Menua() {
               boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
             }}
           >
-            <Typography variant="h4" align="center" gutterBottom>
-              Update Dining Menu Item
-            </Typography>
+              <Typography variant="h4" align="center" gutterBottom>
+                Update Catering Menu Item
+              </Typography>
+      
 
             {/* Catering Category Selection */}
             <Box mb={3}>
@@ -261,14 +237,18 @@ function Menua() {
                   <MenuItem value="">
                     <em>Choose a category</em>
                   </MenuItem>
-            <MenuItem value="Appetizer">Appetizer</MenuItem>
-            <MenuItem value="Chef_special">Chef Special</MenuItem>
-            <MenuItem value="Sabjz_e_bahar">Sabjz-E-Bahar</MenuItem>
-            <MenuItem value="Dal">Dal</MenuItem>
-            <MenuItem value="rice">Rice</MenuItem>
-            <MenuItem value="bread">Bread</MenuItem>
-            <MenuItem value="beverages">Beverages</MenuItem>
-            <MenuItem value="dessert">Dessert</MenuItem>
+                  <MenuItem value="Appetizer">Appetizer</MenuItem>
+                  <MenuItem value="Drink">Drinks</MenuItem>
+                  <MenuItem value="Paneer ke Pakwan">Paneer ke Pakwan</MenuItem>
+                  <MenuItem value="Sabz e Bahar">Sabz 'e' Bahar</MenuItem>
+                  <MenuItem value="Yogurts">Yogurts</MenuItem>
+                  <MenuItem value="Scent of Rice">Scent of Rice</MenuItem>
+                  <MenuItem value="Dal Ranga Rang">Dal Ranga Rang</MenuItem>
+                  <MenuItem value="Special Food">Special Food</MenuItem>
+                  <MenuItem value="Breads Delight">Breads Delight</MenuItem>
+                  <MenuItem value="Sweet Dessert">Sweet Desserts</MenuItem>
+                  <MenuItem value="Healthy Salad">Healthy Salad</MenuItem>
+                  <MenuItem value="Tangy Pickles">Tangy Pickles</MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -288,20 +268,6 @@ function Menua() {
               />
             </Box>
 
-            {/* price Field */}
-            <Box mb={3}>
-              <TextField
-                required
-                fullWidth
-                name="price"
-                label="Price"
-                type="number"
-                variant="outlined"
-                value={data.price}
-                style={{ backgroundColor: "#f5f5f5" }}
-                onChange={handleChange}
-              />
-            </Box>
 
             {/* Description Field */}
             <Box mb={3}>
@@ -320,25 +286,7 @@ function Menua() {
               />
             </Box>
 
-            {/* set availibity */}
-            <div class="form-check form-switch">
-              <Switch
-                {...label}
-                checked={data.availibity === "true" || data.availibity === true} // Ensure it's a boolean value
-                name="availibity"
-                onChange={(e) => {
-                  setData({
-                    ...data,
-                    availibity: e.target.checked ? "true" : "false",
-                  }); // Update availibity as "true" or "false"
-                }}
-              />
-
-              <label class="form-check-label" for="flexSwitchCheckChecked">
-                Item Availability
-              </label>
-            </div>
-
+        
             {/* Image Preview Section */}
             {data.image && (
               <Box mb={3} textAlign="center">
@@ -404,15 +352,11 @@ function Menua() {
 
   return (
     <div style={{ margin: "2%" }}>
-      {window.location.pathname.includes("menua") ? (
-        <Typography variant="h4" align="center" gutterBottom>
-          Update Dining Menu Item
-        </Typography>
-      ) : (
+    
         <Typography variant="h4" align="center" gutterBottom>
           Update Catering Menu Item
         </Typography>
-      )}
+    
 
       <Button
         type="button"
@@ -463,14 +407,18 @@ function Menua() {
               },
             }}
           >
-            <MenuItem value="Appetizer">Appetizer</MenuItem>
-            <MenuItem value="Chef_special">Chef Special</MenuItem>
-            <MenuItem value="Sabjz_e_bahar">Sabjz-E-Bahar</MenuItem>
-            <MenuItem value="Dal">Dal</MenuItem>
-            <MenuItem value="rice">Rice</MenuItem>
-            <MenuItem value="bread">Bread</MenuItem>
-            <MenuItem value="beverages">Beverages</MenuItem>
-            <MenuItem value="dessert">Dessert</MenuItem>
+            <MenuItem value="appetizer">Appetizer</MenuItem>
+            <MenuItem value="chef_special">Drink</MenuItem>
+            <MenuItem value="sabz_e_bahar">Paneer ke Pakwan</MenuItem>
+            <MenuItem value="dal">Sabz e Bahar</MenuItem>
+            <MenuItem value="rice">Yogurts</MenuItem>
+            <MenuItem value="bread">Scent of Rice</MenuItem>
+            <MenuItem value="beverages">Dal Ranga Rang</MenuItem>
+            <MenuItem value="dessert">Special Food</MenuItem>
+            <MenuItem value="dal">Breads Delight</MenuItem>
+            <MenuItem value="bread">Sweet Dessert</MenuItem>
+            <MenuItem value="beverages">Healthy Salad</MenuItem>
+            <MenuItem value="dessert">Tangy Pickles</MenuItem>
           </Select>
 
           <Table aria-label="customer order table" sx={{ minWidth: 650 }}>
@@ -490,18 +438,13 @@ function Menua() {
                 <TableCell>Category</TableCell>
                 <TableCell>Item Name</TableCell>
                 <TableCell>Description</TableCell>
-                {window.location.pathname.includes("menua") ? (
-                  <TableCell>Price</TableCell>
-                ) : (
-                  ""
-                )}
                 <TableCell>Update</TableCell>
                 <TableCell>Delete</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRecords
-                data={diningdata}
+                data={cateringdata}
                 handleClickOpen={handleClickOpen}
                 deleteUser={deleteUser}
               />
@@ -522,14 +465,8 @@ function TableRecords({ data, handleClickOpen, deleteUser }) {
             <TableRow>
               <TableCell component="th" scope="row">
                 {/* {val.tokenid} */}
-                {val.availibity == "false" ? (
-                  <IconButton style={{ color: redcolor }}>
-                    {" "}
-                    <NoMealsIcon />{" "}
-                  </IconButton>
-                ) : (
-                  ""
-                )}
+          
+
               </TableCell>
               <TableCell>
                 <Avatar variant="rounded" src={val.image} />
@@ -537,8 +474,6 @@ function TableRecords({ data, handleClickOpen, deleteUser }) {
               <TableCell>{val.category}</TableCell>
               <TableCell>{val.itemname}</TableCell>
               <TableCell>{val.desc}</TableCell>
-              <TableCell>{val.price}</TableCell>
-
               <TableCell>
                 <IconButton
                   style={{ color: redcolor }}

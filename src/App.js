@@ -13,14 +13,15 @@ import React from "react";
 import Footer from "./Pages/Footer";
 import Checkout from "./Pages/Checkout";
 import Menua from "./Pages/Admin/Menua";
+import Cateringa from "./Pages/Admin/Cateringa";
 import Ordera from "./Pages/Admin/Ordera";
 import Carouselimg from "./Pages/Admin/Carouselimg";
 
 function App() {
-  const [checkuser, setCheckuser] = React.useState(false);
-  const checkuserlogin =()=>{
-    setCheckuser(!checkuser)
-  }
+  const [checkuser, setCheckuser] = React.useState(true);
+  const checkuserlogin = () => {
+    setCheckuser(!checkuser);
+  };
 
   return (
     <div className="App">
@@ -38,7 +39,7 @@ function App() {
           <Route path="/Registration" Component={Registration} />
           <Route path="/Checkout" Component={Checkout} />
           <Route path="/Admin/Menua" Component={Menua} />
-          <Route path="/Admin/Cateringa" Component={Menua} />
+          <Route path="/Admin/Cateringa" Component={Cateringa} />
           <Route path="/Admin/Ordera" Component={Ordera} />
           <Route path="/Admin/Carouselimg" Component={Carouselimg} />
           <Route path="/Admin/Login" Component={Loginpage} />
