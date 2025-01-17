@@ -217,10 +217,9 @@ function Menua() {
               boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
             }}
           >
-              <Typography variant="h4" align="center" gutterBottom>
-                Update Catering Menu Item
-              </Typography>
-      
+            <Typography variant="h4" align="center" gutterBottom>
+              Update Catering Menu Item
+            </Typography>
 
             {/* Catering Category Selection */}
             <Box mb={3}>
@@ -268,7 +267,6 @@ function Menua() {
               />
             </Box>
 
-
             {/* Description Field */}
             <Box mb={3}>
               <TextField
@@ -286,7 +284,6 @@ function Menua() {
               />
             </Box>
 
-        
             {/* Image Preview Section */}
             {data.image && (
               <Box mb={3} textAlign="center">
@@ -352,11 +349,9 @@ function Menua() {
 
   return (
     <div style={{ margin: "2%" }}>
-    
-        <Typography variant="h4" align="center" gutterBottom>
-          Update Catering Menu Item
-        </Typography>
-    
+      <Typography variant="h4" align="center" gutterBottom>
+        Update Catering Menu Item
+      </Typography>
 
       <Button
         type="button"
@@ -465,8 +460,6 @@ function TableRecords({ data, handleClickOpen, deleteUser }) {
             <TableRow>
               <TableCell component="th" scope="row">
                 {/* {val.tokenid} */}
-          
-
               </TableCell>
               <TableCell>
                 <Avatar variant="rounded" src={val.image} />

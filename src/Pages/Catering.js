@@ -1,4 +1,4 @@
-import React ,{useEffect} from "react";
+import React, { useEffect } from "react";
 import Accordian from "../Components/Accordians";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import Button from "@mui/material/Button";
@@ -15,367 +15,82 @@ import {
   doc,
 } from "firebase/firestore";
 
-
-
 function Catering() {
-  // const [cmenu, setCmenu] = React.useState({
-  //   Appetizer: [
-  //     {
-  //       name: "Veg Manchurian dry and gravy",
-  //       desc: "It is delicious product made with milk and palm sugar decorated with cashews and almonds",
-  //       availy: "no",
-  //     },
-  //     { name: "Gobi Manchurian", desc: "cc",
-  //       availy: "no",
-  //      },
-  //     { name: "Chilli Paneer,dry and gravy" },
-  //     { name: "Crispy vegetable" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //   ],
-  //   Drink: [
-  //     { name: "Veg Manchurian dry and gravy", availy: "no" },
-  //     { name: "Gobi Manchurian" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //   ],
-  //   Paneer_ke_pakwan: [
-  //     { name: "Veg Manchurian dry and gravy" },
-  //     { name: "Gobi Manchurian" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //   ],
-  //   Sabz_e_bahar: [
-  //     { name: "Veg Manchurian dry and gravy" },
-  //     { name: "Gobi Manchurian" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //   ],
-  //   Yogurts: [
-  //     { name: "Veg Manchurian dry and gravy" },
-  //     { name: "Gobi Manchurian" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //   ],
-
-  //   Scent_of_Rice: [
-  //     { name: "Veg Manchurian dry and gravy" },
-  //     { name: "Gobi Manchurian" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //   ],
-  //   Dal_ranga_rang: [
-  //     { name: "Veg Manchurian dry and gravy" },
-  //     { name: "Gobi Manchurian" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //   ],
-  //   Special_food: [
-  //     { name: "Veg Manchurian dry and gravy" },
-  //     { name: "Gobi Manchurian" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //   ],
-  //   Breads_delight: [
-  //     { name: "Veg Manchurian dry and gravy" },
-  //     { name: "Gobi Manchurian" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //   ],
-  //   Sweet_dessert: [
-  //     { name: "Veg Manchurian dry and gravy" },
-  //     { name: "Gobi Manchurian" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //   ],
-  //   Healthy_salad: [
-  //     { name: "Veg Manchurian dry and gravy" },
-  //     { name: "Gobi Manchurian" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //   ],
-  //   Tangy_pickels: [
-  //     { name: "Veg Manchurian dry and gravy" },
-  //     { name: "Gobi Manchurian" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //     { name: "Samosa" },
-  //   ],
-  // });
-
   const AcateringCollectionRef = collection(db, "Cateringmenu");
-    const [cateringdata, setCateringdata] = React.useState([]);
-    const [data, setData] = React.useState({});
-    let navigate = useNavigate();
-  
-    const getcateringmenudata = async () => {
-      const data = await getDocs(AcateringCollectionRef);
-  
-      let mData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-  
-      let obj = {};
-  
-      mData.map((val) => {
-        if (val.category in obj) {
-          obj[val.category].push(val);
-        } else {
-          obj[val.category] = [val];
-        }
-      });
-      setCateringdata(obj);
-    };
-  
-    useEffect(() => {
-      getcateringmenudata();
+  const [cateringdata, setCateringdata] = React.useState([]);
+  const [data, setData] = React.useState({});
+  let navigate = useNavigate();
+
+  const getcateringmenudata = async () => {
+    const data = await getDocs(AcateringCollectionRef);
+
+    let mData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+
+    let obj = {};
+
+    mData.map((val) => {
+      if (val.category in obj) {
+        obj[val.category].push(val);
+      } else {
+        obj[val.category] = [val];
+      }
     });
+    setCateringdata(obj);
+  };
+
+  useEffect(() => {
+    getcateringmenudata();
+  });
+
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+
+    // Set the font for the document
+    doc.setFont("helvetica", "normal");
+
+    // Add centered title "Catering Menu"
+    const title = "Catering Menu";
+    const pageWidth = doc.internal.pageSize.width;
+    const titleWidth =
+      (doc.getStringUnitWidth(title) * doc.internal.getFontSize()) /
+      doc.internal.scaleFactor;
+    const titleX = (pageWidth - titleWidth) / 2; // Center the title
+    doc.setFontSize(22); // Larger font size for the title
+    doc.text(title, titleX, 20); // Add the title to the center of the page
+
+    let yOffset = 30; // Start content after the title
+
+    // Add a horizontal line under the title for separation
+    doc.setLineWidth(0.5);
+    doc.line(10, yOffset, pageWidth - 10, yOffset);
+    yOffset += 5; // Space after the line
+
+    // Loop through each category and its items
+    Object.keys(cateringdata).forEach((val, index) => {
+      // Add category name
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16); // Larger font for category name
+      doc.text(val, 10, yOffset); // Add the category name
+      yOffset += 8; // Space after category name
+
+      // Add the items under the category
+      cateringdata[val].forEach((item, itemIndex) => {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        const itemText = `${item.itemname}- ${
+          item.desc || "No description available"
+        }`;
+        doc.text(itemText, 10, yOffset); // Item name and description
+        yOffset += 8; // Space after each item
+      });
+
+      // Add space after each category for better readability
+      yOffset += 12; // Additional space between categories
+    });
+
+    // Save the generated PDF with the name "catering_menu.pdf"
+    doc.save("catering_menu.pdf");
+  };
 
   return (
     <div style={{ margin: "3%" }}>
@@ -422,21 +137,21 @@ function Catering() {
           }}
           tabIndex={-1}
           startIcon={<CloudDownloadIcon />}
-          onClick={() => {
-            {
-              Object.keys(cateringdata).map((val) => {
-                console.log("val", val);
-                return (
-                  <div>
-                    doc.text(val.name, 10, 20); doc.text(val.phoneno, 20, 30);
-                    {/* doc.text(val.email, 30, 40);
-                doc.text(val.address, 40, 50); */}
-                    doc.save("menu.pdf");
-                  </div>
-                );
-              });
-            }
-          }}
+          onClick={downloadPDF}
+
+          // Object.keys(cateringdata).map((val) => {
+          //   console.log("val", val);
+          //   return (
+          //     <div>
+          //       doc.text(val.name, 10, 20); doc.text(val.phoneno, 20, 30);
+          //       {/* doc.text(val.email, 30, 40);
+          //   doc.text(val.address, 40, 50); */}
+          //       doc.save("menu.pdf");
+          //         </div>
+          //       );
+          //     });
+          //   }
+          // }}
         >
           Download Catering Menu
         </Button>
