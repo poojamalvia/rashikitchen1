@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
+import { redcolor } from "../Design";
 
 function Registration() {
   let navigate = useNavigate();
@@ -85,7 +86,7 @@ function Registration() {
               style={{
                 width: "100%",
                 padding: "12px",
-                backgroundColor: "#f57c00",
+                backgroundColor:redcolor,
                 border: "none",
                 borderRadius: "4px",
                 color: "#fff",

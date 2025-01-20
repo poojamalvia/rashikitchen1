@@ -38,28 +38,38 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import { db } from "../firebase-config"
+import { db } from "../firebase-config";
+import { useLocation } from "react-router-dom";
 
 let redcolor = "#FF1B1C";
 
+const isAdmin = () => {
+  return window.location.pathname.toLowerCase().includes("admin");
+};
 
 function Navbar(props) {
+  let location = useLocation();
+  const [checkuser, setCheckuser] = React.useState(isAdmin());
+
   const [auth, setAuth] = React.useState(true);
-const imgCollectionRef = collection(db, "carouselimage");
+  const imgCollectionRef = collection(db, "carouselimage");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [cartCount, setCartCount] = React.useState(4);
-  const [checkadminlogin, setCheckadminlogin] = React.useState(true);
- const [image, setImage] = React.useState([])
+  const [checkadminlogin] = React.useState(true);
+  const [image, setImage] = React.useState([]);
 
-  useEffect(()=>{
-      const getCarouselimage = async()=>{
-        const data = await getDocs(imgCollectionRef);
-        setImage(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    
-      }
-      getCarouselimage()
-    })
+  useEffect(() => {
+    const getCarouselimage = async () => {
+      const data = await getDocs(imgCollectionRef);
+      setImage(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getCarouselimage();
+  }, []);
+
+  useEffect(() => {
+    setCheckuser(isAdmin());
+  }, [location]);
 
   const StyledIconButton = styled(IconButton)(({ theme }) => ({
     transition: "all 0.3s ease",
@@ -69,10 +79,6 @@ const imgCollectionRef = collection(db, "carouselimage");
     },
   }));
 
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
-
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -80,7 +86,7 @@ const imgCollectionRef = collection(db, "carouselimage");
   const handleClose = () => {
     setAnchorEl(null);
 
-    navigate("/Login");
+    navigate("/User/Login");
   };
 
   let navigate = useNavigate();
@@ -174,7 +180,7 @@ const imgCollectionRef = collection(db, "carouselimage");
                         open={Boolean(anchorEl)}
                         onClose={handleClose}
                       >
-                        {props.checkuser ? (
+                        {checkuser ? (
                           <MenuItem
                             onClick={() => {
                               navigate("/Registration");
@@ -197,66 +203,7 @@ const imgCollectionRef = collection(db, "carouselimage");
                   )
                 : ""}
 
-              {/* {auth && (
-                <div>
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    onClick={handleMenu}
-                    color="inherit"
-                    sx={{
-                      mr: 2,
-                      "&:hover": {
-                        backgroundColor: "#FF5722",
-                        transform: "scale(1.1)",
-                      },
-                      transition:
-                        "transform 0.3s ease, background-color 0.3s ease",
-                    }}
-                  >
-                    <AccountCircle />
-                  </IconButton>
-                  <Menu
-                    id="menu-appbar"
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
-                    }}
-                    keepMounted
-                    transformOrigin={{
-
-                      vertical: "top",
-                      horizontal: "right",
-                    }}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    {props.checkuser ? (
-                      <MenuItem
-                        onClick={() => {
-                          navigate("/Registration");
-                        }}
-                      >
-                        Profile
-                      </MenuItem>
-                    ) : (
-                      <MenuItem
-                        onClick={() => {
-                          navigate("/Admin/Carouselimg");
-                        }}
-                      >
-                        Profile
-                      </MenuItem>
-                    )}
-                    <MenuItem onClick={handleClose}>Log Out</MenuItem>
-                  </Menu>
-                </div>
-              )} */}
-
-              {props.checkuser ? (
+              {!checkuser ? (
                 <IconButton
                   size="large"
                   edge="start"
@@ -272,12 +219,18 @@ const imgCollectionRef = collection(db, "carouselimage");
                       "transform 0.3s ease, background-color 0.3s ease",
                   }}
                   onClick={() => {
-                    navigate("/Cart");
+                    navigate("/User/Cart");
                   }}
                 >
                   <Badge
                     badgeContent={cartCount} // Show the number of items in the cart
-                    color="secondary" // Red badge color
+                    // color="secondary" // Red badge color
+                    // dot
+                    sx={{
+                      ".MuiBadge-dot": {
+                        backgroundColor: "purple", // Change the secondary badge color to purple
+                      },
+                    }}
                   >
                     <ShoppingCartIcon />
                   </Badge>
@@ -289,7 +242,7 @@ const imgCollectionRef = collection(db, "carouselimage");
           </AppBar>
         </div>
 
-        {props.checkuser ? (
+        {!checkuser ? (
           <div
             style={{ margin: "5%" }}
             id="carouselExampleInterval"
@@ -309,7 +262,7 @@ const imgCollectionRef = collection(db, "carouselimage");
                     style={{
                       width: "20%",
                       maxHeight: "400px",
-                      objectFit: "fill",
+                      objectFit: "cover",
                     }}
                     className="d-block w-100"
                     alt={`carousel-item-${index}`}
@@ -357,7 +310,7 @@ const imgCollectionRef = collection(db, "carouselimage");
             }}
           >
             <RenderList
-              checkuser={props.checkuser}
+              checkuser={checkuser}
               drawerOpen={drawerOpen}
               setDrawerOpen={setDrawerOpen}
             />
@@ -408,12 +361,12 @@ const RenderList = ({ drawerOpen, setDrawerOpen, checkuser }) => {
           height: window.innerHeight,
         }}
       >
-        {checkuser ? (
+        {!checkuser ? (
           <List>
             {[
               { name: "Home", value: "home" },
-              { name: "Menu", value: "menu" },
-              { name: "Catering", value: "catering" },
+              { name: "Menu", value: "DiningMenu" },
+              { name: "Catering", value: "CateringMenu" },
               { name: "Orders", value: "orders" },
               { name: "Location & Hours", value: "Locationhours" },
               { name: "Contact Us", value: "contactus" },
@@ -422,7 +375,7 @@ const RenderList = ({ drawerOpen, setDrawerOpen, checkuser }) => {
                 key={val}
                 disablePadding
                 onClick={() => {
-                  navigate("/" + val.value);
+                  navigate("/User/" + val.value);
                   setDrawerOpen(false);
                 }}
               >
@@ -436,9 +389,9 @@ const RenderList = ({ drawerOpen, setDrawerOpen, checkuser }) => {
         ) : (
           <List>
             {[
-              { name: "Menu", value: "menua" },
-              { name: "Catering", value: "cateringa" },
-              { name: "Orders", value: "ordera" },
+              { name: "Menu", value: "DiningMenu" },
+              { name: "Catering", value: "CateringMenu" },
+              { name: "Orders", value: "Userorder" },
             ].map((val, index) => (
               <ListItem
                 key={val}

@@ -141,14 +141,14 @@ function Ordera() {
     );
   }
   return (
-    <Box style={{margin:"1%"}}>
+    <Box style={{ margin: "1%" }}>
       <Typography variant="h4" align="center" gutterBottom>
         Customer Order Details
       </Typography>
 
       <Box>
-        <FormControl sx={{ width: "30%",marginBottom:"2%"}}>
-          <InputLabel id="order-status-label" sx={{ color: "red" }}>
+        <FormControl sx={{ width: "30%", marginBottom: "2%" }}>
+          <InputLabel id="order-status-label" style={{ color: redcolor }}>
             Search Orders
           </InputLabel>
           <Select
@@ -186,15 +186,19 @@ function Ordera() {
       <TableContainer component={Paper}>
         <Table aria-label="customer order table">
           <TableHead>
-            <TableRow  sx={{
-                  backgroundColor: "#f57c00", // Background color for the header
-                  color: "white", // Text color for better contrast
-                  "& th": {
-                    fontWeight: "bold", // Bold font weight for header cells
-                    fontSize: "16px",
-                  },
-                }}
- >
+            <TableRow
+              sx={{
+                backgroundColor: redcolor, // Background color for the header
+                 // Text color for better contrast
+                "& th": {
+                  fontWeight: "bold", // Bold font weight for header cells
+                  fontSize: "16px",
+                  color:"#ffffff"
+                },
+              }}
+
+            >
+              
               <TableCell>Token Number</TableCell>
               <TableCell>Order Date/Time</TableCell>
 
@@ -299,8 +303,8 @@ function Ordera() {
               Update your order status:
             </Typography>
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <InputLabel id="order-status" sx={{ color: "red" }}>
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+              <InputLabel id="order-status" style={{ color: "red" }}>
                 Select Orders
               </InputLabel>
               <Select
@@ -332,7 +336,7 @@ function Ordera() {
                 <MenuItem value={50}>Delivered Orders</MenuItem>
                 <MenuItem value={60}>Canceled Orders</MenuItem>
               </Select>
-            </Box>
+            </FormControl>
           </DialogContent>
 
           <DialogActions sx={{ backgroundColor: redcolor }}>

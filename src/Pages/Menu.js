@@ -11,9 +11,9 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+const AdiningCollectionRef = collection(db, "Diningmenu");
 
 function Menu() {
-  const AdiningCollectionRef = collection(db, "Diningmenu");
   const [diningdata, setDiningdata] = React.useState([]);
   const [data, setData] = React.useState({});
   let navigate = useNavigate();
@@ -37,7 +37,7 @@ function Menu() {
 
   useEffect(() => {
     getdiningmenudata();
-  });
+  }, []);
   return (
     <div style={{ margin: "3%" }}>
       <Typography
@@ -55,7 +55,6 @@ function Menu() {
       </Typography>
 
       {Object.keys(diningdata).map((fld) => {
-        console.log("Fld", fld);
         return (
           <>
             <Accordian
@@ -72,4 +71,4 @@ function Menu() {
   );
 }
 
-export default Menu;
+export default React.memo(Menu);

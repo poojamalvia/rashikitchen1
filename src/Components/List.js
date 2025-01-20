@@ -6,11 +6,13 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
+import { redcolor } from "../Design";
 
-export default function AlignItemsList({ menuDetails, isAdd }) {
+function AlignItemsList({ menuDetails, isAdd }) {
   const [isHovered1, setIsHovered1] = React.useState(
     new Array(menuDetails.length).fill(false)
   );
+  const [totalamt, setTotalamt] = React.useState(0);
 
   const handleMouseEnter = (index) => {
     const newHoveredState = [...isHovered1];
@@ -35,11 +37,6 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
       updatedDisabledItems[index] = true;
       setDisabledItems(updatedDisabledItems);
     } // Disable the button for unavailable item
-    //else {
-    //   // Add to cart logic goes here
-    //   // For now, just log for demo
-    //   console.log("Item added to cart");
-    // }
   };
   return (
     <List sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -70,6 +67,7 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
                       >
                         {data.desc}
                       </Typography>
+                      {console.log(totalamt)}
 
                       {data.availibity == "false" ? (
                         <label
@@ -100,14 +98,17 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
                         justifyContent: "end",
                       }}
                     >
-                      {isAdd && <AddBtn data={data} />} &nbsp;&nbsp;
                       {isAdd && (
+                        <AddBtn data={data} setTotalamt={setTotalamt} />
+                      )}{" "}
+                      &nbsp;&nbsp;
+                      {/* {isAdd && (
                         <button
                           type="button"
                           style={{
                             backgroundColor: isHovered1[index]
                               ? "#FF1B1C"
-                              : "#f57c00",
+                              : redcolor,
                             border: "none",
                             color: "white",
                             borderRadius: "5px",
@@ -126,7 +127,7 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
                         >
                           Add to Cart
                         </button>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 }
@@ -140,7 +141,7 @@ export default function AlignItemsList({ menuDetails, isAdd }) {
   );
 }
 
-function AddBtn({ data }) {
+function AddBtn({ data, setTotalamt }) {
   const [count, setCount] = React.useState(0);
 
   //const [detail, setDetail] = React.useState();
@@ -161,7 +162,7 @@ function AddBtn({ data }) {
           class="btn btn-danger"
           style={{
             border: "none",
-            backgroundColor: isHovered ? "#FF1B1C" : "#f57c00",
+            backgroundColor: isHovered ? "#FF1B1C" : redcolor,
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
           }}
@@ -182,7 +183,7 @@ function AddBtn({ data }) {
           class="btn btn-danger"
           style={{
             border: "none",
-            backgroundColor: isHovered ? "#FF1B1C" : "#f57c00",
+            backgroundColor: isHovered ? "#FF1B1C" : redcolor,
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
           }}
@@ -197,7 +198,7 @@ function AddBtn({ data }) {
           class="btn btn-danger"
           style={{
             border: "none",
-            backgroundColor: isHovered ? "#FF1B1C" : "#f57c00",
+            backgroundColor: isHovered ? "#FF1B1C" : redcolor,
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
             borderTopRightRadius: "5px", // Apply radius to top-right corner
@@ -210,6 +211,7 @@ function AddBtn({ data }) {
               setIsHovered(true);
               setCount(count + 1);
             }
+            setTotalamt(count + 1);
           }}
         >
           +
@@ -219,3 +221,5 @@ function AddBtn({ data }) {
     </>
   );
 }
+
+export default React.memo(AlignItemsList);

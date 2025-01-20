@@ -8,13 +8,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import List from "./List";
 import Paper from "@mui/material/Paper";
 
-export default function AccordionExpandIcon({
-  menuDetails,
-  name,
-  count,
-  fld,
-  isAdd,
-}) {
+function AccordionExpandIcon({ menuDetails, name, count, fld, isAdd }) {
   const [open, setOpen] = React.useState(false);
   return (
     <div style={{ padding: "5px" }}>
@@ -47,3 +41,5 @@ export default function AccordionExpandIcon({
     </div>
   );
 }
+
+export default React.memo(AccordionExpandIcon);

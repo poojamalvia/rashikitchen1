@@ -18,7 +18,6 @@ import { useEffect } from "react";
 function Homepage() {
   const [loc, setLoc] = React.useState("Ahmedabad");
   const [data, setData] = React.useState();
-  const apikey = "5f114b623b2c42d49c3102625230807";
   // const [isloading, setIsloading] = React.useState(false)
 
   const [currentDateTime, setCurrentDateTime] = React.useState("");
@@ -62,39 +61,60 @@ function Homepage() {
 
   return (
     <Box
-    sx={{
-      margin: "5%",
-      backgroundColor: "#f4f4f4",
-      borderRadius: "10px",
-      boxShadow: 3,
-      padding: { xs: "20px", md: "40px" },
-      textAlign: "center",
-    }}
-  >
-    <Typography variant="h4" component="h1" sx={{ marginBottom: "20px", fontWeight: "bold", color: "#333" }}>
-      Welcome to Rashi's Kitchen - Longwood
-    </Typography>
-
-    <Typography variant="h6" sx={{ marginBottom: "20px", color: "#888" }}>
-      {currentDateTime}
-    </Typography>
-
-    <Box sx={{ marginBottom: "20px" }}>
-      <Typography variant="body1" sx={{ color: "#333" }}>
-        Rashi's Kitchen offers healthy and delicious tasting Chinese and Indian cuisines in Longwood, FL. Rashi's Kitchen's convenient location and affordable prices make our restaurant a natural choice for dine-in and take-out meals in the Longwood community. Established in Sept 2024, the restaurant is known for its variety of tastes and freshest ingredients. Come and experience our friendly atmosphere and excellent service.
+      sx={{
+        margin: "5%",
+        backgroundColor: "#f4f4f4",
+        borderRadius: "10px",
+        boxShadow: 3,
+        padding: { xs: "20px", md: "40px" },
+        textAlign: "center",
+      }}
+    >
+      <Typography
+        variant="h4"
+        component="h1"
+        sx={{ marginBottom: "20px", fontWeight: "bold", color: "#333" }}
+      >
+        Welcome to Rashi's Kitchen - Longwood
       </Typography>
+
+      <Typography variant="h6" sx={{ marginBottom: "20px", color: "#888" }}>
+        {currentDateTime}
+      </Typography>
+
+      <Box sx={{ marginBottom: "20px" }}>
+        <Typography variant="body1" sx={{ color: "#333" }}>
+          Rashi's Kitchen offers healthy and delicious tasting Chinese and
+          Indian cuisines in Longwood, FL. Rashi's Kitchen's convenient location
+          and affordable prices make our restaurant a natural choice for dine-in
+          and take-out meals in the Longwood community. Established in Sept
+          2024, the restaurant is known for its variety of tastes and freshest
+          ingredients. Come and experience our friendly atmosphere and excellent
+          service.
+        </Typography>
+      </Box>
+
+      <Typography
+        variant="h5"
+        sx={{
+          marginTop: "20px",
+          marginBottom: "20px",
+          color: "#333",
+          fontWeight: "bold",
+        }}
+      >
+        Registration Required To Order Online!
+      </Typography>
+
+      <Typography variant="body1" sx={{ color: "#333", marginBottom: "20px" }}>
+        Start ordering online by clicking login above. Simply select the menu
+        items you want, add them to your cart, and checkout. Your order will be
+        sent to the restaurant and will be ready at the time you specify. It's
+        that easy!
+      </Typography>
+
+      {/* Add additional elements if needed */}
     </Box>
-
-    <Typography variant="h5" sx={{ marginTop: "20px", marginBottom: "20px", color: "#333", fontWeight: "bold" }}>
-      Registration Required To Order Online!
-    </Typography>
-
-    <Typography variant="body1" sx={{ color: "#333", marginBottom: "20px" }}>
-      Start ordering online by clicking login above. Simply select the menu items you want, add them to your cart, and checkout. Your order will be sent to the restaurant and will be ready at the time you specify. It's that easy!
-    </Typography>
-
-    {/* Add additional elements if needed */}
-  </Box>
     // <div style={{margin:"5%"}}>
     //   <center>
     //     <Box

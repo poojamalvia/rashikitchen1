@@ -18,33 +18,30 @@ import Ordera from "./Pages/Admin/Ordera";
 import Carouselimg from "./Pages/Admin/Carouselimg";
 
 function App() {
-  const [checkuser, setCheckuser] = React.useState(true);
-  const checkuserlogin = () => {
-    setCheckuser(!checkuser);
-  };
-
   return (
     <div className="App">
       <BrowserRouter>
-        <NavBar checkuser={checkuser} checkuserlogin={checkuserlogin} />
+        <NavBar />
         <Routes>
-          <Route path="/home" Component={Homepage} />
-          <Route path="/menu" Component={MenuPage} />
-          <Route path="/orders" Component={OrderPage} />
-          <Route path="/contactus" Component={ContactPage} />
-          <Route path="/catering" Component={CateringPage} />
-          <Route path="/cart" Component={CartPage} />
-          <Route path="/Locationhours" Component={Locationhours} />
-          <Route path="/login" Component={Loginpage} />
-          <Route path="/Registration" Component={Registration} />
+          <Route path="/User/home" Component={Homepage} />
+          <Route path="/User/DiningMenu" Component={MenuPage} />
+          <Route path="/User/CateringMenu" Component={CateringPage} />
+          <Route path="/User/orders" Component={OrderPage} />
+          <Route path="/User/Locationhours" Component={Locationhours} />
+          <Route path="/User/contactus" Component={ContactPage} />
+          
+          <Route path="/User/login" Component={Loginpage} />
+          <Route path="/User/Registration" Component={Registration} />
+          <Route path="/User/cart" Component={CartPage} />
           <Route path="/Checkout" Component={Checkout} />
-          <Route path="/Admin/Menua" Component={Menua} />
-          <Route path="/Admin/Cateringa" Component={Cateringa} />
-          <Route path="/Admin/Ordera" Component={Ordera} />
+
+          <Route path="/Admin/DiningMenu" Component={Menua} />
+          <Route path="/Admin/CateringMenu" Component={Cateringa} />
+          <Route path="/Admin/UserOrder" Component={Ordera} />
           <Route path="/Admin/Carouselimg" Component={Carouselimg} />
           <Route path="/Admin/Login" Component={Loginpage} />
         </Routes>
-        {checkuser ? <Footer /> : ""}
+        <Footer />
       </BrowserRouter>
       {/* <Menua/>  */}
       {/* <Ordera/>  */}

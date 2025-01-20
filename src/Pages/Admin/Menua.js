@@ -3,8 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import NoMealsIcon from "@mui/icons-material/NoMeals";
-import { debounce } from 'lodash';
-
 
 import { db } from "../../firebase-config";
 import { redcolor } from "../../Design";
@@ -28,11 +26,13 @@ import {
   FormControl,
   Typography,
   Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Switch,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
-import Slide from "@mui/material/Slide";
 import {
   collection,
   getDocs,
@@ -41,42 +41,22 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+import AddItemDialog from "./AddItemDialog";
 
 function Menua() {
-  const VisuallyHiddenInput = styled("input")({
-    clip: "rect(0 0 0 0)",
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    whiteSpace: "nowrap",
-    width: 1,
-  });
-
   const AdiningCollectionRef = collection(db, "Diningmenu");
+  const [open, setOpen] = React.useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false); // For delete confirmation dialog
   const [diningdata, setDiningdata] = React.useState([]);
   const [updateid, setUpdateid] = React.useState();
-  const [image, setImage] = React.useState([]);
-  const [data, setData] = React.useState({});
+  const [data, setData] = React.useState({availibity:"true"});
+  const [selectedCategory, setSelectedCategory] = React.useState(""); // New state for category selection
 
   const validateFields = () => {
     return (
       data.itemname && data.category && data.price && data.desc && data.image
     );
   };
-
-  const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-
-
-    // setData((data) => ({
-    //   ...data,
-    //   [e.target.name]: e.target.value,
-    // }));
-    console.log(data.availibity);
-  }
 
   const getdiningmenudata = async () => {
     const data = await getDocs(AdiningCollectionRef);
@@ -85,63 +65,13 @@ function Menua() {
 
   useEffect(() => {
     {
+      console.log("in ue");
       getdiningmenudata();
     }
-  }, []);
-
-  // Add item in firebase Database   await addDoc(usersCollectionRef, { name: newName, age: newAge });
-  const createDiningmenu = async (data) => {
-    await addDoc(AdiningCollectionRef, {
-      // no: data.no,
-      category: data.category,
-      itemname: data.itemname,
-      price: data.price,
-      desc: data.desc,
-      availibity: data.availibity,
-      image: data.image,
-    });
-
-    setDiningdata([
-      ...diningdata,
-      {
-        // no: no, // This will be the new no
-        category: data.category,
-        itemname: data.itemname,
-        price: data.price,
-        desc: data.desc,
-        availibity: data.availibity,
-        image: data.image,
-      },
-    ]);
-  };
-
-  const handleAddclick = (e) => {
-    e.preventDefault(); // Prevent form from refreshing on submit
-    if (!validateFields()) {
-      alert("Please fill in all dining fields before adding.");
-      return; // Prevent further execution if fields are not valid
-    }
-
-    createDiningmenu(data); // Add item to Firebase
-    setData({
-      itemname: "",
-      category: "",
-      desc: "",
-      image: "",
-    }); // Clear form
-
-    //setNo(no + 1);
-    setData({
-      itemname: "",
-      price: "",
-      category: "",
-      desc: "",
-      availibity: "true",
-      image: "",
-    }); // Clear form
-  };
+  }, [open]);
 
   const handleUpdateClick = async () => {
+    setOpen(true);
     if (!validateFields()) {
       alert("Please fill in all fields before updating.");
       return; // Prevent further execution if fields are not valid
@@ -178,350 +108,191 @@ function Menua() {
     //  setData({ exp: "", credeb: "", amt: "", desc: "" });
   };
 
-  const deleteUser = async (id) => {
-    const expDoc = doc(db, "Diningmenu", id);
-    await deleteDoc(expDoc);
-
-    // After deleting the document, update the local state to remove the deleted item
-    const updatediningdata = diningdata.filter((item) => item.id !== id);
-    setDiningdata(updatediningdata); // Re-render the table with the updated data
+ 
+  const handleDeleteClick = (id) => {
+    setUpdateid(id);
+    setDeleteDialogOpen(true); // Open the delete confirmation dialog
   };
 
-  const [open, setOpen] = React.useState(false);
+  const handleDeleteConfirm = async () => {
+    const expDoc = doc(db, "Diningmenu", updateid);
+    await deleteDoc(expDoc);
+
+    const updatediningdata = diningdata.filter((item) => item.id !== updateid);
+    setDiningdata(updatediningdata);
+    setDeleteDialogOpen(false); // Close the dialog after confirming deletion
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false); // Close the dialog if cancel is clicked
+  };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      try {
-        var reader = new FileReader();
-        reader.onloadend = async function () {
-          const imageData = reader.result; // This is the base64 data of the image
 
-          // Add to Firestore
-
-          setData({ ...data, image: reader.result });
-        };
-        reader.readAsDataURL(file);
-      } catch (error) {
-        console.error("Error adding file: ", error);
-      }
-    }
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value); // This will update the selected category state
+    console.log(selectedCategory);
   };
-
-  function AddItemDialog(props) {
-    const { onClose, open } = props;
-    const label = { inputProps: { "aria-label": "Switch demo" } };
-
-    return (
-      <Dialog
-        onClose={handleClose}
-        open={open}
-        PaperProps={{
-          style: {
-            margin: 0,
-            // width: "600px",
-            // height: "600px",
-            maxWidth: "100%",
-            //overflow: "hidden",
-            borderRadius: "12px", // Rounded corners
-            boxShadow: "0px 8px 16px rgba(0,0,0,0.1)", // Soft shadow
-          },
-        }}
-      >
-        <Container maxWidth="sm" style={{ padding: "40px 20px" }}>
-          <Box
-            sx={{
-              border: "2px solid #f57c00",
-              borderRadius: "8px",
-              padding: "30px",
-              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <Typography variant="h4" align="center" gutterBottom>
-              Update Dining Menu Item
-            </Typography>
-
-            {/* Catering Category Selection */}
-            <Box mb={3}>
-              <FormControl fullWidth>
-                <InputLabel id="category-label">Catering Category</InputLabel>
-                <Select
-                  labelId="category-label"
-                  name="category"
-                  label="Catering Category"
-                  fullWidth
-                  onChange={handleChange}
-                  value={data.category}
-                >
-                  <MenuItem value="">
-                    <em>Choose a category</em>
-                  </MenuItem>
-            <MenuItem value="Appetizer">Appetizer</MenuItem>
-            <MenuItem value="Chef_special">Chef Special</MenuItem>
-            <MenuItem value="Sabjz_e_bahar">Sabjz-E-Bahar</MenuItem>
-            <MenuItem value="Dal">Dal</MenuItem>
-            <MenuItem value="rice">Rice</MenuItem>
-            <MenuItem value="bread">Bread</MenuItem>
-            <MenuItem value="beverages">Beverages</MenuItem>
-            <MenuItem value="dessert">Dessert</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-
-            {/* Item Name Field */}
-            <Box mb={3}>
-              <TextField
-                required
-                fullWidth
-                name="itemname"
-                label="Item Name"
-                type="text"
-                variant="outlined"
-                value={data.itemname}
-                style={{ backgroundColor: "#f5f5f5" }}
-                onChange={handleChange}
-              />
-            </Box>
-
-            {/* price Field */}
-            <Box mb={3}>
-              <TextField
-                required
-                fullWidth
-                name="price"
-                label="Price"
-                type="number"
-                variant="outlined"
-                value={data.price}
-                style={{ backgroundColor: "#f5f5f5" }}
-                onChange={handleChange}
-              />
-            </Box>
-
-            {/* Description Field */}
-            <Box mb={3}>
-              <TextField
-                required
-                fullWidth
-                name="desc"
-                label="Description"
-                type="text"
-                variant="outlined"
-                multiline
-                rows={4}
-                style={{ backgroundColor: "#f5f5f5" }}
-                value={data.desc}
-                onChange={handleChange}
-              />
-            </Box>
-
-            {/* set availibity */}
-            <div class="form-check form-switch">
-              <Switch
-                {...label}
-                checked={data.availibity === "true" || data.availibity === true} // Ensure it's a boolean value
-                name="availibity"
-                onChange={(e) => {
-                  setData({
-                    ...data,
-                    availibity: e.target.checked ? "true" : "false",
-                  }); // Update availibity as "true" or "false"
-                }}
-              />
-
-              <label class="form-check-label" for="flexSwitchCheckChecked">
-                Item Availability
-              </label>
-            </div>
-
-            {/* Image Preview Section */}
-            {data.image && (
-              <Box mb={3} textAlign="center">
-                <Typography variant="subtitle1" gutterBottom>
-                  Image Preview:
-                </Typography>
-                <img
-                  src={data.image}
-                  alt="Uploaded Preview"
-                  style={{
-                    maxWidth: "100%",
-                    maxHeight: "300px",
-                    objectFit: "contain",
-                    borderRadius: "8px",
-                  }}
-                />
-              </Box>
-            )}
-
-            {/* File Upload Button */}
-            <Box mb={3}>
-              <Button
-                component="label"
-                variant="contained"
-                style={{
-                  backgroundColor: "#f57c00",
-                  width: "100%",
-                  padding: "10px 0",
-                }}
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload Image
-                <VisuallyHiddenInput
-                  type="file"
-                  onChange={handleFileChange}
-                  multiple
-                />
-              </Button>
-            </Box>
-
-            {/* Submit Button */}
-            <Box>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                type="submit"
-                style={{
-                  backgroundColor: "#f57c00",
-                  padding: "12px 0",
-                  fontSize: "16px",
-                }}
-                onClick={handleAddclick}
-              >
-                Add/Update Item
-              </Button>
-            </Box>
-          </Box>
-        </Container>
-      </Dialog>
-    );
-  }
 
   return (
     <div style={{ margin: "2%" }}>
-      {window.location.pathname.includes("menua") ? (
-        <Typography variant="h4" align="center" gutterBottom>
-          Update Dining Menu Item
-        </Typography>
-      ) : (
-        <Typography variant="h4" align="center" gutterBottom>
-          Update Catering Menu Item
-        </Typography>
-      )}
+      <Typography variant="h4" align="center" gutterBottom>
+        Update Dining Menu Item
+      </Typography>
 
-      <Button
-        type="button"
-        style={{
-          backgroundColor: redcolor,
-          border: "none",
-          color: "white",
-          marginBottom: "20px",
-          borderRadius: "5px",
-        }}
-        onClick={handleClickOpen}
-        startIcon={<EditIcon />}
-      >
-        Add Item
-      </Button>
-
-      <AddItemDialog open={open} onClose={handleClose} />
-
-      <Box>
-        <TableContainer component={Paper}>
-          <InputLabel
-            style={{ fontWeight: "bold" }}
-            id="demo-simple-select-standard-label"
-          >
-            Choose Category
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-standard-label"
-            id="demo-simple-select-standard"
-            // value={age}
-            onChange={handleChange}
-            label="Choose Category"
-            sx={{
-              width: "200px",
-              height: "40px",
-              marginBottom: "20px",
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "red", // Change border color here
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "red", // Change border color on hover
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "red", // Change border color on focus
-              },
-              "&.MuiFormLabel-root": {
-                color: "red !important",
-              },
+      <div>
+        <Box display="flex" alignItems="center" marginBottom="20px">
+          <Button
+            type="button"
+            style={{
+              backgroundColor: redcolor,
+              border: "none",
+              color: "white",
+              borderRadius: "5px",
             }}
+            onClick={handleClickOpen}
+            startIcon={<EditIcon />}
           >
-            <MenuItem value="Appetizer">Appetizer</MenuItem>
-            <MenuItem value="Chef_special">Chef Special</MenuItem>
-            <MenuItem value="Sabjz_e_bahar">Sabjz-E-Bahar</MenuItem>
-            <MenuItem value="Dal">Dal</MenuItem>
-            <MenuItem value="rice">Rice</MenuItem>
-            <MenuItem value="bread">Bread</MenuItem>
-            <MenuItem value="beverages">Beverages</MenuItem>
-            <MenuItem value="dessert">Dessert</MenuItem>
-          </Select>
+            Add Item
+          </Button>
 
-          <Table aria-label="customer order table" sx={{ minWidth: 650 }}>
-            <TableHead>
-              <TableRow
-                sx={{
-                  backgroundColor: redcolor, // Background color for the header
-                  "& th": {
-                    fontWeight: "bold", // Bold font weight for header cells
-                    fontSize: "16px",
-                    color: "#ffffff",
-                  },
-                }}
-              >
-                <TableCell>Number</TableCell>
-                <TableCell>Image</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Item Name</TableCell>
-                <TableCell>Description</TableCell>
-                {window.location.pathname.includes("menua") ? (
-                  <TableCell>Price</TableCell>
-                ) : (
-                  ""
-                )}
-                <TableCell>Update</TableCell>
-                <TableCell>Delete</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRecords
-                data={diningdata}
-                handleClickOpen={handleClickOpen}
-                deleteUser={deleteUser}
-              />
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+          <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel
+              style={{ fontWeight: "bold", color: redcolor }}
+              id="category-select-label"
+            >
+              Filter Category
+            </InputLabel>
+
+            <Select
+              labelId="category-select-label"
+              id="category-select"
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+              label="Choose Category"
+              sx={{
+                width: "200px",
+                height: "40px",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "red",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "red",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "red",
+                },
+                "&.MuiFormLabel-root": {
+                  color: "red !important",
+                },
+              }}
+            >
+              <MenuItem value="">
+                <em>All Categories</em>
+              </MenuItem>
+              <MenuItem value="Appetizer">Appetizer</MenuItem>
+              <MenuItem value="Chef_special">Chef Special</MenuItem>
+              <MenuItem value="Sabjz_e_bahar">Sabjz-E-Bahar</MenuItem>
+              <MenuItem value="Dal">Dal</MenuItem>
+              <MenuItem value="Rice">Rice</MenuItem>
+              <MenuItem value="bread">Bread</MenuItem>
+              <MenuItem value="beverages">Beverages</MenuItem>
+              <MenuItem value="dessert">Dessert</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
+        <AddItemDialog
+          open={open}
+          handleClose={handleClose}
+          data={data}
+          setData={setData}
+        />
+      </div>
+
+      <TableContainer component={Paper}>
+        <Table aria-label="customer order table" sx={{ minWidth: 650 }}>
+          <TableHead>
+            <TableRow
+              sx={{
+                backgroundColor: redcolor, // Background color for the header
+                "& th": {
+                  fontWeight: "bold", // Bold font weight for header cells
+                  fontSize: "16px",
+                  color: "#ffffff",
+                },
+              }}
+            >
+              <TableCell>Image</TableCell>
+              <TableCell>Category</TableCell>
+              <TableCell>Item Name</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Price</TableCell>
+
+              <TableCell>Update</TableCell>
+              <TableCell>Delete</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRecords
+              data={
+                selectedCategory
+                  ? diningdata.filter(
+                      (item) => item.category === selectedCategory
+                    )
+                  : diningdata
+              } // Filter data based on selected category
+              setData={setData}
+              setUpdateid={setUpdateid}
+              handleClickOpen={handleClickOpen}
+              handleDeleteClick={handleDeleteClick}
+            />
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <Typography>Are you sure you want to delete this item?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel} >
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
 
-function TableRecords({ data, handleClickOpen, deleteUser }) {
+function TableRecords({
+  data,
+  setData,
+  setUpdateid,
+  handleClickOpen,
+  handleDeleteClick,
+}) {
   if (data && data.length > 0) {
     return (
       <>
         {data.map((val, index) => {
           return (
-            <TableRow>
-              <TableCell component="th" scope="row">
-                {/* {val.tokenid} */}
+            <TableRow key={val.id}>
+              {/* <TableCell component="th" scope="row"> */}
+              {/* {val.tokenid} */}
+
+              {/* </TableCell> */}
+              <TableCell>
                 {val.availibity == "false" ? (
                   <IconButton style={{ color: redcolor }}>
                     {" "}
@@ -530,8 +301,6 @@ function TableRecords({ data, handleClickOpen, deleteUser }) {
                 ) : (
                   ""
                 )}
-              </TableCell>
-              <TableCell>
                 <Avatar variant="rounded" src={val.image} />
               </TableCell>
               <TableCell>{val.category}</TableCell>
@@ -542,7 +311,13 @@ function TableRecords({ data, handleClickOpen, deleteUser }) {
               <TableCell>
                 <IconButton
                   style={{ color: redcolor }}
-                  onClick={handleClickOpen}
+                  //   setUpdateid(val.id); // Set update id before opening
+                  onClick={() => {
+                    setData(val);
+                    setUpdateid(val.id);
+                    handleClickOpen();
+                  }}
+                  //  onClick={handleClickOpen}
                 >
                   <EditIcon />
                 </IconButton>
@@ -550,7 +325,7 @@ function TableRecords({ data, handleClickOpen, deleteUser }) {
               <TableCell>
                 <IconButton
                   style={{ color: redcolor }}
-                  onClick={() => deleteUser(val.id)}
+                  onClick={() => handleDeleteClick(val.id)}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -561,7 +336,7 @@ function TableRecords({ data, handleClickOpen, deleteUser }) {
       </>
     );
   } else {
-    return <div></div>;
+    return <div> No Items Found</div>;
   }
 }
 

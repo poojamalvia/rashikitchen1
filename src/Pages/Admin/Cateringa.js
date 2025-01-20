@@ -3,6 +3,7 @@ import Avatar from "@mui/material/Avatar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import NoMealsIcon from "@mui/icons-material/NoMeals";
+import AddItemcaterDialog from "./AddItemcaterDialog";
 
 import { db } from "../../firebase-config";
 import { redcolor } from "../../Design";
@@ -26,6 +27,9 @@ import {
   FormControl,
   Typography,
   Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
   Switch,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -40,7 +44,7 @@ import {
   doc,
 } from "firebase/firestore";
 
-function Menua() {
+function Cateringa() {
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -54,11 +58,13 @@ function Menua() {
   });
 
   const [data, setData] = React.useState({});
-
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false); // For delete confirmation dialog
   const AcateringCollectionRef = collection(db, "Cateringmenu");
   const [cateringdata, setCateringdata] = React.useState([]);
   const [updateid, setUpdateid] = React.useState();
   const [image, setImage] = React.useState([]);
+  const [selectedCategory, setSelectedCategory] = React.useState(""); // New state for category selection
+  const [open, setOpen] = React.useState(false);
 
   const validateFields = () => {
     return data.itemname && data.category && data.desc && data.image;
@@ -67,7 +73,10 @@ function Menua() {
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
-
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value); // This will update the selected category state
+    console.log(selectedCategory);
+  };
   const getcateringmenudata = async () => {
     const data = await getDocs(AcateringCollectionRef);
     setCateringdata(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -77,44 +86,7 @@ function Menua() {
     {
       getcateringmenudata();
     }
-  }, []);
-
-  // Add item in firebase Database   await addDoc(usersCollectionRef, { name: newName, age: newAge });
-  const createCateringmenu = async (data) => {
-    await addDoc(AcateringCollectionRef, {
-      // no: data.no,
-      category: data.category,
-      itemname: data.itemname,
-      desc: data.desc,
-      image: data.image,
-    });
-
-    setCateringdata([
-      ...cateringdata,
-      {
-        // no: no, // This will be the new no
-        category: data.category,
-        itemname: data.itemname,
-        desc: data.desc,
-        image: data.image,
-      },
-    ]);
-  };
-
-  const handleAddclick = () => {
-    if (!validateFields()) {
-      alert("Please fill in all catering fields before adding.");
-      return; // Prevent further execution if fields are not valid
-    }
-
-    createCateringmenu(data); // Add item to Firebase
-    setData({
-      itemname: "",
-      category: "",
-      desc: "",
-      image: "",
-    }); // Clear form
-  };
+  }, [open]);
 
   const handleUpdateClick = async () => {
     if (!validateFields()) {
@@ -153,199 +125,33 @@ function Menua() {
     //  setData({ exp: "", credeb: "", amt: "", desc: "" });
   };
 
-  const deleteUser = async (id) => {
-    const cateringDoc = doc(db, "Cateringmenu", id);
+  
+
+   const handleDeleteClick = (id) => {
+      setUpdateid(id);
+      setDeleteDialogOpen(true); // Open the delete confirmation dialog
+    };
+  
+    const handleDeleteConfirm = async () => {
+      const cateringDoc = doc(db, "Cateringmenu", updateid);
     await deleteDoc(cateringDoc);
 
-    // After deleting the document, update the local state to remove the deleted item
-    const updatecateringdata = cateringdata.filter((item) => item.id !== id);
+  
+      // After deleting the document, update the local state to remove the deleted item
+    const updatecateringdata = cateringdata.filter((item) => item.id !== updateid);
     setCateringdata(updatecateringdata); // Re-render the table with the updated data
-  };
-
-  const [open, setOpen] = React.useState(false);
+      setDeleteDialogOpen(false); // Close the dialog after confirming deletion
+    };
+  
+    const handleDeleteCancel = () => {
+      setDeleteDialogOpen(false); // Close the dialog if cancel is clicked
+    };
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      try {
-        var reader = new FileReader();
-        reader.onloadend = async function () {
-          const imageData = reader.result; // This is the base64 data of the image
-
-          // Add to Firestore
-
-          setData({ ...data, image: reader.result });
-        };
-        reader.readAsDataURL(file);
-      } catch (error) {
-        console.error("Error adding file: ", error);
-      }
-    }
-  };
-
-  function AddItemDialog(props) {
-    const { onClose, open } = props;
-    const label = { inputProps: { "aria-label": "Switch demo" } };
-
-    return (
-      <Dialog
-        onClose={handleClose}
-        open={open}
-        PaperProps={{
-          style: {
-            margin: 0,
-            // width: "600px",
-            // height: "600px",
-            maxWidth: "100%",
-            //overflow: "hidden",
-            borderRadius: "12px", // Rounded corners
-            boxShadow: "0px 8px 16px rgba(0,0,0,0.1)", // Soft shadow
-          },
-        }}
-      >
-        <Container maxWidth="sm" style={{ padding: "40px 20px" }}>
-          <Box
-            sx={{
-              border: "2px solid #f57c00",
-              borderRadius: "8px",
-              padding: "30px",
-              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <Typography variant="h4" align="center" gutterBottom>
-              Update Catering Menu Item
-            </Typography>
-
-            {/* Catering Category Selection */}
-            <Box mb={3}>
-              <FormControl fullWidth>
-                <InputLabel id="category-label">Catering Category</InputLabel>
-                <Select
-                  labelId="category-label"
-                  name="category"
-                  label="Catering Category"
-                  fullWidth
-                  onChange={handleChange}
-                  value={data.category}
-                >
-                  <MenuItem value="">
-                    <em>Choose a category</em>
-                  </MenuItem>
-                  <MenuItem value="Appetizer">Appetizer</MenuItem>
-                  <MenuItem value="Drink">Drinks</MenuItem>
-                  <MenuItem value="Paneer ke Pakwan">Paneer ke Pakwan</MenuItem>
-                  <MenuItem value="Sabz e Bahar">Sabz 'e' Bahar</MenuItem>
-                  <MenuItem value="Yogurts">Yogurts</MenuItem>
-                  <MenuItem value="Scent of Rice">Scent of Rice</MenuItem>
-                  <MenuItem value="Dal Ranga Rang">Dal Ranga Rang</MenuItem>
-                  <MenuItem value="Special Food">Special Food</MenuItem>
-                  <MenuItem value="Breads Delight">Breads Delight</MenuItem>
-                  <MenuItem value="Sweet Dessert">Sweet Desserts</MenuItem>
-                  <MenuItem value="Healthy Salad">Healthy Salad</MenuItem>
-                  <MenuItem value="Tangy Pickles">Tangy Pickles</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-
-            {/* Item Name Field */}
-            <Box mb={3}>
-              <TextField
-                required
-                fullWidth
-                name="itemname"
-                label="Item Name"
-                type="text"
-                variant="outlined"
-                value={data.itemname}
-                style={{ backgroundColor: "#f5f5f5" }}
-                onChange={handleChange}
-              />
-            </Box>
-
-            {/* Description Field */}
-            <Box mb={3}>
-              <TextField
-                required
-                fullWidth
-                name="desc"
-                label="Description"
-                type="text"
-                variant="outlined"
-                multiline
-                rows={4}
-                style={{ backgroundColor: "#f5f5f5" }}
-                value={data.desc}
-                onChange={handleChange}
-              />
-            </Box>
-
-            {/* Image Preview Section */}
-            {data.image && (
-              <Box mb={3} textAlign="center">
-                <Typography variant="subtitle1" gutterBottom>
-                  Image Preview:
-                </Typography>
-                <img
-                  src={data.image}
-                  alt="Uploaded Preview"
-                  style={{
-                    maxWidth: "100%",
-                    maxHeight: "300px",
-                    objectFit: "contain",
-                    borderRadius: "8px",
-                  }}
-                />
-              </Box>
-            )}
-
-            {/* File Upload Button */}
-            <Box mb={3}>
-              <Button
-                component="label"
-                variant="contained"
-                style={{
-                  backgroundColor: "#f57c00",
-                  width: "100%",
-                  padding: "10px 0",
-                }}
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload Image
-                <VisuallyHiddenInput
-                  type="file"
-                  onChange={handleFileChange}
-                  multiple
-                />
-              </Button>
-            </Box>
-
-            {/* Submit Button */}
-            <Box>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                type="submit"
-                style={{
-                  backgroundColor: "#f57c00",
-                  padding: "12px 0",
-                  fontSize: "16px",
-                }}
-                onClick={handleAddclick}
-              >
-                Add/Update Item
-              </Button>
-            </Box>
-          </Box>
-        </Container>
-      </Dialog>
-    );
-  }
 
   return (
     <div style={{ margin: "2%" }}>
@@ -353,36 +159,36 @@ function Menua() {
         Update Catering Menu Item
       </Typography>
 
-      <Button
-        type="button"
-        style={{
-          backgroundColor: redcolor,
-          border: "none",
-          color: "white",
-          marginBottom: "20px",
-          borderRadius: "5px",
-        }}
-        onClick={handleClickOpen}
-        startIcon={<EditIcon />}
-      >
-        Add Item
-      </Button>
+      <Box display="flex" alignItems="center">
+        <Button
+          type="button"
+          style={{
+            backgroundColor: redcolor,
+            border: "none",
+            color: "white",
+            marginBottom: "20px",
+            borderRadius: "5px",
+          }}
+          onClick={handleClickOpen}
+          startIcon={<EditIcon />}
+        >
+          Add Item
+        </Button>
 
-      <AddItemDialog open={open} onClose={handleClose} />
+        <AddItemcaterDialog open={open} onClose={handleClose} />
 
-      <Box>
-        <TableContainer component={Paper}>
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
           <InputLabel
-            style={{ fontWeight: "bold" }}
+            style={{ fontWeight: "bold", color: redcolor }}
             id="demo-simple-select-standard-label"
           >
-            Choose Category
+            Filter Category
           </InputLabel>
           <Select
             labelId="demo-simple-select-standard-label"
             id="demo-simple-select-standard"
-            // value={age}
-            onChange={handleChange}
+            value={selectedCategory}
+            onChange={handleCategoryChange}
             label="Choose Category"
             sx={{
               width: "200px",
@@ -402,65 +208,90 @@ function Menua() {
               },
             }}
           >
-            <MenuItem value="appetizer">Appetizer</MenuItem>
-            <MenuItem value="chef_special">Drink</MenuItem>
-            <MenuItem value="sabz_e_bahar">Paneer ke Pakwan</MenuItem>
-            <MenuItem value="dal">Sabz e Bahar</MenuItem>
-            <MenuItem value="rice">Yogurts</MenuItem>
-            <MenuItem value="bread">Scent of Rice</MenuItem>
-            <MenuItem value="beverages">Dal Ranga Rang</MenuItem>
-            <MenuItem value="dessert">Special Food</MenuItem>
-            <MenuItem value="dal">Breads Delight</MenuItem>
-            <MenuItem value="bread">Sweet Dessert</MenuItem>
-            <MenuItem value="beverages">Healthy Salad</MenuItem>
-            <MenuItem value="dessert">Tangy Pickles</MenuItem>
+            <MenuItem value="">
+              <em>All categories</em>
+            </MenuItem>
+            <MenuItem value="Appetizer">Appetizer</MenuItem>
+            <MenuItem value="Drink">Drinks</MenuItem>
+            <MenuItem value="Paneer ke Pakwan">Paneer ke Pakwan</MenuItem>
+            <MenuItem value="Sabz e Bahar">Sabz 'e' Bahar</MenuItem>
+            <MenuItem value="Yogurts">Yogurts</MenuItem>
+            <MenuItem value="Scent of Rice">Scent of Rice</MenuItem>
+            <MenuItem value="Dal Ranga Rang">Dal Ranga Rang</MenuItem>
+            <MenuItem value="Special Food">Special Food</MenuItem>
+            <MenuItem value="Breads Delight">Breads Delight</MenuItem>
+            <MenuItem value="Sweet Dessert">Sweet Dessert</MenuItem>
+            <MenuItem value="Healthy Salad">Healthy Salad</MenuItem>
+            <MenuItem value="Tangy Pickles">Tangy Pickles</MenuItem>
           </Select>
-
-          <Table aria-label="customer order table" sx={{ minWidth: 650 }}>
-            <TableHead>
-              <TableRow
-                sx={{
-                  backgroundColor: redcolor, // Background color for the header
-                  "& th": {
-                    fontWeight: "bold", // Bold font weight for header cells
-                    fontSize: "16px",
-                    color: "#ffffff",
-                  },
-                }}
-              >
-                <TableCell>Number</TableCell>
-                <TableCell>Image</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Item Name</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Update</TableCell>
-                <TableCell>Delete</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRecords
-                data={cateringdata}
-                handleClickOpen={handleClickOpen}
-                deleteUser={deleteUser}
-              />
-            </TableBody>
-          </Table>
-        </TableContainer>
+        </FormControl>
       </Box>
+
+      <TableContainer component={Paper}>
+        <Table aria-label="customer order table" sx={{ minWidth: 650 }}>
+          <TableHead>
+            <TableRow
+              sx={{
+                backgroundColor: redcolor, // Background color for the header
+                "& th": {
+                  fontWeight: "bold", // Bold font weight for header cells
+                  fontSize: "16px",
+                  color: "#ffffff",
+                },
+              }}
+            >
+              <TableCell>Image</TableCell>
+              <TableCell>Category</TableCell>
+              <TableCell>Item Name</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Update</TableCell>
+              <TableCell>Delete</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRecords
+              data={
+                selectedCategory
+                  ? cateringdata.filter(
+                      (item) => item.category === selectedCategory
+                    )
+                  : cateringdata
+              }
+              handleClickOpen={handleClickOpen}
+              handleDeleteClick={handleDeleteClick}
+            />
+          </TableBody>
+        </Table>
+      </TableContainer>
+       {/* Delete Confirmation Dialog */}
+       <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <Typography>Are you sure you want to delete this item?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel} >
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
 
-function TableRecords({ data, handleClickOpen, deleteUser }) {
+function TableRecords({ data, handleClickOpen, handleDeleteClick }) {
   if (data && data.length > 0) {
     return (
       <>
         {data.map((val, index) => {
           return (
             <TableRow>
-              <TableCell component="th" scope="row">
+              {/* <TableCell component="th" scope="row"> */}
                 {/* {val.tokenid} */}
-              </TableCell>
+              {/* </TableCell> */}
               <TableCell>
                 <Avatar variant="rounded" src={val.image} />
               </TableCell>
@@ -478,7 +309,7 @@ function TableRecords({ data, handleClickOpen, deleteUser }) {
               <TableCell>
                 <IconButton
                   style={{ color: redcolor }}
-                  onClick={() => deleteUser(val.id)}
+                  onClick={() => handleDeleteClick(val.id)}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -493,4 +324,4 @@ function TableRecords({ data, handleClickOpen, deleteUser }) {
   }
 }
 
-export default Menua;
+export default Cateringa;

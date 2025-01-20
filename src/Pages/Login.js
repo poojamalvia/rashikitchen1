@@ -13,6 +13,7 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+import { redcolor } from "../Design";
 
 function Login() {
   const handleChange = (e) => {};
@@ -61,8 +62,8 @@ function Login() {
 
     if (foundAdmin) {
       // If credentials match, navigate to the next page (e.g., admin dashboard)
-      console.log("pswd mathch");
-     navigate("/Admin/Menua");
+      // localStorage.setItem('token', )
+      navigate("/Admin/Menua");
     } else {
       // If credentials don't match, show error message.
       setErrorMessage("Invalid login credentials. Please try again.");
@@ -157,7 +158,7 @@ function Login() {
             style={{
               width: "100%",
               padding: "14px 20px",
-              backgroundColor: "#f57c00",
+              backgroundColor: redcolor,
               color: "white",
               border: "none",
               borderRadius: "4px",
@@ -179,8 +180,8 @@ function Login() {
               <p style={{ margin: 0 }}>
                 Don't have an account?{" "}
                 <a
-                  href="#"
-                  onClick={() => navigate("/Registration")}
+                  href=""
+                  onClick={() => navigate("/User/Registration")}
                   style={{
                     color: "#f57c00",
                     fontWeight: "bold",
