@@ -40,8 +40,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { useLocation } from "react-router-dom";
-
-let redcolor = "#FF1B1C";
+import { redcolor } from "../Design";
 
 const isAdmin = () => {
   return window.location.pathname.toLowerCase().includes("admin");

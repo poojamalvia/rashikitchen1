@@ -40,7 +40,7 @@ function Catering() {
 
   useEffect(() => {
     getcateringmenudata();
-  });
+  },[]);
 
   const downloadPDF = () => {
     const doc = new jsPDF();

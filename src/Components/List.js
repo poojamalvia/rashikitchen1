@@ -7,37 +7,103 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { redcolor } from "../Design";
+import { db } from "../firebase-config";
+import {
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  getDoc,
+  arrayUnion,
+} from "firebase/firestore";
 
 function AlignItemsList({ menuDetails, isAdd }) {
   const [isHovered1, setIsHovered1] = React.useState(
     new Array(menuDetails.length).fill(false)
   );
-  const [totalamt, setTotalamt] = React.useState(0);
-
-  const handleMouseEnter = (index) => {
-    const newHoveredState = [...isHovered1];
-    newHoveredState[index] = true;
-    setIsHovered1(newHoveredState);
-  };
-
-  // Handle mouse leave for a specific button
-  const handleMouseLeave = (index) => {
-    const newHoveredState = [...isHovered1];
-    newHoveredState[index] = false;
-    setIsHovered1(newHoveredState);
-  };
-  // State to track if the "Add to Cart" button was clicked for an unavailable item
+  const [total, setTotal] = React.useState(0);
+  // const UsercartCollectionRef = collection(db, "Userdetails","6ORHSPh1yeA7mywPVdOJ");
+  const [addtocartitem, setAddtocartitem] = React.useState([]);
   const [disabledItems, setDisabledItems] = React.useState(
     new Array(menuDetails.length).fill(false)
   );
+  const [cart, setCart] = React.useState([]);
+  const [update, doUpdate] = React.useState(true);
 
-  const handleAddToCartClick = (index, availability) => {
-    if (availability === "false") {
-      const updatedDisabledItems = [...disabledItems];
-      updatedDisabledItems[index] = true;
-      setDisabledItems(updatedDisabledItems);
-    } // Disable the button for unavailable item
+  React.useEffect(() => {
+    getCartData();
+  }, [update]);
+
+  const getCartData = async () => {
+    const userRef = doc(db, "Userdetails", "6ORHSPh1yeA7mywPVdOJ");
+
+    // Get the current cart data to find if the item already exists
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+      const currentCart = userDoc.data().cart || [];
+      setCart(currentCart);
+    }
   };
+
+  const handleAddclick = (data) => {
+    const updatedData = {
+      itemname: data.itemname,
+      price: data.price,
+      category: data.category, // If category is part of the item
+      desc: data.desc,
+      image: data.image,
+      total: data.total, // Assuming this holds the total amount or quantity of the item
+    };
+    doUpdate(!update);
+    createAddtocart(updatedData); // Add item to Firebase
+  };
+
+  const createAddtocart = async (data) => {
+    try {
+      const userRef = doc(db, "Userdetails", "6ORHSPh1yeA7mywPVdOJ");
+
+      // Get the current cart data to find if the item already exists
+      const userDoc = await getDoc(userRef);
+      if (userDoc.exists()) {
+        const currentCart = userDoc.data().cart || [];
+
+        // Check if the item already exists in the cart for the same itemname and category
+        const itemIndex = currentCart.findIndex(
+          (item) =>
+            item.itemname === data.itemname && item.category === data.category
+        );
+
+        if (itemIndex !== -1) {
+          // If item exists, update the total
+          const updatedCart = [...currentCart];
+          updatedCart[itemIndex].total += data.total; // Increment the total quantity for the item
+
+          // Update the cart array with the new total for the item
+          await updateDoc(userRef, {
+            cart: updatedCart,
+          });
+        } else {
+          // If item does not exist, add it to the cart array
+          await updateDoc(userRef, {
+            cart: [
+              ...currentCart,
+              {
+                itemname: data.itemname,
+                price: data.price,
+                category: data.category,
+                desc: data.desc,
+                image: data.image,
+                total: data.total,
+              },
+            ],
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error updating cart: ", error);
+    }
+  };
+
   return (
     <List sx={{ width: "100%", bgcolor: "background.paper" }}>
       {menuDetails.map((data, index) => {
@@ -67,7 +133,7 @@ function AlignItemsList({ menuDetails, isAdd }) {
                       >
                         {data.desc}
                       </Typography>
-                      {console.log(totalamt)}
+                      {console.log(total)}
 
                       {data.availibity == "false" ? (
                         <label
@@ -99,35 +165,13 @@ function AlignItemsList({ menuDetails, isAdd }) {
                       }}
                     >
                       {isAdd && (
-                        <AddBtn data={data} setTotalamt={setTotalamt} />
+                        <AddBtn
+                          data={data}
+                          setTotal={setTotal}
+                          handleAddclick={handleAddclick}
+                          cart={cart}
+                        />
                       )}{" "}
-                      &nbsp;&nbsp;
-                      {/* {isAdd && (
-                        <button
-                          type="button"
-                          style={{
-                            backgroundColor: isHovered1[index]
-                              ? "#FF1B1C"
-                              : redcolor,
-                            border: "none",
-                            color: "white",
-                            borderRadius: "5px",
-                            cursor:
-                              data.availibity === "false"
-                                ? "not-allowed"
-                                : "pointer", // Change cursor when unavailable
-                            opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
-                          }}
-                          disabled={data.availibity === "false"} // Disable button if unavailable
-                          onMouseEnter={() => handleMouseEnter(index)} // use index here
-                          onMouseLeave={() => handleMouseLeave(index)}
-                          onClick={() => {
-                            handleAddToCartClick(index, data.availibity);
-                          }}
-                        >
-                          Add to Cart
-                        </button>
-                      )} */}
                     </div>
                   </div>
                 }
@@ -141,12 +185,45 @@ function AlignItemsList({ menuDetails, isAdd }) {
   );
 }
 
-function AddBtn({ data, setTotalamt }) {
+function AddBtn({ data, setTotal, handleAddclick, cart }) {
+  //const [detail, setDetail] = React.useState();
   const [count, setCount] = React.useState(0);
 
-  //const [detail, setDetail] = React.useState();
+  React.useEffect(() => {
+    getCount();
+  }, [cart]);
 
   const [isHovered, setIsHovered] = React.useState(false);
+  const handleIncrement = () => {
+    if (data.availibity !== "false") {
+      console.log(data);
+      const updatedData = { ...data, total: data.total ? data.total + 1 : 1 };
+      handleAddclick(updatedData);
+    }
+  };
+
+  const handleDecrement = () => {
+    if (count > 0) {
+      console.log("+++++++++++clicked+++++++++");
+      const updatedData = { ...data, total: count - 1 };
+      handleAddclick(updatedData);
+    }
+  };
+
+  const getCount = () => {
+    console.log("-----", cart);
+    let x = cart.find(
+      (item) =>
+        item.itemname === data.itemname && item.category === data.category
+    );
+    if (x && x.total && x.total > 0) {
+      console.log("---777--", x);
+
+      setCount(x.total);
+    } else {
+      setCount(0);
+    }
+  };
 
   return (
     <>
@@ -168,13 +245,7 @@ function AddBtn({ data, setTotalamt }) {
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          onClick={() => {
-            if (count > 0 && data.availibity !== "false") {
-              setCount(count - 1);
-
-              // <Cart data={data} />;
-            }
-          }}
+          onClick={handleDecrement}
         >
           -
         </button>
@@ -190,7 +261,7 @@ function AddBtn({ data, setTotalamt }) {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {count == 0 ? "0" : count}
+          {count}
         </button>
 
         <button
@@ -206,13 +277,7 @@ function AddBtn({ data, setTotalamt }) {
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          onClick={() => {
-            if (data.availibity !== "false") {
-              setIsHovered(true);
-              setCount(count + 1);
-            }
-            setTotalamt(count + 1);
-          }}
+          onClick={handleIncrement}
         >
           +
         </button>
