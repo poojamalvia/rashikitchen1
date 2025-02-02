@@ -7,6 +7,8 @@ import Dialog from "@mui/material/Dialog";
 import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
+import logo from "../Rashi.png"
+import {background,redcolor} from "../Design"
 
 function SimpleDialog(props) {
   
@@ -179,18 +181,18 @@ function Locationhrs() {
       <h4>Location and Hours</h4>
       <br />
 
-      <div className="container">
-        <Paper elevation={3} style={{ width: "25rem" }}>
+      <div className="container" style={{display:"flex" , justifyContent:"center"}}>
+        <Paper elevation={3} style={{ width: "25rem"}}>
           <div className="col-md-12">
             <div class="card" style={{ width: "25rem" }}>
-              <div style={{ display: "flex", justifyContent: "center" }}>
+              <div style={{ display: "flex", justifyContent: "center",backgroundColor:background }}>
                 <img
-                  src="Rashilogo.png"
+                  src={logo}
                   class="card-img-top"
                   style={{ width: "200px" }}
                 />
               </div>
-              <div class="card-body">
+              <div class="card-body" style={{backgroundColor:background}}>
                 {/* <h5 class="card-title">Card title</h5> */}
                 <p class="card-text">
                   <h4> Rashi's Kitchen - Longwood</h4>
@@ -241,12 +243,12 @@ function Locationhrs() {
               </div>
               <ul
                 class="list-group list-group-flush"
-                style={{ alignItems: "center" }}
+                style={{ alignItems: "center" ,backgroundColor:background}}
               >
-                <li class="list-group-item">
+                <li class="list-group-item" style={{backgroundColor:background}}>
                   <button
                     class="btn btn-warning"
-                    style={{ backgroundColor: "#f57c00" }}
+                    style={{ backgroundColor: redcolor }}
                     onClick={() => {
                       navigate("/menu");
                     }}

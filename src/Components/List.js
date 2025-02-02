@@ -22,6 +22,8 @@ function AlignItemsList({ menuDetails, isAdd }) {
     new Array(menuDetails.length).fill(false)
   );
   const [total, setTotal] = React.useState(0);
+  const [amt, setAmt] = React.useState(1);
+  //const [finalamt, setFinalamt] = React.useState(0);
   // const UsercartCollectionRef = collection(db, "Userdetails","6ORHSPh1yeA7mywPVdOJ");
   const [addtocartitem, setAddtocartitem] = React.useState([]);
   const [disabledItems, setDisabledItems] = React.useState(
@@ -41,20 +43,30 @@ function AlignItemsList({ menuDetails, isAdd }) {
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
       const currentCart = userDoc.data().cart || [];
+
       setCart(currentCart);
+      const totalcount = currentCart.reduce(
+        (sum, item) => sum + (item.total || 0),
+        0
+      );
+      await updateDoc(userRef, { totalcount });
     }
   };
 
   const handleAddclick = (data) => {
+    console.log("-----()()()()---", data);
     const updatedData = {
       itemname: data.itemname,
       price: data.price,
       category: data.category, // If category is part of the item
       desc: data.desc,
       image: data.image,
-      total: data.total, // Assuming this holds the total amount or quantity of the item
+      total: data.total,
+      amt: data.total * data.price, // Assuming this holds the total amount or quantity of the item
     };
     doUpdate(!update);
+    console.log("-----()(updatedData)(updatedData)()---", updatedData);
+
     createAddtocart(updatedData); // Add item to Firebase
   };
 
@@ -77,6 +89,8 @@ function AlignItemsList({ menuDetails, isAdd }) {
           // If item exists, update the total
           const updatedCart = [...currentCart];
           updatedCart[itemIndex].total += data.total; // Increment the total quantity for the item
+          updatedCart[itemIndex].amt =
+            updatedCart[itemIndex].total * updatedCart[itemIndex].price;
 
           // Update the cart array with the new total for the item
           await updateDoc(userRef, {
@@ -84,18 +98,24 @@ function AlignItemsList({ menuDetails, isAdd }) {
           });
         } else {
           // If item does not exist, add it to the cart array
+          const newCart = [
+            ...currentCart,
+            {
+              itemname: data.itemname,
+              price: data.price,
+              category: data.category,
+              desc: data.desc,
+              image: data.image,
+              total: data.total,
+              amt: data.total * data.price,
+            },
+          ];
+
+          // Calculate new totalamt
+
+          // Update Firestore with the new cart and total amount
           await updateDoc(userRef, {
-            cart: [
-              ...currentCart,
-              {
-                itemname: data.itemname,
-                price: data.price,
-                category: data.category,
-                desc: data.desc,
-                image: data.image,
-                total: data.total,
-              },
-            ],
+            cart: newCart,
           });
         }
       }
@@ -103,7 +123,6 @@ function AlignItemsList({ menuDetails, isAdd }) {
       console.error("Error updating cart: ", error);
     }
   };
-
   return (
     <List sx={{ width: "100%", bgcolor: "background.paper" }}>
       {menuDetails.map((data, index) => {
@@ -167,7 +186,6 @@ function AlignItemsList({ menuDetails, isAdd }) {
                       {isAdd && (
                         <AddBtn
                           data={data}
-                          setTotal={setTotal}
                           handleAddclick={handleAddclick}
                           cart={cart}
                         />
@@ -185,7 +203,7 @@ function AlignItemsList({ menuDetails, isAdd }) {
   );
 }
 
-function AddBtn({ data, setTotal, handleAddclick, cart }) {
+function AddBtn({ data, handleAddclick, cart }) {
   //const [detail, setDetail] = React.useState();
   const [count, setCount] = React.useState(0);
 
@@ -197,7 +215,12 @@ function AddBtn({ data, setTotal, handleAddclick, cart }) {
   const handleIncrement = () => {
     if (data.availibity !== "false") {
       console.log(data);
-      const updatedData = { ...data, total: data.total ? data.total + 1 : 1 };
+      setCount((prev) => prev + 1); // Update count immediately
+      const updatedData = {
+        ...data,
+        amt: data.total * data.price,
+        total: data.total ? data.total + 1 : 1,
+      };
       handleAddclick(updatedData);
     }
   };
@@ -205,7 +228,15 @@ function AddBtn({ data, setTotal, handleAddclick, cart }) {
   const handleDecrement = () => {
     if (count > 0) {
       console.log("+++++++++++clicked+++++++++");
-      const updatedData = { ...data, total: count - 1 };
+      setCount((prev) => prev - 1); // Update count immediately
+      const updatedData = {
+        ...data,
+        total: data.total ? data.total - 1 : 1,
+        amt: Math.max(0, (data.total - 1) * data.price),
+      };
+      // Ensure amt doesn't go negative
+
+      console.log("updated data ---->>>>", updatedData);
       handleAddclick(updatedData);
     }
   };
@@ -239,7 +270,7 @@ function AddBtn({ data, setTotal, handleAddclick, cart }) {
           class="btn btn-danger"
           style={{
             border: "none",
-            backgroundColor: isHovered ? "#FF1B1C" : redcolor,
+            backgroundColor: isHovered ? redcolor : "#FF1B1C",
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
           }}
@@ -254,7 +285,7 @@ function AddBtn({ data, setTotal, handleAddclick, cart }) {
           class="btn btn-danger"
           style={{
             border: "none",
-            backgroundColor: isHovered ? "#FF1B1C" : redcolor,
+            backgroundColor: isHovered ? redcolor : "#FF1B1C",
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
           }}
@@ -269,7 +300,7 @@ function AddBtn({ data, setTotal, handleAddclick, cart }) {
           class="btn btn-danger"
           style={{
             border: "none",
-            backgroundColor: isHovered ? "#FF1B1C" : redcolor,
+            backgroundColor: isHovered ? redcolor : "#FF1B1C",
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
             borderTopRightRadius: "5px", // Apply radius to top-right corner

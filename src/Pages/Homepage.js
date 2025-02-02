@@ -14,6 +14,7 @@ import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useEffect } from "react";
+import { background } from "../Design";
 
 function Homepage() {
   const [loc, setLoc] = React.useState("Ahmedabad");
@@ -63,7 +64,7 @@ function Homepage() {
     <Box
       sx={{
         margin: "5%",
-        backgroundColor: "#f4f4f4",
+        backgroundColor: background,
         borderRadius: "10px",
         boxShadow: 3,
         padding: { xs: "20px", md: "40px" },

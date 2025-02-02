@@ -7,7 +7,7 @@ import Rating from "@mui/material/Rating";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import EmailIcon from "@mui/icons-material/Email";
-let redcolor="#FF1B1C"
+import { redcolor } from "../Design";
 
 function Footer() {
   const [value, setValue] = React.useState(3.5);

@@ -3,6 +3,7 @@ import Accordian from "../Components/Accordians";
 import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import { db } from "../firebase-config";
+
 import {
   collection,
   getDocs,
@@ -15,7 +16,6 @@ const AdiningCollectionRef = collection(db, "Diningmenu");
 
 function Menu() {
   const [diningdata, setDiningdata] = React.useState([]);
-  const [data, setData] = React.useState({});
   let navigate = useNavigate();
 
   const getdiningmenudata = async () => {

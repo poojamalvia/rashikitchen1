@@ -7,6 +7,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import List from "./List";
 import Paper from "@mui/material/Paper";
+import { redcolor } from "../Design";
 
 function AccordionExpandIcon({ menuDetails, name, count, fld, isAdd }) {
   const [open, setOpen] = React.useState(false);
@@ -17,7 +18,7 @@ function AccordionExpandIcon({ menuDetails, name, count, fld, isAdd }) {
           <AccordionSummary
             expandIcon={
               <ArrowDropDownIcon
-                style={{ color: open ? "white" : "#FF1B1C" }}
+                style={{ color: open ? "white" : redcolor }}
               />
             }
             onClick={() => {
@@ -25,7 +26,7 @@ function AccordionExpandIcon({ menuDetails, name, count, fld, isAdd }) {
             }}
             aria-controls="panel2-content"
             id="panel2-header"
-            style={{ backgroundColor: open ? "#FF1B1C" : "white" }}
+            style={{ backgroundColor: open ? redcolor : "white" }}
           >
             <Typography style={{ color: open ? "white" : "black" }}>
               {name + " " + "(" + count + ")"}

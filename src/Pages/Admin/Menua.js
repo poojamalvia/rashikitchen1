@@ -5,7 +5,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import NoMealsIcon from "@mui/icons-material/NoMeals";
 
 import { db } from "../../firebase-config";
-import { redcolor } from "../../Design";
 
 import {
   TextField,
@@ -42,6 +41,7 @@ import {
   doc,
 } from "firebase/firestore";
 import AddItemDialog from "./AddItemDialog";
+import { redcolor } from "../../Design";
 
 function Menua() {
   const AdiningCollectionRef = collection(db, "Diningmenu");
@@ -200,9 +200,9 @@ function Menua() {
               <MenuItem value="Sabjz_e_bahar">Sabjz-E-Bahar</MenuItem>
               <MenuItem value="Dal">Dal</MenuItem>
               <MenuItem value="Rice">Rice</MenuItem>
-              <MenuItem value="bread">Bread</MenuItem>
-              <MenuItem value="beverages">Beverages</MenuItem>
-              <MenuItem value="dessert">Dessert</MenuItem>
+              <MenuItem value="Bread">Bread</MenuItem>
+              <MenuItem value="Beverages">Beverages</MenuItem>
+              <MenuItem value="Dessert">Dessert</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -306,7 +306,7 @@ function TableRecords({
               <TableCell>{val.category}</TableCell>
               <TableCell>{val.itemname}</TableCell>
               <TableCell>{val.desc}</TableCell>
-              <TableCell>{val.price}</TableCell>
+              <TableCell>${val.price}</TableCell>
 
               <TableCell>
                 <IconButton

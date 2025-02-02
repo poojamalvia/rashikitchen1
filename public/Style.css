@@ -38,3 +38,21 @@
       gap: 10px;
     }
   }
+
+  /* In App.css or a global stylesheet */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+.App {
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Optional: Ensure no elements are overflowing the page */
+* {
+  box-sizing: border-box;
+}

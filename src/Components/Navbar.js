@@ -259,9 +259,13 @@ function Navbar(props) {
                   <img
                     src={val.image}
                     style={{
-                      width: "20%",
+                      width: "100%", // Make sure the image takes full width
+                      height: "100%", // Make the image take full height of the container
+                    //  objectFit: "cover", // Ensure the image covers the container while maintaining aspect ratio
+                    //  maxHeight: "500px", // Set max height to avoid stretching too much
+                    //  width: "100%",
                       maxHeight: "400px",
-                      objectFit: "cover",
+                      objectFit: "fill",
                     }}
                     className="d-block w-100"
                     alt={`carousel-item-${index}`}

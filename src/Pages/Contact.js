@@ -6,8 +6,7 @@ import { IconButton } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { useNavigate } from "react-router-dom";
-
-let redcolor = "#FF1B1C";
+import { redcolor } from "../Design";
 
 function Contact() {
   let navigate = useNavigate();

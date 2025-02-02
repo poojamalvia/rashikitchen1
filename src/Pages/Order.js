@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -24,10 +24,20 @@ import {
   Table,
   Typography,
 } from "@mui/material";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 
-let redcolor = "#FF1B1C";
+import { redcolor } from "../Design";
+import {db} from "../firebase-config"
+import firebase from "firebase/compat/app";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -48,6 +58,19 @@ item3 : Crispy veg     -$20,
 
 function Order() {
   const [age, setAge] = React.useState("");
+  const [CustOrder,setCustOrder]=React.useState([])
+   const orderRef = collection(db, "Userorders");
+
+   const getuserorder =async()=>{
+    const data = await getDocs(orderRef);
+    setCustOrder(data.docs.map((doc)=>({...doc.data(),id:doc.id})))
+
+   }
+
+   useEffect(()=>{
+    getuserorder()
+    
+   })
 
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -61,44 +84,46 @@ function Order() {
     setOpen(false);
   };
 
-  const [CustOrder, setCustOrder] = React.useState([
-    {
-      tokenid: "1",
-      amount: "50",
-      review: "3.5",
-      orderstatus: "confirmed",
-    },
-    {
-      tokenid: "2",
-      amount: "100",
-      review: "2.5",
-      orderstatus: "In Process",
-    },
-    {
-      tokenid: "3",
-      amount: "250",
-      review: "3",
-      orderstatus: "canceled",
-    },
-    {
-      tokenid: "4",
-      amount: "200",
-      review: "4",
-      orderstatus: "In Process",
-    },
-    {
-      tokenid: "5",
-      amount: "100",
-      review: "5",
-      orderstatus: "In Process",
-    },
-  ]);
+  // const [CustOrder, setCustOrder] = React.useState([
+  //   {
+  //     tokenid: "1",
+  //     amount: "50",
+  //     review: "3.5",
+  //     orderstatus: "confirmed",
+  //   },
+  //   {
+  //     tokenid: "2",
+  //     amount: "100",
+  //     review: "2.5",
+  //     orderstatus: "In Process",
+  //   },
+  //   {
+  //     tokenid: "3",
+  //     amount: "250",
+  //     review: "3",
+  //     orderstatus: "canceled",
+  //   },
+  //   {
+  //     tokenid: "4",
+  //     amount: "200",
+  //     review: "4",
+  //     orderstatus: "In Process",
+  //   },
+  //   {
+  //     tokenid: "5",
+  //     amount: "100",
+  //     review: "5",
+  //     orderstatus: "In Process",
+  //   },
+  // ]);
+
 
   const [item, setItem] = React.useState([
     { name: "Manchurian" },
     { name: "Paneer Chily" },
     { name: "crispy Veg" },
   ]);
+
   function AddStatusbtn() {
     return (
       <div>
@@ -128,7 +153,7 @@ function Order() {
             <TableBody>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  {val.tokenid}
+                  {val.tokenno}
                 </TableCell>
                 <TableCell></TableCell>
 
@@ -164,7 +189,7 @@ function Order() {
                   </>
                 </TableCell>
 
-                <TableCell>$-{val.amount}</TableCell>
+                <TableCell>$-{val.totalamt}</TableCell>
                 <TableCell>
                   <Rating
                     value={val.review}

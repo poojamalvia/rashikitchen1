@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import ListItemText from "@mui/material/ListItemText";
@@ -18,8 +18,19 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import { InputAdornment } from "@mui/material";
-let redcolor = "#FF1B1C";
-
+import { redcolor, fontcolor } from "../Design";
+import { db } from "../firebase-config";
+import {
+  collection,
+  query,
+  where,
+  addDoc,
+  getDoc,
+  doc,
+  updateDoc,
+  getDocs,
+  arrayUnion,
+} from "firebase/firestore";
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogTitle-root": {
     padding: theme.spacing(3),
@@ -55,35 +66,110 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 function Cart({}) {
-  const [cart, setCart] = React.useState([
-    {
-      name: "Samosa",
-      Price: 5,
-      img: `https://static.toiimg.com/thumb/61050397.cms?imgsize=246859&width=800&height=800`,
-      desc: "It is delicious product made with milk and palm sugar decorated with cashews and almonds",
-    },
-    {
-      name: "Chole Bhature",
-      Price: 13.99,
-      img: `data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QCLRXhpZgAASUkqAAgAAAAEAA4BAgA1AAAAPgAAABIBAwABAAAAAQAAABoBBQABAAAAcwAAABsBBQABAAAAewAAAAAAAABWZWdhbiwgQ29jb251dCBNaWxrIFZhbmlsbGEgSWNlIENyZWFtIEluIGEgU3VnYXIgQ29uZSwBAAABAAAALAEAAAEAAAD/7QB6UGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAF4cAlAADkxhdXJpUGF0dGVyc29uHAJ4ADVWZWdhbiwgQ29jb251dCBNaWxrIFZhbmlsbGEgSWNlIENyZWFtIEluIGEgU3VnYXIgQ29uZRwCbgAMR2V0dHkgSW1hZ2Vz/+EFMmh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8APD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyI+Cgk8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgoJCTxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6SXB0YzR4bXBDb3JlPSJodHRwOi8vaXB0Yy5vcmcvc3RkL0lwdGM0eG1wQ29yZS8xLjAveG1sbnMvIiAgIHhtbG5zOkdldHR5SW1hZ2VzR0lGVD0iaHR0cDovL3htcC5nZXR0eWltYWdlcy5jb20vZ2lmdC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBsdXM9Imh0dHA6Ly9ucy51c2VwbHVzLm9yZy9sZGYveG1wLzEuMC8iICB4bWxuczppcHRjRXh0PSJodHRwOi8vaXB0Yy5vcmcvc3RkL0lwdGM0eG1wRXh0LzIwMDgtMDItMjkvIiB4bWxuczp4bXBSaWdodHM9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9yaWdodHMvIiBwaG90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`,
-      desc: "It is delicious product made with milk and palm sugar decorated with cashews and almonds",
-    },
-    {
-      name: "Kadhi Pakora",
-      Price: 10.99,
-      img: `data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QCLRXhpZgAASUkqAAgAAAAEAA4BAgA1AAAAPgAAABIBAwABAAAAAQAAABoBBQABAAAAcwAAABsBBQABAAAAewAAAAAAAABWZWdhbiwgQ29jb251dCBNaWxrIFZhbmlsbGEgSWNlIENyZWFtIEluIGEgU3VnYXIgQ29uZSwBAAABAAAALAEAAAEAAAD/7QB6UGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAF4cAlAADkxhdXJpUGF0dGVyc29uHAJ4ADVWZWdhbiwgQ29jb251dCBNaWxrIFZhbmlsbGEgSWNlIENyZWFtIEluIGEgU3VnYXIgQ29uZRwCbgAMR2V0dHkgSW1hZ2Vz/+EFMmh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8APD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyI+Cgk8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgoJCTxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6SXB0YzR4bXBDb3JlPSJodHRwOi8vaXB0Yy5vcmcvc3RkL0lwdGM0eG1wQ29yZS8xLjAveG1sbnMvIiAgIHhtbG5zOkdldHR5SW1hZ2VzR0lGVD0iaHR0cDovL3htcC5nZXR0eWltYWdlcy5jb20vZ2lmdC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBsdXM9Imh0dHA6Ly9ucy51c2VwbHVzLm9yZy9sZGYveG1wLzEuMC8iICB4bWxuczppcHRjRXh0PSJodHRwOi8vaXB0Yy5vcmcvc3RkL0lwdGM0eG1wRXh0LzIwMDgtMDItMjkvIiB4bWxuczp4bXBSaWdodHM9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9yaWdodHMvIiBwaG90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`,
-      desc: "It is delicious product made with milk and palm sugar decorated with cashews and almonds",
-    },
-    {
-      name: "Dal Makhni",
-      Price: 12.99,
-      img: `data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QCLRXhpZgAASUkqAAgAAAAEAA4BAgA1AAAAPgAAABIBAwABAAAAAQAAABoBBQABAAAAcwAAABsBBQABAAAAewAAAAAAAABWZWdhbiwgQ29jb251dCBNaWxrIFZhbmlsbGEgSWNlIENyZWFtIEluIGEgU3VnYXIgQ29uZSwBAAABAAAALAEAAAEAAAD/7QB6UGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAF4cAlAADkxhdXJpUGF0dGVyc29uHAJ4ADVWZWdhbiwgQ29jb251dCBNaWxrIFZhbmlsbGEgSWNlIENyZWFtIEluIGEgU3VnYXIgQ29uZRwCbgAMR2V0dHkgSW1hZ2Vz/+EFMmh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8APD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyI+Cgk8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgoJCTxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6SXB0YzR4bXBDb3JlPSJodHRwOi8vaXB0Yy5vcmcvc3RkL0lwdGM0eG1wQ29yZS8xLjAveG1sbnMvIiAgIHhtbG5zOkdldHR5SW1hZ2VzR0lGVD0iaHR0cDovL3htcC5nZXR0eWltYWdlcy5jb20vZ2lmdC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBsdXM9Imh0dHA6Ly9ucy51c2VwbHVzLm9yZy9sZGYveG1wLzEuMC8iICB4bWxuczppcHRjRXh0PSJodHRwOi8vaXB0Yy5vcmcvc3RkL0lwdGM0eG1wRXh0LzIwMDgtMDItMjkvIiB4bWxuczp4bXBSaWdodHM9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9yaWdodHMvIiBwaG90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`,
-      desc: "It is delicious product made with milk and palm sugar decorated with cashews and almonds",
-    },
-  ]);
-  const [Subtotal, setSubtotal] = React.useState(42.97);
+  const [cartdetails, setCartdetails] = React.useState([]);
+  const [Subtotal, setSubtotal] = React.useState(0);
+  const [finalamt, setFinalamt] = React.useState(0);
+  const [tax, setTax] = React.useState(0);
+  const [update, doUpdate] = React.useState(true);
+  const [tempcart, setTempcart] = React.useState([]);
+
   const [open, setOpen] = React.useState(false);
   const [tip, setTip] = React.useState((0.0).toFixed(2));
+  const userRef = doc(db, "Userdetails", "6ORHSPh1yeA7mywPVdOJ");
+
+  const getusercartdetails = async () => {
+    try {
+      const docSnap = await getDoc(userRef);
+
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data()); // Log to inspect the structure
+        const cartData = docSnap.data().cart;
+        setSubtotal(docSnap.data().totalamt || 0); // Get the existing total amount
+        if (cartData) {
+          setCartdetails(cartData); // Set the cart data in state
+        } else {
+          console.log("No cart data found.");
+        }
+      } else {
+        console.log("No such document!");
+      }
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  };
+
+  const handleAddclick = (data) => {
+    const updatedData = {
+      itemname: data.itemname,
+      price: data.price,
+      category: data.category, // If category is part of the item
+      desc: data.desc,
+      image: data.image,
+      total: data.total, // Assuming this holds the total amount or quantity of the item
+    };
+    doUpdate(!update);
+    setTempcart();
+    createAddtocart(updatedData); // Add item to Firebase
+  };
+
+  const createAddtocart = async (data) => {
+    try {
+      // Get the current cart data to find if the item already exists
+      const userDoc = await getDoc(userRef);
+      if (userDoc.exists()) {
+        const currentCart = userDoc.data().cart || [];
+
+        // Check if the item already exists in the cart for the same itemname and category
+        const itemIndex = currentCart.findIndex(
+          (item) =>
+            item.itemname === data.itemname && item.category === data.category
+        );
+
+        if (itemIndex !== -1) {
+          // If item exists, update the total
+          const updatedCart = [...currentCart];
+          updatedCart[itemIndex].total += data.total; // Increment the total quantity for the item
+
+          // Update the cart array with the new total for the item
+          await updateDoc(userRef, {
+            cart: updatedCart,
+          });
+        } else {
+          // If item does not exist, add it to the cart array
+          await updateDoc(userRef, {
+            cart: [
+              ...currentCart,
+              {
+                itemname: data.itemname,
+                price: data.price,
+                category: data.category,
+                desc: data.desc,
+                image: data.image,
+                total: data.total,
+              },
+            ],
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error updating cart: ", error);
+    }
+  };
+
+  const handleOrderAddclick = async () => {
+    navigate("/Checkout");
+  };
+
+  useEffect(() => {
+    getusercartdetails();
+
+    // Calculate tax (7% of Subtotal) and set it
+    const calculatedTax = (0.07 * Subtotal).toFixed(2);
+    setTax(calculatedTax);
+    const finalAmount = parseFloat(Subtotal) + parseFloat(tax);
+
+    setFinalamt(finalAmount); // Convert back to float
+  }, [Subtotal, [finalamt]]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -119,9 +205,7 @@ function Cart({}) {
               </tr>
               <tr>
                 <td style={{ padding: "10px" }}>Taxes:</td>
-                <td style={{ padding: "10px", fontWeight: "bold" }}>
-                  ${(0.07 * Subtotal).toFixed(2)}
-                </td>
+                <td style={{ padding: "10px", fontWeight: "bold" }}>${tax}</td>
               </tr>
               <tr>
                 <td style={{ padding: "10px" }}>Tip:</td>
@@ -149,7 +233,8 @@ function Cart({}) {
                     color: redcolor,
                   }}
                 >
-                  ${(Subtotal + 0.07 * Subtotal).toFixed(2)}
+                  ${finalamt}
+                
                 </td>
               </tr>
             </table>
@@ -197,7 +282,7 @@ function Cart({}) {
           >
             <Button
               variant="contained"
-              onClick={() => navigate("/Checkout")}
+              onClick={handleOrderAddclick}
               fullWidth
               style={{
                 fontSize: "18px",
@@ -365,16 +450,15 @@ function Cart({}) {
       </React.Fragment>
 
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-        {cart.map((data) => {
-          console.log("data---", data);
-          return (
-            <>
+        {cartdetails.length > 0 ? (
+          cartdetails.map((data, index) => (
+            <div key={index}>
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
-                  <Avatar variant="rounded" src={data.img} />
+                  <Avatar variant="rounded" src={data?.image} />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={data.name}
+                  primary={data?.itemname}
                   secondary={
                     <div className="row">
                       <div className="col-md-9">
@@ -383,7 +467,7 @@ function Cart({}) {
                           variant="body2"
                           sx={{ color: "text.primary", display: "inline" }}
                         >
-                          -${data.Price}
+                          -${data?.price}
                         </Typography>
                         <br />
                         <Typography
@@ -391,37 +475,68 @@ function Cart({}) {
                           variant="body2"
                           sx={{ color: "text.primary", display: "inline" }}
                         >
-                          {data.desc}
+                          {data?.desc}
                         </Typography>
                       </div>
                       <div
                         className="col-md-3"
-                        style={{
-                          display: "flex",
-                          justifyContent: "end",
-                        }}
+                        style={{ display: "flex", justifyContent: "end" }}
                       >
-                        {<AddBtn data={data} />}
+                        <AddBtn
+                          data={data}
+                          total={data.total}
+                          Subtotal={Subtotal}
+                          setSubtotal={setSubtotal}
+                          handleAddclick={handleAddclick}
+                        />
                       </div>
                     </div>
                   }
                 />
               </ListItem>
+
               <Divider variant="inset" component="li" />
-            </>
-          );
-        })}
+            </div>
+          ))
+        ) : (
+          <Typography variant="body1" sx={{ color: "text.secondary" }}>
+            No items in cart.
+          </Typography>
+        )}
       </List>
     </div>
   );
 }
 
-function AddBtn({ data }) {
+function AddBtn({ data, total, Subtotal, setSubtotal, handleAddclick }) {
   const [count, setCount] = React.useState(0);
-  const [total, setTotal] = React.useState(0);
+  const [count1, setCount1] = React.useState(0);
+  const [totall, setTotall] = React.useState(0);
   const [detail, setDetail] = React.useState({});
   const [isHovered, setIsHovered] = React.useState(false);
   console.log("data", data);
+
+  React.useEffect(() => {
+    //gettotal();
+  }, [data]);
+
+  const gettotal = () => {};
+
+  const handleIncrement = () => {
+    if (data.availibity !== "false") {
+      console.log(data);
+      const updatedData = { ...data, total: data.total ? data.total + 1 : 1 };
+      handleAddclick(updatedData);
+    }
+  };
+
+  const handleDecrement = () => {
+    if (count > 0) {
+      console.log("+++++++++++clicked+++++++++");
+      const updatedData = { ...data, total: count - 1 };
+      handleAddclick(updatedData);
+    }
+  };
   return (
     <>
       {" "}
@@ -436,17 +551,12 @@ function AddBtn({ data }) {
           class="btn btn-warning"
           style={{
             border: "none",
-            backgroundColor: isHovered ? redcolor : "#f57c00",
+            backgroundColor: isHovered ? "#f57c00" : redcolor,
+            color: fontcolor,
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          onClick={() => {
-            if (count > 0) {
-              setCount(count - 1);
-              setTotal(total - 1);
-              <Cart data={data} />;
-            }
-          }}
+          onClick={handleDecrement}
         >
           -
         </button>
@@ -457,10 +567,11 @@ function AddBtn({ data }) {
           onMouseLeave={() => setIsHovered(false)}
           style={{
             border: "none",
-            backgroundColor: isHovered ? redcolor : "#f57c00",
+            backgroundColor: isHovered ? "#f57c00" : redcolor,
+            color: fontcolor,
           }}
         >
-          {count == 0 ? "ADD" : count}
+          {total}
         </button>
 
         <button
@@ -468,16 +579,12 @@ function AddBtn({ data }) {
           class="btn btn-warning"
           style={{
             border: "none",
-            backgroundColor: isHovered ? redcolor : "#f57c00",
+            backgroundColor: isHovered ? "#f57c00" : redcolor,
+            color: fontcolor,
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          onClick={() => {
-            setCount(count + 1);
-            setTotal(total + 1);
-            setDetail(data);
-            console.log(detail);
-          }}
+          onClick={handleIncrement}
         >
           +
         </button>
