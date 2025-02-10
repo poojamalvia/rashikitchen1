@@ -7,12 +7,10 @@ import Dialog from "@mui/material/Dialog";
 import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
-import logo from "../Rashi.png"
-import {background,redcolor} from "../Design"
+import logo from "../Rashi.png";
+import { background, redcolor } from "../Design";
 
 function SimpleDialog(props) {
-  
-
   const { onClose, selectedValue, open, currentDay } = props;
 
   const handleClose = () => {
@@ -24,111 +22,108 @@ function SimpleDialog(props) {
   };
 
   return (
-
     <Dialog
-    onClose={handleClose}
-    open={open}
-    PaperProps={{
-      style: {
-        margin: 0,
-        width: "400px",
-        height: "400px",
-        maxWidth: "100%",
-        overflow: "hidden",
-        borderRadius: "12px", // Rounded corners
-        boxShadow: "0px 8px 16px rgba(0,0,0,0.1)", // Soft shadow
-      },
-    }}
-  >
-    <DialogTitle
-      style={{
-        color: "#AF1740",
-        fontWeight: "bold",
-        fontSize: "24px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
+      onClose={handleClose}
+      open={open}
+      PaperProps={{
+        style: {
+          margin: 0,
+          width: "400px",
+          height: "400px",
+          maxWidth: "100%",
+          overflow: "hidden",
+          borderRadius: "12px", // Rounded corners
+          boxShadow: "0px 8px 16px rgba(0,0,0,0.1)", // Soft shadow
+        },
       }}
     >
-      Hours
-      <IconButton
-        edge="end"
-        color="inherit"
-        onClick={handleClose}
-        aria-label="close"
+      <DialogTitle
         style={{
-          color: "#AF1740", // Icon color matches the title
+          color: "#AF1740",
+          fontWeight: "bold",
+          fontSize: "24px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        <CloseIcon />
-      </IconButton>
-    </DialogTitle>
+        Hours
+        <IconButton
+          edge="end"
+          color="inherit"
+          onClick={handleClose}
+          aria-label="close"
+          style={{
+            color: "#AF1740", // Icon color matches the title
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
-    <div style={{ padding: "20px", overflowY: "auto" }}>
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse", // Make sure the borders collapse together
-          fontFamily: "'Roboto', sans-serif", // Clean font
-        }}
-      >
-  
-        <tbody>
-          {[
-            { day: "Monday", hours: "Closed" },
-            { day: "Tuesday", hours: "11:00 AM - 9:00 PM" },
-            { day: "Wednesday", hours: "11:00 AM - 9:00 PM" },
-            { day: "Thursday", hours: "11:00 AM - 9:00 PM" },
-            { day: "Friday", hours: "11:00 AM - 9:00 PM" },
-            { day: "Saturday", hours: "11:00 AM - 9:00 PM" },
-            { day: "Sunday", hours: "11:00 AM - 9:00 PM" },
-          ].map((row, index) => (
-            <tr
-              key={index}
-              style={{
-              //  backgroundColor: index % 2 === 0 ? "#f9f9f9" : "white",
-              backgroundColor:
-              row.day === currentDay ? "#D6CFB4" : index % 2 === 0 ? "#f9f9f9" : "white", // Highlight current day
-                
-              }}
-            >
-              <td
+      <div style={{ padding: "20px", overflowY: "auto" }}>
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse", // Make sure the borders collapse together
+            fontFamily: "'Roboto', sans-serif", // Clean font
+          }}
+        >
+          <tbody>
+            {[
+              { day: "Monday", hours: "Closed" },
+              { day: "Tuesday", hours: "11:00 AM - 9:00 PM" },
+              { day: "Wednesday", hours: "11:00 AM - 9:00 PM" },
+              { day: "Thursday", hours: "11:00 AM - 9:00 PM" },
+              { day: "Friday", hours: "11:00 AM - 9:00 PM" },
+              { day: "Saturday", hours: "11:00 AM - 9:00 PM" },
+              { day: "Sunday", hours: "11:00 AM - 9:00 PM" },
+            ].map((row, index) => (
+              <tr
+                key={index}
                 style={{
-                  padding: "10px",
-                  color: "#333",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  
+                  //  backgroundColor: index % 2 === 0 ? "#f9f9f9" : "white",
+                  backgroundColor:
+                    row.day === currentDay
+                      ? "#D6CFB4"
+                      : index % 2 === 0
+                      ? "#f9f9f9"
+                      : "white", // Highlight current day
                 }}
               >
-                {row.day}
-              </td>
-              <td
-                style={{
-                  padding: "10px",
-                  color: row.hours === "Closed" ? "#d32f2f" : "#388e3c", // Color coding for open/closed
-                  fontSize: "14px",
-                  fontWeight: "500",
-                }}
-              >
-                <b>{row.hours}</b>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </Dialog>
- 
+                <td
+                  style={{
+                    padding: "10px",
+                    color: "#333",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                  }}
+                >
+                  {row.day}
+                </td>
+                <td
+                  style={{
+                    padding: "10px",
+                    color: row.hours === "Closed" ? "#d32f2f" : "#388e3c", // Color coding for open/closed
+                    fontSize: "14px",
+                    fontWeight: "500",
+                  }}
+                >
+                  <b>{row.hours}</b>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Dialog>
   );
 }
 
 function Locationhrs() {
   const [currentDateTime, setCurrentDateTime] = React.useState("");
 
-  
   const [currentDay, setCurrentDay] = React.useState(""); // Add state for current day
-
 
   useEffect(() => {
     // Function to fetch current date and time
@@ -181,18 +176,27 @@ function Locationhrs() {
       <h4>Location and Hours</h4>
       <br />
 
-      <div className="container" style={{display:"flex" , justifyContent:"center"}}>
-        <Paper elevation={3} style={{ width: "25rem"}}>
+      <div
+        className="container"
+        style={{ display: "flex", justifyContent: "center" }}
+      >
+        <Paper elevation={3} style={{ width: "25rem" }}>
           <div className="col-md-12">
             <div class="card" style={{ width: "25rem" }}>
-              <div style={{ display: "flex", justifyContent: "center",backgroundColor:background }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  backgroundColor: background,
+                }}
+              >
                 <img
                   src={logo}
                   class="card-img-top"
                   style={{ width: "200px" }}
                 />
               </div>
-              <div class="card-body" style={{backgroundColor:background}}>
+              <div class="card-body" style={{ backgroundColor: background }}>
                 {/* <h5 class="card-title">Card title</h5> */}
                 <p class="card-text">
                   <h4> Rashi's Kitchen - Longwood</h4>
@@ -236,19 +240,21 @@ function Locationhrs() {
                     open={open}
                     onClose={handleClose}
                     currentDateTime={currentDateTime}
-                  
                     currentDay={currentDay} // Pass current day to SimpleDialog
                   />
                 </p>
               </div>
               <ul
                 class="list-group list-group-flush"
-                style={{ alignItems: "center" ,backgroundColor:background}}
+                style={{ alignItems: "center", backgroundColor: background }}
               >
-                <li class="list-group-item" style={{backgroundColor:background}}>
+                <li
+                  class="list-group-item"
+                  style={{ backgroundColor: background }}
+                >
                   <button
                     class="btn btn-warning"
-                    style={{ backgroundColor: redcolor }}
+                    style={{ backgroundColor: redcolor, color: "#FFFFFF" }}
                     onClick={() => {
                       navigate("/menu");
                     }}

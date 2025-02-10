@@ -6,6 +6,8 @@ import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import { db } from "../firebase-config";
+import Logo from "../Rashi.png";
+import backimg from "../backimg2_1.jpg";
 import {
   collection,
   getDocs,
@@ -14,7 +16,6 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-
 
 function Catering() {
   const AcateringCollectionRef = collection(db, "Cateringmenu");
@@ -41,55 +42,81 @@ function Catering() {
 
   useEffect(() => {
     getcateringmenudata();
-  },[]);
+  }, []);
 
   const downloadPDF = () => {
     const doc = new jsPDF();
-
-    // Set the font for the document
-    doc.setFont("helvetica", "normal");
-
-    // Add centered title "Catering Menu"
-    const title = "Catering Menu";
     const pageWidth = doc.internal.pageSize.width;
-    const titleWidth =
-      (doc.getStringUnitWidth(title) * doc.internal.getFontSize()) /
-      doc.internal.scaleFactor;
-    const titleX = (pageWidth - titleWidth) / 2; // Center the title
-    doc.setFontSize(22); // Larger font size for the title
-    doc.text(title, titleX, 20); // Add the title to the center of the page
+    const pageHeight = doc.internal.pageSize.height;
 
-    let yOffset = 30; // Start content after the title
+    // Add blurred background image (Ensure the image is pre-blurred)
+    doc.addImage(backimg, "JPEG", 0, 0, pageWidth, pageHeight, "", "FAST");
 
-    // Add a horizontal line under the title for separation
-    doc.setLineWidth(0.5);
-    doc.line(10, yOffset, pageWidth - 10, yOffset);
-    yOffset += 5; // Space after the line
+    // Add logo image at the top
+    const logoWidth = 28;
+    const logoHeight = 28;
+    doc.addImage(Logo, "PNG", 20, 14, logoWidth, logoHeight);
 
-    // Loop through each category and its items
-    Object.keys(cateringdata).forEach((val, index) => {
-      // Add category name
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(16); // Larger font for category name
-      doc.text(val, 10, yOffset); // Add the category name
-      yOffset += 8; // Space after category name
-
-      // Add the items under the category
-      cateringdata[val].forEach((item, itemIndex) => {
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(12);
-        const itemText = `${item.itemname}- ${
-          item.desc || "No description available"
-        }`;
-        doc.text(itemText, 10, yOffset); // Item name and description
-        yOffset += 8; // Space after each item
-      });
-
-      // Add space after each category for better readability
-      yOffset += 12; // Additional space between categories
+    // Styled heading
+    doc.setTextColor(178, 34, 34);
+    doc.setFontSize(24);
+    doc.setFont("times", "bolditalic");
+    doc.text("Rashi's Kitchen Catering Menu", pageWidth / 2, 23, {
+      align: "center",
     });
 
-    // Save the generated PDF with the name "catering_menu.pdf"
+    // Address & phone with elegant font
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(12);
+    doc.setTextColor(139, 69, 19);
+    doc.text(
+      "3260 N US Hwy 17 92 #100, Longwood, FL 32750",
+      pageWidth / 2,
+      30,
+      { align: "center" }
+    );
+    doc.text("Phone: +1 (689) 207-7593", pageWidth / 2, 36, {
+      align: "center",
+    });
+
+    let yOffset = 45;
+
+    // Decorative line separator
+    doc.setDrawColor(178, 34, 34);
+    doc.setLineWidth(0.5);
+    doc.line(20, yOffset, pageWidth - 20, yOffset);
+    yOffset += 10;
+
+    // Reset text color for menu items
+    doc.setTextColor(0, 0, 0);
+
+    // Loop through categories and items with better spacing
+    Object.keys(cateringdata).forEach((category) => {
+      doc.setFont("times", "bolditalic");
+      doc.setFontSize(16);
+      doc.setTextColor(139, 0, 0);
+      doc.text(category.toUpperCase(), pageWidth / 2, yOffset, {
+        align: "center",
+      });
+
+      yOffset += 2;
+      doc.setDrawColor(178, 34, 34);
+      doc.setLineWidth(0.2);
+      doc.line(50, yOffset, pageWidth - 50, yOffset);
+      yOffset += 5;
+
+      cateringdata[category].forEach((item) => {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`• ${item.itemname} `, 20, yOffset);
+        yOffset += 5;
+      });
+
+      yOffset += 8; // Extra space between categories
+    });
+
+    // Save the generated PDF
     doc.save("catering_menu.pdf");
   };
 
@@ -139,20 +166,6 @@ function Catering() {
           tabIndex={-1}
           startIcon={<CloudDownloadIcon />}
           onClick={downloadPDF}
-
-          // Object.keys(cateringdata).map((val) => {
-          //   console.log("val", val);
-          //   return (
-          //     <div>
-          //       doc.text(val.name, 10, 20); doc.text(val.phoneno, 20, 30);
-          //       {/* doc.text(val.email, 30, 40);
-          //   doc.text(val.address, 40, 50); */}
-          //       doc.save("menu.pdf");
-          //         </div>
-          //       );
-          //     });
-          //   }
-          // }}
         >
           Download Catering Menu
         </Button>

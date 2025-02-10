@@ -3,11 +3,62 @@ import { useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import { redcolor } from "../Design";
+import { db } from "../firebase-config";
+import { collection, addDoc } from "firebase/firestore";
 
 function Registration() {
+  const RegCollectionref = collection(db, "Userdetails");
+  const [registrationdata, setRegistrationdata] = React.useState([]);
+  const [data, setData] = React.useState();
+
   let navigate = useNavigate();
-  const handleChange = () => {};
-  const handleClick = () => {};
+  const handleChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+    console.log(data);
+  };
+
+  const validateFields = () => {
+    return (
+      data.fname && data.lname && data.email && data.password && data.mobileno
+    );
+  };
+  const handleAddClick = (e) => {
+    if (!validateFields()) {
+      alert("Please fill in all dining fields before adding.");
+      return; // Prevent further execution if fields are not valid
+    }
+
+    createuserregistration(data);
+
+    setData({
+      fname: "",
+      lname: "",
+      email: "",
+      password: "",
+      mobileno: "",
+    });
+  };
+
+  const createuserregistration = async (data) => {
+    await addDoc(RegCollectionref, {
+      fname: data.fname,
+      lname: data.lname,
+      email: data.email,
+      password: data.password,
+      mobileno: data.mobileno,
+    });
+    setRegistrationdata([
+      ...registrationdata,
+      {
+        fname: data.fname,
+        lname: data.lname,
+        email: data.email,
+        password: data.password,
+        mobileno: data.mobileno,
+      },
+    ]);
+  };
+
   return (
     <div style={{ margin: "5%" }}>
       <Paper
@@ -32,7 +83,7 @@ function Registration() {
             <TextField
               required
               style={{ width: "100%" }}
-              id="first-name"
+              name="fname"
               label="First Name"
               type="text"
               variant="outlined"
@@ -45,7 +96,7 @@ function Registration() {
             <TextField
               required
               style={{ width: "100%" }}
-              id="last-name"
+              name="lname"
               label="Last Name"
               type="text"
               variant="outlined"
@@ -58,7 +109,7 @@ function Registration() {
             <TextField
               required
               style={{ width: "100%" }}
-              id="email"
+              name="email"
               label="Email"
               type="email"
               variant="outlined"
@@ -71,9 +122,20 @@ function Registration() {
             <TextField
               required
               style={{ width: "100%" }}
-              id="password"
+              name="password"
               label="Password"
               type="password"
+              variant="outlined"
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+          <div className="mb-3">
+            <TextField
+              required
+              style={{ width: "100%" }}
+              name="mobileno"
+              label="Mobile number"
+              type="number"
               variant="outlined"
               onChange={(e) => handleChange(e)}
             />
@@ -86,7 +148,7 @@ function Registration() {
               style={{
                 width: "100%",
                 padding: "12px",
-                backgroundColor:redcolor,
+                backgroundColor: redcolor,
                 border: "none",
                 borderRadius: "4px",
                 color: "#fff",
@@ -95,7 +157,7 @@ function Registration() {
                 boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                 transition: "all 0.3s",
               }}
-              onClick={handleClick}
+              onClick={handleAddClick}
             >
               Sign Up
             </button>

@@ -6,7 +6,7 @@ import { IconButton } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { useNavigate } from "react-router-dom";
-import { redcolor } from "../Design";
+import { redcolor ,background} from "../Design";
 
 function Contact() {
   let navigate = useNavigate();
@@ -55,7 +55,7 @@ function Contact() {
 
       <center>
         <Box
-          style={{ width: "50%", align: "center", minWidth: "400px" }}
+          style={{ width: "50%", align: "center", minWidth: "400px" ,backgroundColor:background}}
           component="section"
           sx={{ p: 1, border: "1px solid grey" }}
         >

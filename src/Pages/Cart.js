@@ -234,7 +234,6 @@ function Cart({}) {
                   }}
                 >
                   ${finalamt}
-                
                 </td>
               </tr>
             </table>

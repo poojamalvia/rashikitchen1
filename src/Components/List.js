@@ -49,6 +49,7 @@ function AlignItemsList({ menuDetails, isAdd }) {
         (sum, item) => sum + (item.total || 0),
         0
       );
+
       await updateDoc(userRef, { totalcount });
     }
   };

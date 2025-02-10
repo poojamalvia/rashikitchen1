@@ -140,7 +140,14 @@ function Order() {
       <TableContainer component={Paper}>
         <Table aria-label="customer order table">
           <TableHead>
-            <TableRow>
+            <TableRow sx={{
+                            backgroundColor: redcolor, // Background color for the header
+                            "& th": {
+                              fontWeight: "bold", // Bold font weight for header cells
+                              fontSize: "16px",
+                              color: "#ffffff",
+                            },
+                          }}>
               <TableCell>Token Number</TableCell>
               <TableCell>Order Date</TableCell>
               <TableCell>Ordered Items</TableCell>

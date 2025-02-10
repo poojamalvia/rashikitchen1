@@ -14,6 +14,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { db } from "../../firebase-config";
+import { redcolor } from "../../Design";
 
 function Carouselimg() {
   const imgCollectionRef = collection(db, "carouselimage");
@@ -96,7 +97,7 @@ function Carouselimg() {
           component="label"
           variant="contained"
           style={{
-            backgroundColor: "#f57c00",
+            backgroundColor: redcolor,
             width: "20%",
             padding: "10px 20px",
             textTransform: "capitalize",

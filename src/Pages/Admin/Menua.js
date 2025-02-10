@@ -49,7 +49,8 @@ function Menua() {
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false); // For delete confirmation dialog
   const [diningdata, setDiningdata] = React.useState([]);
   const [updateid, setUpdateid] = React.useState();
-  const [data, setData] = React.useState({availibity:"true"});
+  const [Isupdate, setIsUpdate] = React.useState(false);
+  const [data, setData] = React.useState({ availibity: "true" });
   const [selectedCategory, setSelectedCategory] = React.useState(""); // New state for category selection
 
   const validateFields = () => {
@@ -65,50 +66,10 @@ function Menua() {
 
   useEffect(() => {
     {
-      console.log("in ue");
       getdiningmenudata();
     }
   }, [open]);
 
-  const handleUpdateClick = async () => {
-    setOpen(true);
-    if (!validateFields()) {
-      alert("Please fill in all fields before updating.");
-      return; // Prevent further execution if fields are not valid
-    }
-
-    // Find the document in your local state by its ID
-    let obj = diningdata.find((val1) => val1.id === updateid);
-
-    // Update the fields of the object
-    obj.category = data.category;
-    obj.itemname = data.itemname;
-    obj.price = data.price;
-    obj.desc = data.desc;
-
-    // Create a reference to the specific document to update in Firebase
-    const docRef = doc(db, "Diningmenu", updateid); // Use the updateid for the specific document
-
-    // Update the document in Firebase
-    await updateDoc(docRef, {
-      category: obj.category,
-      itemname: obj.itemname,
-      price: obj.price,
-      desc: obj.desc,
-    });
-
-    // Update the local state to reflect the changes
-    setDiningdata(
-      diningdata.map((item) =>
-        item.id === updateid ? { ...item, ...obj } : item
-      )
-    );
-
-    // Clear the input fields
-    //  setData({ exp: "", credeb: "", amt: "", desc: "" });
-  };
-
- 
   const handleDeleteClick = (id) => {
     setUpdateid(id);
     setDeleteDialogOpen(true); // Open the delete confirmation dialog
@@ -132,6 +93,7 @@ function Menua() {
   };
   const handleClose = () => {
     setOpen(false);
+    setIsUpdate(false); // Reset to false when closing dialog
   };
 
   const handleCategoryChange = (e) => {
@@ -212,6 +174,8 @@ function Menua() {
           handleClose={handleClose}
           data={data}
           setData={setData}
+          setIsUpdate={setIsUpdate}
+          updateid={updateid}
         />
       </div>
 
@@ -249,6 +213,9 @@ function Menua() {
               } // Filter data based on selected category
               setData={setData}
               setUpdateid={setUpdateid}
+              updateid={updateid}
+              Isupdate={Isupdate}
+              setIsUpdate={setIsUpdate}
               handleClickOpen={handleClickOpen}
               handleDeleteClick={handleDeleteClick}
             />
@@ -263,10 +230,10 @@ function Menua() {
           <Typography>Are you sure you want to delete this item?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteCancel} >
+          <Button onClick={handleDeleteCancel} style={{ color: redcolor }}>
             Cancel
           </Button>
-          <Button onClick={handleDeleteConfirm} color="secondary">
+          <Button onClick={handleDeleteConfirm} style={{ color: redcolor }}>
             Delete
           </Button>
         </DialogActions>
@@ -279,6 +246,7 @@ function TableRecords({
   data,
   setData,
   setUpdateid,
+  setIsUpdate,
   handleClickOpen,
   handleDeleteClick,
 }) {
@@ -293,15 +261,20 @@ function TableRecords({
 
               {/* </TableCell> */}
               <TableCell>
-                {val.availibity == "false" ? (
-                  <IconButton style={{ color: redcolor }}>
-                    {" "}
-                    <NoMealsIcon />{" "}
-                  </IconButton>
-                ) : (
-                  ""
-                )}
-                <Avatar variant="rounded" src={val.image} />
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  <Avatar variant="rounded" src={val.image} />
+
+                  {val.availibity == "false" ? (
+                    <IconButton style={{ color: redcolor }}>
+                      {" "}
+                      <NoMealsIcon />{" "}
+                    </IconButton>
+                  ) : (
+                    ""
+                  )}
+                </div>
               </TableCell>
               <TableCell>{val.category}</TableCell>
               <TableCell>{val.itemname}</TableCell>
@@ -315,9 +288,9 @@ function TableRecords({
                   onClick={() => {
                     setData(val);
                     setUpdateid(val.id);
+                    setIsUpdate(true);
                     handleClickOpen();
                   }}
-                  //  onClick={handleClickOpen}
                 >
                   <EditIcon />
                 </IconButton>

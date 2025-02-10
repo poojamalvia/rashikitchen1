@@ -62,6 +62,7 @@ function Cateringa() {
   const AcateringCollectionRef = collection(db, "Cateringmenu");
   const [cateringdata, setCateringdata] = React.useState([]);
   const [updateid, setUpdateid] = React.useState();
+  const [Isupdate, setIsUpdate] = React.useState(false);
   const [image, setImage] = React.useState([]);
   const [selectedCategory, setSelectedCategory] = React.useState(""); // New state for category selection
   const [open, setOpen] = React.useState(false);
@@ -88,69 +89,32 @@ function Cateringa() {
     }
   }, [open]);
 
-  const handleUpdateClick = async () => {
-    if (!validateFields()) {
-      alert("Please fill in all fields before updating.");
-      return; // Prevent further execution if fields are not valid
-    }
-
-    // Find the document in your local state by its ID
-    let obj = cateringdata.find((val1) => val1.id === updateid);
-
-    // Update the fields of the object
-    obj.category = data.category;
-    obj.itemname = data.itemname;
-    obj.desc = data.desc;
-    obj.image = data.image;
-
-    // Create a reference to the specific document to update in Firebase
-    const docRef = doc(db, "Cateringmenu", updateid); // Use the updateid for the specific document
-
-    // Update the document in Firebase
-    await updateDoc(docRef, {
-      category: obj.category,
-      itemname: obj.itemname,
-      desc: obj.desc,
-      image: obj.image,
-    });
-
-    // Update the local state to reflect the changes
-    setCateringdata(
-      cateringdata.map((item) =>
-        item.id === updateid ? { ...item, ...obj } : item
-      )
-    );
-
-    // Clear the input fields
-    //  setData({ exp: "", credeb: "", amt: "", desc: "" });
+  const handleDeleteClick = (id) => {
+    setUpdateid(id);
+    setDeleteDialogOpen(true); // Open the delete confirmation dialog
   };
 
-  
-
-   const handleDeleteClick = (id) => {
-      setUpdateid(id);
-      setDeleteDialogOpen(true); // Open the delete confirmation dialog
-    };
-  
-    const handleDeleteConfirm = async () => {
-      const cateringDoc = doc(db, "Cateringmenu", updateid);
+  const handleDeleteConfirm = async () => {
+    const cateringDoc = doc(db, "Cateringmenu", updateid);
     await deleteDoc(cateringDoc);
 
-  
-      // After deleting the document, update the local state to remove the deleted item
-    const updatecateringdata = cateringdata.filter((item) => item.id !== updateid);
+    // After deleting the document, update the local state to remove the deleted item
+    const updatecateringdata = cateringdata.filter(
+      (item) => item.id !== updateid
+    );
     setCateringdata(updatecateringdata); // Re-render the table with the updated data
-      setDeleteDialogOpen(false); // Close the dialog after confirming deletion
-    };
-  
-    const handleDeleteCancel = () => {
-      setDeleteDialogOpen(false); // Close the dialog if cancel is clicked
-    };
+    setDeleteDialogOpen(false); // Close the dialog after confirming deletion
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false); // Close the dialog if cancel is clicked
+  };
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    setIsUpdate(false); // Reset to false when closing dialog
   };
 
   return (
@@ -175,7 +139,14 @@ function Cateringa() {
           Add Item
         </Button>
 
-        <AddItemcaterDialog open={open} onClose={handleClose} />
+        <AddItemcaterDialog
+          open={open}
+          onClose={handleClose}
+          data={data}
+          setData={setData}
+          updateid={updateid}
+          Isupdate={Isupdate}
+        />
 
         <FormControl sx={{ m: 1, minWidth: 120 }}>
           <InputLabel
@@ -257,23 +228,29 @@ function Cateringa() {
                     )
                   : cateringdata
               }
+              setData={setData}
+              setUpdateid={setUpdateid}
+              updateid={updateid}
+              Isupdate={Isupdate}
+              setIsUpdate={setIsUpdate}
               handleClickOpen={handleClickOpen}
               handleDeleteClick={handleDeleteClick}
             />
           </TableBody>
         </Table>
       </TableContainer>
-       {/* Delete Confirmation Dialog */}
-       <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <Typography>Are you sure you want to delete this item?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteCancel} >
+          <Button onClick={handleDeleteCancel} style={{ color: redcolor }}>
             Cancel
           </Button>
-          <Button onClick={handleDeleteConfirm} color="secondary">
+          <Button onClick={handleDeleteConfirm} style={{ color: redcolor }}>
+            {" "}
             Delete
           </Button>
         </DialogActions>
@@ -282,7 +259,14 @@ function Cateringa() {
   );
 }
 
-function TableRecords({ data, handleClickOpen, handleDeleteClick }) {
+function TableRecords({
+  data,
+  setData,
+  handleClickOpen,
+  setUpdateid,
+  setIsUpdate,
+  handleDeleteClick,
+}) {
   if (data && data.length > 0) {
     return (
       <>
@@ -290,7 +274,7 @@ function TableRecords({ data, handleClickOpen, handleDeleteClick }) {
           return (
             <TableRow>
               {/* <TableCell component="th" scope="row"> */}
-                {/* {val.tokenid} */}
+              {/* {val.tokenid} */}
               {/* </TableCell> */}
               <TableCell>
                 <Avatar variant="rounded" src={val.image} />
@@ -301,7 +285,12 @@ function TableRecords({ data, handleClickOpen, handleDeleteClick }) {
               <TableCell>
                 <IconButton
                   style={{ color: redcolor }}
-                  onClick={handleClickOpen}
+                  onClick={() => {
+                    setData(val);
+                    setUpdateid(val.id);
+                    setIsUpdate(true);
+                    handleClickOpen();
+                  }}
                 >
                   <EditIcon />
                 </IconButton>

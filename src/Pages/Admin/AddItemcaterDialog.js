@@ -34,13 +34,13 @@ import {
 import { redcolor } from "../../Design";
 
 function AddItemcaterDialog(props) {
-  const { open, handleClose } = props;
+  const { open, handleClose ,data,setData,Isupdate,updateid} = props;
 
   const label = { inputProps: { "aria-label": "Switch demo" } };
 
   const AcateringCollectionRef = collection(db, "Cateringmenu");
   const [cateringdata, setCateringdata] = React.useState([]);
-  const [data, setData] = React.useState({});
+  //const [data, setData] = React.useState({});
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -104,6 +104,113 @@ function AddItemcaterDialog(props) {
       }
     }
   };
+
+  // const handleUpdateClick = async () => {
+  //     if (!validateFields()) {
+  //       alert("Please fill in all fields before updating.");
+  //       return; // Prevent further execution if fields are not valid
+  //     }
+  
+  //     // Find the document in your local state by its ID
+  //     let obj = cateringdata.find((val1) => val1.id === updateid);
+  
+  //     // Update the fields of the object
+  //     obj.category = data.category;
+  //     obj.itemname = data.itemname;
+  //     obj.desc = data.desc;
+  //     obj.image = data.image;
+  
+  //     // Create a reference to the specific document to update in Firebase
+  //     const docRef = doc(db, "Cateringmenu", updateid); // Use the updateid for the specific document
+  
+  //     // Update the document in Firebase
+  //     await updateDoc(docRef, {
+  //       category: obj.category,
+  //       itemname: obj.itemname,
+  //       desc: obj.desc,
+  //       image: obj.image,
+  //     });
+  
+  //     // Update the local state to reflect the changes
+  //     setCateringdata(
+  //       cateringdata.map((item) =>
+  //         item.id === updateid ? { ...item, ...obj } : item
+  //       )
+  //     );
+  
+  //     // Clear the input fields
+  //     //  setData({ exp: "", credeb: "", amt: "", desc: "" });
+  //   };
+
+    const handleUpdateClick = async () => {
+        if (!validateFields()) {
+          alert("Please fill in all fields before updating.");
+          return; // Prevent further execution if fields are not valid
+        }
+    
+        console.log("Update click", Isupdate);
+    
+        if (!updateid) {
+          alert("No item selected for update.");
+          return;
+        }
+    
+        try {
+          const docRef = doc(db, "Cateringmenu", updateid); // Use the updateid for the specific document
+  
+    
+          // Update the document in Firestore
+          await updateDoc(docRef, {
+            category: data.category,
+            itemname: data.itemname,
+            desc: data.desc,
+            image: data.image,
+          });
+    
+          // Update the local state to reflect the changes
+          setCateringdata((prevDiningData) =>
+            prevDiningData.map((item) =>
+              item.id === updateid ? { ...item, ...data } : item
+            )
+          );
+    
+          alert("Item updated successfully!");
+          handleClose(); // Close the dialog after updating
+        } catch (error) {
+          console.error("Error updating item:", error);
+          alert("Failed to update item. Please try again.");
+        }
+        // // Find the document in your local state by its ID
+        // let obj = diningdata.find((val1) => val1.id === updateid);
+    
+        // // Update the fields of the object
+        // obj.category = data.category;
+        // obj.itemname = data.itemname;
+        // obj.price = data.price;
+        // obj.desc = data.desc;
+    
+        // // Create a reference to the specific document to update in Firebase
+        // const docRef = doc(db, "Diningmenu", updateid); // Use the updateid for the specific document
+    
+        // // Update the document in Firebase
+        // await updateDoc(docRef, {
+        //   category: obj.category,
+        //   itemname: obj.itemname,
+        //   price: obj.price,
+        //   desc: obj.desc,
+        // });
+    
+        // // Update the local state to reflect the changes
+        // setDiningdata(
+        //   diningdata.map((item) =>
+        //     item.id === updateid ? { ...item, ...obj } : item
+        //   )
+        // );
+    
+        // // Clear the input fields
+        //  setData({ exp: "", credeb: "", amt: "", desc: "" });
+      };
+    
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -180,6 +287,7 @@ function AddItemcaterDialog(props) {
           {/* Item Name Field */}
           <Box mb={3}>
             <TextField
+            required
               fullWidth
               name="itemname"
               label="Item Name"

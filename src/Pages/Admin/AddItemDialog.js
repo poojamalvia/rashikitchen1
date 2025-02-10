@@ -1,14 +1,6 @@
 import React from "react";
 import {
   TextField,
-  IconButton,
-  TableCell,
-  TableBody,
-  TableRow,
-  TableHead,
-  Table,
-  Paper,
-  TableContainer,
   Button,
   Box,
   Container,
@@ -23,23 +15,16 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import { db } from "../../firebase-config";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import { redcolor } from "../../Design";
 
 function AddItemDialog(props) {
-  const { open, handleClose, data, setData } = props;
+  const { open, handleClose, data, setData, Isupdate, setIsUpdate, updateid } =
+    props;
 
   const label = { inputProps: { "aria-label": "Switch demo" } };
   const AdiningCollectionRef = collection(db, "Diningmenu");
   const [diningdata, setDiningdata] = React.useState([]);
-  //const [data, setData] = React.useState({});
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -56,6 +41,7 @@ function AddItemDialog(props) {
       return; // Prevent further execution if fields are not valid
     }
 
+    console.log("Add click", Isupdate);
     createDiningmenu(data); // Add item to Firebase
 
     //setNo(no + 1);
@@ -111,6 +97,62 @@ function AddItemDialog(props) {
         console.error("Error adding file: ", error);
       }
     }
+  };
+
+  const handleUpdateClick = async () => {
+    if (!validateFields()) {
+      alert("Please fill in all fields before updating.");
+      return; // Prevent further execution if fields are not valid
+    }
+
+    console.log("Update click", Isupdate);
+
+    // if (!updateid) {
+    //   alert("No item selected for update.");
+    //   return;
+    // }
+    console.log("Updating Item with ID:", updateid);
+
+    try {
+      // Find the document in your local state by its ID
+      let obj = diningdata.find((val1) => val1.id === updateid);
+
+      // Update the fields of the object
+      obj.category = data.category;
+      obj.itemname = data.itemname;
+      obj.price = data.price;
+      obj.desc = data.desc;
+      obj.availibity = data.availibity;
+      obj.image = data.image;
+      // Create a reference to the specific document to update in Firestore
+      const docRef = doc(db, "Diningmenu", updateid);
+
+      // Update the document in Firestore
+      await updateDoc(docRef, {
+        category: obj.category,
+        itemname: obj.itemname,
+        price: obj.price,
+        desc: obj.desc,
+        availibity: obj.availibity,
+        image: obj.image,
+      });
+
+      // Update the local state to reflect the changes
+      setDiningdata(
+      diningdata.map((item) =>
+        item.id === updateid ? { ...item, ...obj } : item
+      )
+    );
+     
+      alert("Item updated successfully!");
+      handleClose(); // Close the dialog after updating
+    } catch (error) {
+      console.error("Error updating item:", error);
+      alert("Failed to update item. Please try again.");
+    }
+   
+    //  Clear the input fields
+      //setData({ exp: "", credeb: "", amt: "", desc: "" });
   };
 
   const VisuallyHiddenInput = styled("input")({
@@ -173,10 +215,10 @@ function AddItemDialog(props) {
                 <MenuItem value="Chef_special">Chef Special</MenuItem>
                 <MenuItem value="Sabjz_e_bahar">Sabjz-E-Bahar</MenuItem>
                 <MenuItem value="Dal">Dal</MenuItem>
-                <MenuItem value="rice">Rice</MenuItem>
-                <MenuItem value="bread">Bread</MenuItem>
-                <MenuItem value="beverages">Beverages</MenuItem>
-                <MenuItem value="dessert">Dessert</MenuItem>
+                <MenuItem value="Rice">Rice</MenuItem>
+                <MenuItem value="Bread">Bread</MenuItem>
+                <MenuItem value="Beverages">Beverages</MenuItem>
+                <MenuItem value="Dessert">Dessert</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -184,6 +226,7 @@ function AddItemDialog(props) {
           {/* Item Name Field */}
           <Box mb={3}>
             <TextField
+              required
               fullWidth
               name="itemname"
               label="Item Name"
@@ -238,6 +281,7 @@ function AddItemDialog(props) {
                 {...label}
                 checked={data.availibity === "true" || data.availibity === true} // Ensure it's a boolean value
                 name="availibity"
+                style={{ color: redcolor }}
                 onChange={(e) => {
                   setData({
                     ...data,
@@ -306,11 +350,10 @@ function AddItemDialog(props) {
                 padding: "12px 0",
                 fontSize: "16px",
               }}
-              onClick={handleAddclick}
+              onClick={handleUpdateClick}
             >
-              Add/Update Item
+              {Isupdate ? "Update Item" : "Add Item"}
             </Button>
-          
           </Box>
         </Box>
       </Container>
