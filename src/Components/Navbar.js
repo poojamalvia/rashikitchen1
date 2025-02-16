@@ -333,10 +333,7 @@ function Navbar(props) {
             setDrawerOpen(false);
           }}
         >
-          <RenderList
-            checkuser={checkuser}
-            setDrawerOpen={setDrawerOpen}
-          />
+          <RenderList checkuser={checkuser} setDrawerOpen={setDrawerOpen} />
         </Drawer>
       </div>
 
