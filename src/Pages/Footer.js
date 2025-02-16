@@ -39,12 +39,15 @@ function Footer() {
       <footer
         style={{
           borderTop: "1px solid black",
+          borderTopLeftRadius: "50% 20px",
+    borderTopRightRadius: "50% 20px",
           backgroundColor: redcolor,
           color: "white",
           padding: "10px",
           textAlign: "center",
         }}
       >
+        
         <div className="row">
           <div
             className="col-md-3"

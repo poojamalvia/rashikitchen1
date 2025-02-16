@@ -145,7 +145,7 @@ function Login() {
               href="#"
               style={{
                 fontSize: "14px",
-                color: "#f57c00",
+                color: redcolor,
                 textDecoration: "none",
               }}
             >

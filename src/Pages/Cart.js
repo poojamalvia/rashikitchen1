@@ -67,11 +67,13 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 function Cart({}) {
   const [cartdetails, setCartdetails] = React.useState([]);
+
   const [Subtotal, setSubtotal] = React.useState(0);
   const [finalamt, setFinalamt] = React.useState(0);
   const [tax, setTax] = React.useState(0);
   const [update, doUpdate] = React.useState(true);
-  const [tempcart, setTempcart] = React.useState([]);
+  const [tempcart, setTempcart] = React.useState({});
+   const [currentDateTime, setCurrentDateTime] = React.useState("");
 
   const [open, setOpen] = React.useState(false);
   const [tip, setTip] = React.useState((0.0).toFixed(2));
@@ -84,9 +86,14 @@ function Cart({}) {
       if (docSnap.exists()) {
         console.log("Document data:", docSnap.data()); // Log to inspect the structure
         const cartData = docSnap.data().cart;
-        setSubtotal(docSnap.data().totalamt || 0); // Get the existing total amount
+       
+        
+       // setSubtotal(docSnap.data().totalamt || 0); // Get the existing total amount
         if (cartData) {
           setCartdetails(cartData); // Set the cart data in state
+          const calculatedSubtotal = cartData.reduce((acc, item) => acc + item.amt, 0);
+          setSubtotal(calculatedSubtotal); // Update subtotal state
+          
         } else {
           console.log("No cart data found.");
         }
@@ -108,7 +115,7 @@ function Cart({}) {
       total: data.total, // Assuming this holds the total amount or quantity of the item
     };
     doUpdate(!update);
-    setTempcart();
+    
     createAddtocart(updatedData); // Add item to Firebase
   };
 
@@ -160,8 +167,19 @@ function Cart({}) {
     navigate("/Checkout");
   };
 
+  const updateDatetime =()=>{
+    const date = new Date()
+    const formatedatetime = new Intl.DateTimeFormat("en-US",{ year: "numeric",
+      month: "numeric",
+      day: "numeric", hour12: true,}).format(date)
+
+      setCurrentDateTime(formatedatetime)
+    }
   useEffect(() => {
     getusercartdetails();
+
+    const intervalId = setInterval(updateDatetime, 1000);
+    return () => clearInterval(intervalId);
 
     // Calculate tax (7% of Subtotal) and set it
     const calculatedTax = (0.07 * Subtotal).toFixed(2);
@@ -169,7 +187,15 @@ function Cart({}) {
     const finalAmount = parseFloat(Subtotal) + parseFloat(tax);
 
     setFinalamt(finalAmount); // Convert back to float
+    setTempcart({...tempcart,amt:finalamt})
   }, [Subtotal, [finalamt]]);
+
+  const handleChange=(e)=>{
+
+    setTempcart({...tempcart,[e.target.name]:e.target.value})
+
+
+  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -258,13 +284,14 @@ function Cart({}) {
               Special Instructions
             </Typography>
             <TextField
-              id="special-instructions"
+              name="special_instru"
               label="Enter Special Instructions"
               variant="outlined"
               multiline
               rows={4}
               fullWidth
               style={{ marginBottom: "20px" }}
+              onChange={handleChange}
             />
           </div>
           <div
@@ -456,6 +483,7 @@ function Cart({}) {
                 <ListItemAvatar>
                   <Avatar variant="rounded" src={data?.image} />
                 </ListItemAvatar>
+              
                 <ListItemText
                   primary={data?.itemname}
                   secondary={
@@ -483,10 +511,8 @@ function Cart({}) {
                       >
                         <AddBtn
                           data={data}
-                          total={data.total}
-                          Subtotal={Subtotal}
-                          setSubtotal={setSubtotal}
                           handleAddclick={handleAddclick}
+                          cartdetails={cartdetails}
                         />
                       </div>
                     </div>
@@ -507,24 +533,25 @@ function Cart({}) {
   );
 }
 
-function AddBtn({ data, total, Subtotal, setSubtotal, handleAddclick }) {
+
+function AddBtn({ data, handleAddclick, cartdetails }) {
   const [count, setCount] = React.useState(0);
-  const [count1, setCount1] = React.useState(0);
-  const [totall, setTotall] = React.useState(0);
-  const [detail, setDetail] = React.useState({});
   const [isHovered, setIsHovered] = React.useState(false);
-  console.log("data", data);
 
   React.useEffect(() => {
-    //gettotal();
-  }, [data]);
+    getCount();
+  }, [cartdetails]);
 
-  const gettotal = () => {};
-
+  
   const handleIncrement = () => {
     if (data.availibity !== "false") {
       console.log(data);
-      const updatedData = { ...data, total: data.total ? data.total + 1 : 1 };
+      setCount((prev) => prev + 1); // Update count immediately
+      const updatedData = {
+        ...data,
+        amt: data.total * data.price,
+        total: data.total ? data.total + 1 : 1,
+      };
       handleAddclick(updatedData);
     }
   };
@@ -532,10 +559,34 @@ function AddBtn({ data, total, Subtotal, setSubtotal, handleAddclick }) {
   const handleDecrement = () => {
     if (count > 0) {
       console.log("+++++++++++clicked+++++++++");
-      const updatedData = { ...data, total: count - 1 };
+      setCount((prev) => prev - 1); // Update count immediately
+      const updatedData = {
+        ...data,
+        total: data.total ? data.total - 1 : 1,
+        amt: Math.max(0, (data.total - 1) * data.price),
+      };
+      // Ensure amt doesn't go negative
+
+      console.log("updated data ---->>>>", updatedData);
       handleAddclick(updatedData);
     }
   };
+
+  const getCount = () => {
+    console.log("-----", cartdetails);
+    let x = cartdetails.find(
+      (item) =>
+        item.itemname === data.itemname && item.category === data.category
+    );
+    if (x && x.total && x.total > 0) {
+      console.log("---777--", x);
+
+      setCount(x.total);
+    } else {
+      setCount(0);
+    }
+  };
+
   return (
     <>
       {" "}
@@ -543,15 +594,16 @@ function AddBtn({ data, total, Subtotal, setSubtotal, handleAddclick }) {
         class="btn-group"
         role="group"
         aria-label="Button group with nested dropdown"
-        style={{ display: "inline-flex" }}
+        style={{ display: "inline-flex", borderRadius: "3px" }}
       >
         <button
           type="button"
-          class="btn btn-warning"
+          class="btn btn-danger"
           style={{
             border: "none",
-            backgroundColor: isHovered ? "#f57c00" : redcolor,
-            color: fontcolor,
+            backgroundColor: isHovered ?  "#FF1B1C" : redcolor,
+            cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
+            opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -561,25 +613,29 @@ function AddBtn({ data, total, Subtotal, setSubtotal, handleAddclick }) {
         </button>
         <button
           type="button"
-          class="btn btn-warning"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          class="btn btn-danger"
           style={{
             border: "none",
-            backgroundColor: isHovered ? "#f57c00" : redcolor,
-            color: fontcolor,
+            backgroundColor: isHovered ?  "#FF1B1C" : redcolor,
+            cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
+            opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
           }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          {total}
+          {count}
         </button>
 
         <button
           type="button"
-          class="btn btn-warning"
+          class="btn btn-danger"
           style={{
             border: "none",
-            backgroundColor: isHovered ? "#f57c00" : redcolor,
-            color: fontcolor,
+            backgroundColor: isHovered ? "#FF1B1C" : redcolor,
+            cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
+            opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
+            borderTopRightRadius: "5px", // Apply radius to top-right corner
+            borderBottomRightRadius: "5px", // Apply radius to bottom-right corner
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -587,9 +643,9 @@ function AddBtn({ data, total, Subtotal, setSubtotal, handleAddclick }) {
         >
           +
         </button>
+        <br></br>
       </div>
     </>
   );
 }
-
 export default Cart;

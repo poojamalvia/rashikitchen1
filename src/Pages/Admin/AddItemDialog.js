@@ -15,7 +15,7 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import { db } from "../../firebase-config";
-import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
+import { collection, addDoc, updateDoc, doc ,getDoc} from "firebase/firestore";
 import { redcolor } from "../../Design";
 
 function AddItemDialog(props) {
@@ -98,61 +98,48 @@ function AddItemDialog(props) {
       }
     }
   };
-
-  const handleUpdateClick = async () => {
+  const handleUpdateClick = async (id) => {
     if (!validateFields()) {
       alert("Please fill in all fields before updating.");
-      return; // Prevent further execution if fields are not valid
+      return;
     }
-
-    console.log("Update click", Isupdate);
-
-    // if (!updateid) {
-    //   alert("No item selected for update.");
-    //   return;
-    // }
-    console.log("Updating Item with ID:", updateid);
-
+    if (!id) {
+      alert("Invalid item ID. Cannot update.");
+      return;
+    }
     try {
-      // Find the document in your local state by its ID
-      let obj = diningdata.find((val1) => val1.id === updateid);
-
-      // Update the fields of the object
-      obj.category = data.category;
-      obj.itemname = data.itemname;
-      obj.price = data.price;
-      obj.desc = data.desc;
-      obj.availibity = data.availibity;
-      obj.image = data.image;
-      // Create a reference to the specific document to update in Firestore
-      const docRef = doc(db, "Diningmenu", updateid);
-
-      // Update the document in Firestore
+      // Check if document exists
+      const docRef = doc(db, "Diningmenu", id);
+      const docSnap = await getDoc(docRef);
+  
+      if (!docSnap.exists()) {
+        alert("Document does not exist!");
+        return;
+      }
+  
+      // Update Firestore document
       await updateDoc(docRef, {
-        category: obj.category,
-        itemname: obj.itemname,
-        price: obj.price,
-        desc: obj.desc,
-        availibity: obj.availibity,
-        image: obj.image,
+        category: data.category,
+        itemname: data.itemname,
+        price: data.price,
+        desc: data.desc,
+        availibity: data.availibity,
+        image: data.image,
       });
-
-      // Update the local state to reflect the changes
-      setDiningdata(
-      diningdata.map((item) =>
-        item.id === updateid ? { ...item, ...obj } : item
-      )
-    );
-     
+  
+      // Update local state
+      setDiningdata((prevDiningData) =>
+        prevDiningData.map((item) =>
+          item.id === id ? { ...item, ...data } : item
+        )
+      );
+  
       alert("Item updated successfully!");
-      handleClose(); // Close the dialog after updating
+      handleClose(); // Close the dialog
     } catch (error) {
       console.error("Error updating item:", error);
       alert("Failed to update item. Please try again.");
     }
-   
-    //  Clear the input fields
-      //setData({ exp: "", credeb: "", amt: "", desc: "" });
   };
 
   const VisuallyHiddenInput = styled("input")({
@@ -186,8 +173,6 @@ function AddItemDialog(props) {
       <Container maxWidth="sm" style={{ padding: "40px 20px" }}>
         <Box
           sx={{
-            border: "2px solid #f57c00",
-            borderRadius: "8px",
             padding: "30px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
           }}
@@ -198,7 +183,7 @@ function AddItemDialog(props) {
 
           {/* Catering Category Selection */}
           <Box mb={3}>
-            <FormControl fullWidth>
+            <FormControl fullWidth required>
               <InputLabel id="category-label">Catering Category</InputLabel>
               <Select
                 labelId="category-label"
@@ -207,6 +192,7 @@ function AddItemDialog(props) {
                 fullWidth
                 onChange={handleChange}
                 value={data.category}
+                
               >
                 <MenuItem value="">
                   <em>Choose a category</em>
@@ -350,9 +336,12 @@ function AddItemDialog(props) {
                 padding: "12px 0",
                 fontSize: "16px",
               }}
-              onClick={handleUpdateClick}
+              onClick={() => {
+                console.log(data);
+                data.id ? handleUpdateClick(data.id) : handleAddclick();
+              }}
             >
-              {Isupdate ? "Update Item" : "Add Item"}
+              {data.id ? "Update Item" : "Add Item"}
             </Button>
           </Box>
         </Box>

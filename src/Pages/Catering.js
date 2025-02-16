@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import { db } from "../firebase-config";
 import Logo from "../Rashi.png";
 import backimg from "../backimg2_1.jpg";
+import {redcolor} from "../Design"
 import {
   collection,
   getDocs,
@@ -48,77 +49,77 @@ function Catering() {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.width;
     const pageHeight = doc.internal.pageSize.height;
-
-    // Add blurred background image (Ensure the image is pre-blurred)
-    doc.addImage(backimg, "JPEG", 0, 0, pageWidth, pageHeight, "", "FAST");
-
-    // Add logo image at the top
-    const logoWidth = 28;
-    const logoHeight = 28;
-    doc.addImage(Logo, "PNG", 20, 14, logoWidth, logoHeight);
-
-    // Styled heading
-    doc.setTextColor(178, 34, 34);
-    doc.setFontSize(24);
-    doc.setFont("times", "bolditalic");
-    doc.text("Rashi's Kitchen Catering Menu", pageWidth / 2, 23, {
-      align: "center",
-    });
-
-    // Address & phone with elegant font
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(12);
-    doc.setTextColor(139, 69, 19);
-    doc.text(
-      "3260 N US Hwy 17 92 #100, Longwood, FL 32750",
-      pageWidth / 2,
-      30,
-      { align: "center" }
-    );
-    doc.text("Phone: +1 (689) 207-7593", pageWidth / 2, 36, {
-      align: "center",
-    });
-
+    const margin = 20;
     let yOffset = 45;
 
-    // Decorative line separator
-    doc.setDrawColor(178, 34, 34);
-    doc.setLineWidth(0.5);
-    doc.line(20, yOffset, pageWidth - 20, yOffset);
-    yOffset += 10;
+    const addHeader = () => {
+        doc.addImage(backimg, "JPEG", 0, 0, pageWidth, pageHeight, "", "FAST");
 
-    // Reset text color for menu items
-    doc.setTextColor(0, 0, 0);
+        // Logo
+        const logoWidth = 28;
+        const logoHeight = 28;
+        doc.addImage(Logo, "PNG", 20, 14, logoWidth, logoHeight);
 
-    // Loop through categories and items with better spacing
-    Object.keys(cateringdata).forEach((category) => {
-      doc.setFont("times", "bolditalic");
-      doc.setFontSize(16);
-      doc.setTextColor(139, 0, 0);
-      doc.text(category.toUpperCase(), pageWidth / 2, yOffset, {
-        align: "center",
-      });
+        // Title
+        doc.setTextColor(178, 34, 34);
+        doc.setFontSize(24);
+        doc.setFont("times", "bolditalic");
+        doc.text("Rashi's Kitchen Catering Menu", pageWidth / 2, 23, { align: "center" });
 
-      yOffset += 2;
-      doc.setDrawColor(178, 34, 34);
-      doc.setLineWidth(0.2);
-      doc.line(50, yOffset, pageWidth - 50, yOffset);
-      yOffset += 5;
-
-      cateringdata[category].forEach((item) => {
-        doc.setFont("helvetica", "normal");
+        // Address & Phone
+        doc.setFont("helvetica", "italic");
         doc.setFontSize(12);
-        doc.setTextColor(0, 0, 0);
-        doc.text(`• ${item.itemname} `, 20, yOffset);
-        yOffset += 5;
-      });
+        doc.setTextColor(139, 69, 19);
+        doc.text("3260 N US Hwy 17 92 #100, Longwood, FL 32750", pageWidth / 2, 30, { align: "center" });
+        doc.text("Phone: +1 (689) 207-7593", pageWidth / 2, 36, { align: "center" });
 
-      yOffset += 8; // Extra space between categories
+        yOffset = 45;
+
+        // Separator Line
+        doc.setDrawColor(178, 34, 34);
+        doc.setLineWidth(0.5);
+        doc.line(margin, yOffset, pageWidth - margin, yOffset);
+        yOffset += 10;
+    };
+
+    addHeader(); // Call header once for the first page
+
+    Object.keys(cateringdata).forEach((category) => {
+        // Check if we need a new page
+        if (yOffset + 20 >= pageHeight - margin) {
+            doc.addPage();
+            addHeader();
+        }
+
+        doc.setFont("times", "bolditalic");
+        doc.setFontSize(16);
+        doc.setTextColor(139, 0, 0);
+        doc.text(category.toUpperCase(), pageWidth / 2, yOffset, { align: "center" });
+
+        yOffset += 2;
+        doc.setDrawColor(178, 34, 34);
+        doc.setLineWidth(0.2);
+        doc.line(50, yOffset, pageWidth - 50, yOffset);
+        yOffset += 5;
+
+        cateringdata[category].forEach((item) => {
+            if (yOffset + 10 >= pageHeight - margin) {
+                doc.addPage();
+                addHeader();
+            }
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`• ${item.itemname} `, 23, yOffset);
+            yOffset += 5;
+        });
+
+        yOffset += 8;
     });
 
-    // Save the generated PDF
     doc.save("catering_menu.pdf");
-  };
+};
 
   return (
     <div style={{ margin: "3%" }}>
@@ -156,8 +157,9 @@ function Catering() {
           role={undefined}
           variant="outlined"
           sx={{
-            borderColor: "red",
-            color: "red",
+            borderColor: redcolor,
+            backgroundColor:redcolor,
+            color: "white",
             "&:hover": {
               borderColor: "darkred", // Darker red on hover
               backgroundColor: "rgba(255, 0, 0, 0.1)", // Optional hover background

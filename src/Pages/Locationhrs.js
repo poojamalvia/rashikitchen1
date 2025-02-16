@@ -225,8 +225,8 @@ function Locationhrs() {
                     variant="outlined"
                     onClick={handleClickOpen}
                     sx={{
-                      borderColor: "red",
-                      color: "red",
+                      borderColor: redcolor,
+                      color: redcolor,
                       "&:hover": {
                         borderColor: "darkred", // Darker red on hover
                         backgroundColor: "rgba(255, 0, 0, 0.1)", // Optional hover background

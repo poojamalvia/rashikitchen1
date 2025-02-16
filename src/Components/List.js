@@ -23,8 +23,7 @@ function AlignItemsList({ menuDetails, isAdd }) {
   );
   const [total, setTotal] = React.useState(0);
   const [amt, setAmt] = React.useState(1);
-  //const [finalamt, setFinalamt] = React.useState(0);
-  // const UsercartCollectionRef = collection(db, "Userdetails","6ORHSPh1yeA7mywPVdOJ");
+
   const [addtocartitem, setAddtocartitem] = React.useState([]);
   const [disabledItems, setDisabledItems] = React.useState(
     new Array(menuDetails.length).fill(false)
@@ -112,7 +111,7 @@ function AlignItemsList({ menuDetails, isAdd }) {
             },
           ];
 
-          // Calculate new totalamt
+    
 
           // Update Firestore with the new cart and total amount
           await updateDoc(userRef, {
@@ -129,6 +128,7 @@ function AlignItemsList({ menuDetails, isAdd }) {
       {menuDetails.map((data, index) => {
         return (
           <>
+ 
             <ListItem alignItems="flex-start">
               <ListItemAvatar>
                 <Avatar variant="rounded" src={data.image} />
@@ -205,14 +205,14 @@ function AlignItemsList({ menuDetails, isAdd }) {
 }
 
 function AddBtn({ data, handleAddclick, cart }) {
-  //const [detail, setDetail] = React.useState();
   const [count, setCount] = React.useState(0);
+  const [isHovered, setIsHovered] = React.useState(false);
 
   React.useEffect(() => {
     getCount();
   }, [cart]);
 
-  const [isHovered, setIsHovered] = React.useState(false);
+  
   const handleIncrement = () => {
     if (data.availibity !== "false") {
       console.log(data);
@@ -271,7 +271,7 @@ function AddBtn({ data, handleAddclick, cart }) {
           class="btn btn-danger"
           style={{
             border: "none",
-            backgroundColor: isHovered ? redcolor : "#FF1B1C",
+            backgroundColor: isHovered ?  "#FF1B1C" : redcolor,
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
           }}
@@ -286,7 +286,7 @@ function AddBtn({ data, handleAddclick, cart }) {
           class="btn btn-danger"
           style={{
             border: "none",
-            backgroundColor: isHovered ? redcolor : "#FF1B1C",
+            backgroundColor: isHovered ?  "#FF1B1C" : redcolor,
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
           }}
@@ -301,7 +301,7 @@ function AddBtn({ data, handleAddclick, cart }) {
           class="btn btn-danger"
           style={{
             border: "none",
-            backgroundColor: isHovered ? redcolor : "#FF1B1C",
+            backgroundColor: isHovered ? "#FF1B1C" : redcolor,
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
             borderTopRightRadius: "5px", // Apply radius to top-right corner

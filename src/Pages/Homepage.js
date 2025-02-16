@@ -17,9 +17,6 @@ import { useEffect } from "react";
 import { background } from "../Design";
 
 function Homepage() {
-  const [loc, setLoc] = React.useState("Ahmedabad");
-  const [data, setData] = React.useState();
-  // const [isloading, setIsloading] = React.useState(false)
 
   const [currentDateTime, setCurrentDateTime] = React.useState("");
 
@@ -33,7 +30,6 @@ function Homepage() {
         year: "numeric",
         month: "long",
         day: "numeric",
-
         hour12: true,
       }).format(date);
 
@@ -47,19 +43,7 @@ function Homepage() {
     return () => clearInterval(intervalId);
   }, []);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://api.weatherapi.com/v1/current.json?key=${apikey}&q=${loc}`)
-  //     .then((res) => {
-  //       //  setIsloading(false)
-  //       console.log("response", res.data.location);
-  //       setData(res.data.location);
-  //     })
-  //     .catch((err) => {
-  //       console.log("error", err);
-  //     });
-  // });
-
+  
   return (
     <Box
       sx={{

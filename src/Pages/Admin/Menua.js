@@ -70,6 +70,11 @@ function Menua() {
     }
   }, [open]);
 
+
+
+
+
+  
   const handleDeleteClick = (id) => {
     setUpdateid(id);
     setDeleteDialogOpen(true); // Open the delete confirmation dialog
@@ -94,7 +99,9 @@ function Menua() {
   const handleClose = () => {
     setOpen(false);
     setIsUpdate(false); // Reset to false when closing dialog
+    setData({});
   };
+
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value); // This will update the selected category state
@@ -141,13 +148,13 @@ function Menua() {
                 width: "200px",
                 height: "40px",
                 "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "red",
+                  borderColor: redcolor,
                 },
                 "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "red",
+                  borderColor: redcolor,
                 },
                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "red",
+                  borderColor: redcolor,
                 },
                 "&.MuiFormLabel-root": {
                   color: "red !important",
@@ -174,7 +181,6 @@ function Menua() {
           handleClose={handleClose}
           data={data}
           setData={setData}
-          setIsUpdate={setIsUpdate}
           updateid={updateid}
         />
       </div>
@@ -214,8 +220,7 @@ function Menua() {
               setData={setData}
               setUpdateid={setUpdateid}
               updateid={updateid}
-              Isupdate={Isupdate}
-              setIsUpdate={setIsUpdate}
+            
               handleClickOpen={handleClickOpen}
               handleDeleteClick={handleDeleteClick}
             />
@@ -246,7 +251,6 @@ function TableRecords({
   data,
   setData,
   setUpdateid,
-  setIsUpdate,
   handleClickOpen,
   handleDeleteClick,
 }) {
@@ -288,7 +292,6 @@ function TableRecords({
                   onClick={() => {
                     setData(val);
                     setUpdateid(val.id);
-                    setIsUpdate(true);
                     handleClickOpen();
                   }}
                 >

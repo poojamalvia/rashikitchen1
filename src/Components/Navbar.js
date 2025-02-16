@@ -16,6 +16,7 @@ import DomainVerificationIcon from "@mui/icons-material/DomainVerification";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
+import Avatar from "@mui/material/Avatar";
 import { styled } from "@mui/system";
 import {
   Drawer,
@@ -30,17 +31,14 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Carouselimg from "../Pages/Admin/Carouselimg";
 import { Login } from "@mui/icons-material";
 import Logo from "../Rashilogo.png";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, getDocs, getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { useLocation } from "react-router-dom";
 import { redcolor } from "../Design";
+import pic1 from "../pic1.jpg";
+import pic2 from "../pic2.jpg";
+import pic3 from "../pic3.jpg";
+import pic4 from "../pic4.jpg";
 
 const isAdmin = () => {
   return window.location.pathname.toLowerCase().includes("admin");
@@ -49,6 +47,7 @@ const isAdmin = () => {
 function Navbar(props) {
   let location = useLocation();
   const [checkuser, setCheckuser] = React.useState(isAdmin());
+  const [opendrawer, setOpendrawer] = React.useState(false);
 
   const [auth, setAuth] = React.useState(true);
   const imgCollectionRef = collection(db, "carouselimage");
@@ -63,36 +62,46 @@ function Navbar(props) {
       const data = await getDocs(imgCollectionRef);
       setImage(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
+    const getTotalCount = async () => {
+      try {
+        const userRef = doc(db, "Userdetails", "6ORHSPh1yeA7mywPVdOJ"); // Replace with dynamic user ID if necessary
+        const userDoc = await getDoc(userRef);
+
+        if (userDoc.exists()) {
+          setCartCount(userDoc.data().totalcount || 0); // Update cart count state
+        }
+      } catch (error) {
+        console.error("Error fetching total count:", error);
+      }
+    };
     getCarouselimage();
-  }, []);
+    getTotalCount();
+  }, [cartCount]);
 
   useEffect(() => {
     setCheckuser(isAdmin());
   }, [location]);
-
-  const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    transition: "all 0.3s ease",
-    "&:hover": {
-      backgroundColor: "#FF1B1C", // Hover effect: change background color
-      transform: "scale(1.1)", // Hover effect: slightly enlarge the button
-    },
-  }));
-
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
 
-    navigate("/User/Login");
+  const avatarStyle = {
+    width: "130px",
+    height: "130px",
+    borderRadius: "50%",
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+    border: "3px solid #ddd",
   };
 
   let navigate = useNavigate();
   return (
     <div>
       <div>
-        <div style={{ margin: "7%" }}>
+        <div style={{ margin: "4%" }}>
           <AppBar position="fixed" style={{ backgroundColor: redcolor }}>
             <Toolbar>
               {checkadminlogin ? (
@@ -110,7 +119,6 @@ function Navbar(props) {
                   edge="start"
                   color="inherit"
                   aria-label="menu"
-                  // sx={{ mr: 2 }}
                   onClick={() => {
                     setDrawerOpen(true);
                   }}
@@ -133,7 +141,7 @@ function Navbar(props) {
                 variant="h5"
                 style={{
                   color: "white",
-                  fontFamily: "open sans",
+                  fontFamily: "'Dancing Script', cursive",
                   fontWeight: "bold",
                 }}
                 component="div"
@@ -243,7 +251,7 @@ function Navbar(props) {
 
         {!checkuser ? (
           <div
-            style={{ margin: "5%" }}
+            // style={{ marg }}
             id="carouselExampleInterval"
             className="carousel slide"
             data-bs-ride="carousel"
@@ -261,10 +269,10 @@ function Navbar(props) {
                     style={{
                       width: "100%", // Make sure the image takes full width
                       height: "100%", // Make the image take full height of the container
-                    //  objectFit: "cover", // Ensure the image covers the container while maintaining aspect ratio
-                    //  maxHeight: "500px", // Set max height to avoid stretching too much
-                    //  width: "100%",
-                      maxHeight: "400px",
+                      //  objectFit: "cover", // Ensure the image covers the container while maintaining aspect ratio
+                      //  maxHeight: "500px", // Set max height to avoid stretching too much
+                      //  width: "100%",
+                      maxHeight: "550px",
                       objectFit: "fill",
                     }}
                     className="d-block w-100"
@@ -303,22 +311,33 @@ function Navbar(props) {
         ) : (
           ""
         )}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "40px",
+            marginTop: "-70px",
+            flexWrap: "wrap",
+          }}
+        >
+          <Avatar src={pic1} style={avatarStyle} />
+          <Avatar src={pic2} style={avatarStyle} />
+          <Avatar src={pic3} style={avatarStyle} />
+          <Avatar src={pic4} style={avatarStyle} />
+        </div>
 
-        <React.Fragment>
-          <Drawer
-            anchor={"left"}
-            open={drawerOpen}
-            onClose={() => {
-              setDrawerOpen(false);
-            }}
-          >
-            <RenderList
-              checkuser={checkuser}
-              drawerOpen={drawerOpen}
-              setDrawerOpen={setDrawerOpen}
-            />
-          </Drawer>
-        </React.Fragment>
+        <Drawer
+          anchor={"left"}
+          open={drawerOpen}
+          onClose={() => {
+            setDrawerOpen(false);
+          }}
+        >
+          <RenderList
+            checkuser={checkuser}
+            setDrawerOpen={setDrawerOpen}
+          />
+        </Drawer>
       </div>
 
       {/* <Login /> */}
@@ -326,7 +345,7 @@ function Navbar(props) {
   );
 }
 
-const RenderList = ({ drawerOpen, setDrawerOpen, checkuser }) => {
+const RenderList = ({ setDrawerOpen, checkuser }) => {
   let anchor = "left";
   let navigate = useNavigate();
 
@@ -354,8 +373,6 @@ const RenderList = ({ drawerOpen, setDrawerOpen, checkuser }) => {
         overflow: "hidden",
       }}
       role="presentation"
-      // onClick={toggleDrawer(anchor, false)}
-      //onKeyDown={toggleDrawer(anchor, false)}
     >
       <div
         style={{
