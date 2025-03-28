@@ -1,21 +1,10 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import axios from "axios";
-
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { styled, alpha } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import InputBase from "@mui/material/InputBase";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useEffect } from "react";
 import { background } from "../Design";
-
+import backimage from "../images/backimage.jpg"
+import '../Pages/Main.css'
 function Homepage() {
 
   const [currentDateTime, setCurrentDateTime] = React.useState("");
@@ -45,9 +34,9 @@ function Homepage() {
 
   
   return (
-    <Box
+    <div className="row d-flex align-items-center justify-content-center"  style={{margin:"5%"}}>
+    <Box className="col-md-6"
       sx={{
-        margin: "5%",
         backgroundColor: background,
         borderRadius: "10px",
         boxShadow: 3,
@@ -55,10 +44,12 @@ function Homepage() {
         textAlign: "center",
       }}
     >
+
       <Typography
         variant="h4"
         component="h1"
-        sx={{ marginBottom: "20px", fontWeight: "bold", color: "#333" }}
+      //  className="dancing-script"
+         sx={{ marginBottom: "20px", fontWeight: "bold", color: "#333" }}
       >
         Welcome to Rashi's Kitchen - Longwood
       </Typography>
@@ -98,42 +89,17 @@ function Homepage() {
         that easy!
       </Typography>
 
+    
+
       {/* Add additional elements if needed */}
     </Box>
-    // <div style={{margin:"5%"}}>
-    //   <center>
-    //     <Box
-    //       style={{ width: "50%", align: "center" }}
-    //       component="section"
-    //       sx={{ p: 1 }}
-    //     >
-    //       <h2> Welcome to Rashi's Kitchen - Longwood</h2> <br />
-    //       <h4> {currentDateTime} </h4>
-    //       {/* {data && data.name ? (
-    //         <div>
 
-    //           <Typography variant="body2">{data.localtime}</Typography>
-    //         </div>
-    //       ) : null} */}
-    //       <br />
-    //       Rashi's Kitchen offers healthy and delicious tasting Chinese and
-    //       Indian cuisines in Longwood,FL. Rashi's Kitchen's convenient location
-    //       and affordable prices make our restaurant a natural choice for dine-in
-    //       and take-out meals in the Longwood community. Established in
-    //       Sept,2024, Restaurant is known for its variety of tastes and freshest
-    //       ingredients. Come and experience our friendly atmosphere and excellent
-    //       service.
-    //       <br />
-    //       <br />
-    //       <h2> Registration Required To Order Online!</h2>
-    //       <br />
-    //       Start ordering online by clicking login Above. Simply select the menu
-    //       items you want, add them to your cart, and checkout. Your order will
-    //       be sent to the restaurant and will be ready at the time you specify.
-    //       It's that easy!
-    //     </Box>
-    //   </center>
-    // </div>
+    <div className="col-md-6 text-center">
+     <img src={backimage} style={{ width: "100%", maxWidth: "400px", borderRadius: "10px", marginBottom: "10px" }} ></img>
+        abc
+      </div>
+    
+  </div>
   );
 }
 

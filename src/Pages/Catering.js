@@ -6,8 +6,8 @@ import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import { db } from "../firebase-config";
-import Logo from "../Rashi.png";
-import backimg from "../backimg2_1.jpg";
+import Logo from "../images/Rashi.png";
+import backimg from "../images/backimg2_1.jpg";
 import {redcolor} from "../Design"
 import {
   collection,

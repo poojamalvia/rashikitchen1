@@ -18,6 +18,9 @@ import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import Avatar from "@mui/material/Avatar";
 import { styled } from "@mui/system";
+import "../Pages/Main.css";
+import Tabs from "@mui/material/Tabs";
+
 import {
   Drawer,
   ListItemText,
@@ -30,15 +33,19 @@ import {
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Carouselimg from "../Pages/Admin/Carouselimg";
 import { Login } from "@mui/icons-material";
-import Logo from "../Rashilogo.png";
+import Logo from "../images/Rashi.png";
 import { collection, getDocs, getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { useLocation } from "react-router-dom";
 import { redcolor } from "../Design";
-import pic1 from "../pic1.jpg";
-import pic2 from "../pic2.jpg";
-import pic3 from "../pic3.jpg";
-import pic4 from "../pic4.jpg";
+import pic1 from "../images/pic1.jpg";
+import pic2 from "../images/pic2.jpg";
+import pic3 from "../images/pic3.jpg";
+import pic4 from "../images/pic4.jpg";
+import Tab from "@mui/material/Tab";
+import { red } from "@mui/material/colors";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 const isAdmin = () => {
   return window.location.pathname.toLowerCase().includes("admin");
@@ -46,8 +53,10 @@ const isAdmin = () => {
 
 function Navbar(props) {
   let location = useLocation();
-  const [checkuser, setCheckuser] = React.useState(isAdmin());
+  const theme = useTheme();
+  const [checkadmin, setCheckadmin] = React.useState(isAdmin());
   const [opendrawer, setOpendrawer] = React.useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [auth, setAuth] = React.useState(true);
   const imgCollectionRef = collection(db, "carouselimage");
@@ -56,6 +65,13 @@ function Navbar(props) {
   const [cartCount, setCartCount] = React.useState(4);
   const [checkadminlogin] = React.useState(true);
   const [image, setImage] = React.useState([]);
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  }
 
   useEffect(() => {
     const getCarouselimage = async () => {
@@ -79,7 +95,7 @@ function Navbar(props) {
   }, [cartCount]);
 
   useEffect(() => {
-    setCheckuser(isAdmin());
+    setCheckadmin(isAdmin());
   }, [location]);
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -101,155 +117,353 @@ function Navbar(props) {
   return (
     <div>
       <div>
-        <div style={{ margin: "4%" }}>
-          <AppBar position="fixed" style={{ backgroundColor: redcolor }}>
-            <Toolbar>
-              {checkadminlogin ? (
-                <IconButton
-                  sx={{
-                    mr: 2,
-                    "&:hover": {
-                      backgroundColor: "#FF5722",
-                      transform: "scale(1.1)",
-                    },
-                    transition:
-                      "transform 0.3s ease, background-color 0.3s ease",
-                  }}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  onClick={() => {
-                    setDrawerOpen(true);
-                  }}
-                >
-                  <MenuIcon onMouse style={{ border: "#100" }} />
-                </IconButton>
-              ) : (
-                ""
-              )}
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                {" "}
-                <img
-                  // className="rounded-circle img-fluid"
-                  style={{ width: "100px", borderRadius: "10px" }}
-                  src={Logo}
-                ></img>
-              </Typography>
-
-              <Typography
-                variant="h5"
-                style={{
-                  color: "white",
-                  fontFamily: "'Dancing Script', cursive",
-                  fontWeight: "bold",
-                }}
-                component="div"
-                sx={{ flexGrow: 1 }}
-              >
-                Rashi’s Kitchen Indian Cuisine
-              </Typography>
-
-              {checkadminlogin
-                ? auth && (
-                    <div>
-                      <IconButton
-                        size="large"
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        onClick={handleMenu}
-                        color="inherit"
-                        sx={{
-                          mr: 2,
-                          "&:hover": {
-                            backgroundColor: "#FF5722",
-                            transform: "scale(1.1)",
-                          },
-                          transition:
-                            "transform 0.3s ease, background-color 0.3s ease",
-                        }}
-                      >
-                        <AccountCircle />
-                      </IconButton>
-                      <Menu
-                        id="menu-appbar"
-                        anchorEl={anchorEl}
-                        anchorOrigin={{
-                          vertical: "top",
-                          horizontal: "right",
-                        }}
-                        keepMounted
-                        transformOrigin={{
-                          vertical: "top",
-                          horizontal: "right",
-                        }}
-                        open={Boolean(anchorEl)}
-                        onClose={handleClose}
-                      >
-                        {checkuser ? (
-                          <MenuItem
-                            onClick={() => {
-                              navigate("/Registration");
-                            }}
-                          >
-                            Profile
-                          </MenuItem>
-                        ) : (
-                          <MenuItem
-                            onClick={() => {
-                              navigate("/Admin/Carouselimg");
-                            }}
-                          >
-                            Profile
-                          </MenuItem>
-                        )}
-                        <MenuItem onClick={handleClose}>Log Out</MenuItem>
-                      </Menu>
-                    </div>
-                  )
-                : ""}
-
-              {!checkuser ? (
-                <IconButton
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{
-                    mr: 2,
-                    "&:hover": {
-                      backgroundColor: "#FF5722",
-                      transform: "scale(1.1)",
-                    },
-                    transition:
-                      "transform 0.3s ease, background-color 0.3s ease",
-                  }}
-                  onClick={() => {
-                    navigate("/User/Cart");
-                  }}
-                >
-                  <Badge
-                    badgeContent={cartCount} // Show the number of items in the cart
-                    // color="secondary" // Red badge color
-                    // dot
+        {isMobile ? (
+          <div>
+            <AppBar
+              position="fixed"
+              style={{
+                backgroundColor: redcolor,
+              }}
+            >
+              <Toolbar>
+                {checkadminlogin ? (
+                  <IconButton
                     sx={{
-                      ".MuiBadge-dot": {
-                        backgroundColor: "purple", // Change the secondary badge color to purple
+                      mr: 2,
+                      "&:hover": {
+                        backgroundColor: "#FF5722",
+                        transform: "scale(1.1)",
                       },
+                      transition:
+                        "transform 0.3s ease, background-color 0.3s ease",
+
+                      //  display: { xs: "block", sm: "none" }
+                    }}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    onClick={() => {
+                      setDrawerOpen(true);
                     }}
                   >
-                    <ShoppingCartIcon />
-                  </Badge>
-                </IconButton>
-              ) : (
-                ""
-              )}
-            </Toolbar>
-          </AppBar>
-        </div>
+                    <MenuIcon onMouse style={{ border: "#100" }} />
+                  </IconButton>
+                ) : (
+                  ""
+                )}
 
-        {!checkuser ? (
+                <Typography
+                  variant="h5"
+                  className="dancing-script"
+                  //</Toolbar>  style={{
+                  //   color: "white",
+                  // fontFamily: "'Dancing Script', cursive",
+                  //  fontWeight: "bold",
+                  //  }}
+                  component="div"
+                  sx={{ flexGrow: 1 }}
+                >
+                  Rashi’s Kitchen Indian Cuisine
+                </Typography>
+
+                {checkadminlogin
+                  ? auth && (
+                      <div>
+                        <IconButton
+                          size="large"
+                          aria-label="account of current user"
+                          aria-controls="menu-appbar"
+                          aria-haspopup="true"
+                          onClick={handleMenu}
+                          color="inherit"
+                          sx={{
+                            mr: 2,
+                            "&:hover": {
+                              backgroundColor: "#FF5722",
+                              transform: "scale(1.1)",
+                            },
+                            transition:
+                              "transform 0.3s ease, background-color 0.3s ease",
+                          }}
+                        >
+                          <AccountCircle />
+                        </IconButton>
+                        <Menu
+                          id="menu-appbar"
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "top",
+                            horizontal: "right",
+                          }}
+                          keepMounted
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "right",
+                          }}
+                          open={Boolean(anchorEl)}
+                          onClose={handleClose}
+                        >
+                          {checkadmin ? (
+                            <MenuItem
+                              onClick={() => {
+                                navigate("/Admin/Carouselimg");
+                              }}
+                            >
+                              Profile
+                            </MenuItem>
+                          ) : (
+                            <MenuItem
+                              onClick={() => {
+                                navigate("/User/Registration");
+                              }}
+                            >
+                              Profile
+                            </MenuItem>
+                          )}
+                          <MenuItem
+                            onClick={() => {
+                              navigate("/User/home");
+                              handleClose();
+                            }}
+                          >
+                            Log Out
+                          </MenuItem>
+                        </Menu>
+                      </div>
+                    )
+                  : ""}
+
+                {!checkadmin ? (
+                  <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{
+                      mr: 2,
+                      "&:hover": {
+                        backgroundColor: "#FF5722",
+                        transform: "scale(1.1)",
+                      },
+                      transition:
+                        "transform 0.3s ease, background-color 0.3s ease",
+                    }}
+                    onClick={() => {
+                      navigate("/User/Cart");
+                    }}
+                  >
+                    <Badge
+                      badgeContent={cartCount} // Show the number of items in the cart
+                      // color="secondary" // Red badge color
+                      // dot
+                      sx={{
+                        ".MuiBadge-dot": {
+                          backgroundColor: "purple", // Change the secondary badge color to purple
+                        },
+                      }}
+                    >
+                      <ShoppingCartIcon />
+                    </Badge>
+                  </IconButton>
+                ) : (
+                  ""
+                )}
+              </Toolbar>
+            </AppBar>
+          </div>
+        ) : (
+          <div style={{ margin: "4%" }}>
+            <AppBar position="fixed" style={{ backgroundColor: "#ffffff" }}>
+              <Toolbar>
+                <Box
+                  sx={{
+                    flexGrow: 1,
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Tabs>
+                    <Tab
+                      label="Home"
+                      {...a11yProps(0)}
+                      style={{ color: redcolor, textTransform: "unset" }}
+                      sx={{ fontSize: "1.2rem" }}
+                      onClick={() => {
+                        navigate("/User/home");
+                      }}
+                    />
+                    <Tab
+                      label="Menu"
+                      {...a11yProps(1)}
+                      style={{ color: redcolor, textTransform: "unset" }}
+                      sx={{ fontSize: "1.2rem" }}
+                      onClick={() => {
+                        navigate("/User/DiningMenu");
+                      }}
+                    />
+                    <Tab
+                      label="Catering"
+                      {...a11yProps(2)}
+                      style={{ color: redcolor, textTransform: "unset" }}
+                      sx={{ fontSize: "1.2rem" }}
+                      onClick={() => {
+                        navigate("/User/CateringMenu");
+                      }}
+                    />
+                    <Box sx={{ width: "50px" }}></Box>
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      sx={{ flexGrow: 1 }}
+                    >
+                      {" "}
+                      <img
+                        // className="rounded-circle img-fluid"
+                        style={{ width: "100px", borderRadius: "10px" }}
+                        src={Logo}
+                      ></img>
+                    </Typography>
+
+                    <Box sx={{ width: "50px" }}></Box>
+                    <Tab
+                      label="Orders"
+                      {...a11yProps(3)}
+                      style={{ color: redcolor, textTransform: "unset" }}
+                      sx={{ fontSize: "1.2rem" }}
+                      onClick={() => {
+                        navigate("/User/orders");
+                      }}
+                    />
+                    <Tab
+                      label="Location & Hours"
+                      {...a11yProps(4)}
+                      style={{ color: redcolor, textTransform: "unset" }}
+                      sx={{ fontSize: "1.2rem" }}
+                      onClick={() => {
+                        navigate("/User/Locationhours");
+                      }}
+                    />
+                    <Tab
+                      label="Contact Us"
+                      {...a11yProps(5)}
+                      style={{ color: redcolor, textTransform: "unset" }}
+                      sx={{ fontSize: "1.2rem" }}
+                      onClick={() => {
+                        navigate("/User/contactus");
+                      }}
+                    />
+                  </Tabs>
+                </Box>
+
+                {checkadminlogin
+                  ? auth && (
+                      <div>
+                        <IconButton
+                          size="large"
+                          aria-label="account of current user"
+                          aria-controls="menu-appbar"
+                          aria-haspopup="true"
+                          onClick={handleMenu}
+                          color={redcolor}
+                          sx={{
+                            mr: 2,
+                            "&:hover": {
+                              backgroundColor: redcolor,
+                              transform: "scale(1.1)",
+                            },
+                            transition:
+                              "transform 0.3s ease, background-color 0.3s ease",
+                          }}
+                        >
+                          <AccountCircle sx={{ color: redcolor }} />
+                        </IconButton>
+                        <Menu
+                          id="menu-appbar"
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "top",
+                            horizontal: "right",
+                          }}
+                          keepMounted
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "right",
+                          }}
+                          open={Boolean(anchorEl)}
+                          onClose={handleClose}
+                        >
+                          {checkadmin ? (
+                            <MenuItem
+                              onClick={() => {
+                                navigate("/Admin/Carouselimg");
+                              }}
+                            >
+                              Profile
+                            </MenuItem>
+                          ) : (
+                            <MenuItem
+                              onClick={() => {
+                                navigate("/User/Registration");
+                              }}
+                            >
+                              Profile
+                            </MenuItem>
+                          )}
+                          <MenuItem
+                            onClick={() => {
+                              navigate("/User/home");
+                              handleClose();
+                            }}
+                          >
+                            Log Out
+                          </MenuItem>
+                        </Menu>
+                      </div>
+                    )
+                  : ""}
+
+                {!checkadmin ? (
+                  <IconButton
+                    size="large"
+                    edge="start"
+                    color={redcolor}
+                    aria-label="menu"
+                    sx={{
+                      mr: 2,
+                      "&:hover": {
+                        backgroundColor: redcolor,
+                        transform: "scale(1.1)",
+                      },
+                      transition:
+                        "transform 0.3s ease, background-color 0.3s ease",
+                    }}
+                    onClick={() => {
+                      navigate("/User/Cart");
+                    }}
+                  >
+                    <Badge
+                      badgeContent={cartCount} // Show the number of items in the cart
+                      // color="secondary" // Red badge color
+                      // dot
+                      sx={{
+                        ".MuiBadge-dot": {
+                          backgroundColor: "purple", // Change the secondary badge color to purple
+                        },
+                      }}
+                    >
+                      <ShoppingCartIcon sx={{ color: redcolor }} />
+                    </Badge>
+                  </IconButton>
+                ) : (
+                  ""
+                )}
+              </Toolbar>
+            </AppBar>
+          </div>
+        )}
+
+        {!checkadmin ? (
           <div
             // style={{ marg }}
             id="carouselExampleInterval"
@@ -332,8 +546,9 @@ function Navbar(props) {
           onClose={() => {
             setDrawerOpen(false);
           }}
+          //  sx={{ display: { xs: "block", sm: "none" },}}
         >
-          <RenderList checkuser={checkuser} setDrawerOpen={setDrawerOpen} />
+          <RenderList checkadmin={checkadmin} setDrawerOpen={setDrawerOpen} />
         </Drawer>
       </div>
 
@@ -342,7 +557,7 @@ function Navbar(props) {
   );
 }
 
-const RenderList = ({ setDrawerOpen, checkuser }) => {
+const RenderList = ({ setDrawerOpen, checkadmin }) => {
   let anchor = "left";
   let navigate = useNavigate();
 
@@ -378,7 +593,7 @@ const RenderList = ({ setDrawerOpen, checkuser }) => {
           height: window.innerHeight,
         }}
       >
-        {!checkuser ? (
+        {!checkadmin ? (
           <List>
             {[
               { name: "Home", value: "home" },

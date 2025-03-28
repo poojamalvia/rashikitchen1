@@ -9,9 +9,12 @@ import {
   InputLabel,
   FormControl,
   Typography,
+  IconButton,
+  DialogTitle,
   Dialog,
   Switch,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close"; // Import Close Icon
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import { db } from "../../firebase-config";
@@ -41,10 +44,7 @@ function AddItemDialog(props) {
       return; // Prevent further execution if fields are not valid
     }
 
-    console.log("Add click", Isupdate);
     createDiningmenu(data); // Add item to Firebase
-
-    //setNo(no + 1);
     setData({
       itemname: "",
       price: "",
@@ -156,30 +156,34 @@ function AddItemDialog(props) {
 
   return (
     <Dialog
-      onClose={handleClose}
       open={open}
       PaperProps={{
         style: {
           margin: 0,
-          // width: "600px",
-          // height: "600px",
           maxWidth: "100%",
-          //overflow: "hidden",
           borderRadius: "12px", // Rounded corners
           boxShadow: "0px 8px 16px rgba(0,0,0,0.1)", // Soft shadow
         },
       }}
     >
-      <Container maxWidth="sm" style={{ padding: "40px 20px" }}>
+
+       <IconButton onClick={handleClose} sx={{ color: redcolor ,position:"absolute", top:"8px",right:"8px"}}>
+          <CloseIcon />
+        </IconButton>
+
+      <Container maxWidth="sm" style={{ padding: "20px" }}>
         <Box
           sx={{
-            padding: "30px",
+            padding: "20px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <Typography variant="h4" align="center" gutterBottom>
+
+    
+
+          <Typography variant="h4" align="center" style={{color:redcolor}} gutterBottom>
             Update Dining Menu Item
-          </Typography>
+          </Typography> 
 
           {/* Catering Category Selection */}
           <Box mb={3}>

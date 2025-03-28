@@ -12,7 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Rating from "@mui/material/Rating";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
-
+import CommentIcon from '@mui/icons-material/Comment';
 import {
   Button,
   TableBody,
@@ -23,6 +23,7 @@ import {
   Paper,
   Table,
   Typography,
+  TextField,
 } from "@mui/material";
 import {
   collection,
@@ -153,6 +154,9 @@ function Order() {
               <TableCell>Ordered Items</TableCell>
               <TableCell>Amount</TableCell>
               <TableCell>review</TableCell>
+              <TableCell>Feedback</TableCell>
+              <TableCell></TableCell>
+
               <TableCell>Order Status</TableCell>
             </TableRow>
           </TableHead>
@@ -162,7 +166,7 @@ function Order() {
                 <TableCell component="th" scope="row">
                   {val.tokenno}
                 </TableCell>
-                <TableCell></TableCell>
+                <TableCell>{val.timestamp}</TableCell>
 
                 <TableCell>
                   <>
@@ -196,7 +200,8 @@ function Order() {
                   </>
                 </TableCell>
 
-                <TableCell>$-{val.totalamt}</TableCell>
+                <TableCell>${val.totalAmount}</TableCell>
+
                 <TableCell>
                   <Rating
                     value={val.review}
@@ -204,13 +209,29 @@ function Order() {
                     size="small"
                   ></Rating>
                 </TableCell>
+                <TableCell>
+                  <TextField
+                   fullWidth
+                   type="text"
+                  >
+
+                  </TextField>
+                  
+
+
+                </TableCell>
+                <TableCell>               
+                       <IconButton>
+                  <CommentIcon style={{color:redcolor}}/>
+                  </IconButton>
+                  </TableCell>
 
                 <TableCell>
                   <Button
                     variant="outlined"
                     style={{ borderColor: redcolor, color: redcolor }}
                   >
-                    {val.orderstatus}
+                    {val.status}
                   </Button>
                 </TableCell>
                 <TableCell></TableCell>

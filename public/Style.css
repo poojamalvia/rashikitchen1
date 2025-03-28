@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
+
+
 /* Basic styling for the contact section */
 .contact-info {
     display: flex;
@@ -55,4 +58,11 @@ body, html {
 /* Optional: Ensure no elements are overflowing the page */
 * {
   box-sizing: border-box;
+}
+
+
+.dancing-script {
+  font-family: 'Dancing Script', cursive;
+  font-weight: bold;
+  color: white;
 }

@@ -54,7 +54,6 @@ function AlignItemsList({ menuDetails, isAdd }) {
   };
 
   const handleAddclick = (data) => {
-    console.log("-----()()()()---", data);
     const updatedData = {
       itemname: data.itemname,
       price: data.price,
@@ -62,12 +61,11 @@ function AlignItemsList({ menuDetails, isAdd }) {
       desc: data.desc,
       image: data.image,
       total: data.total,
-      amt: data.total * data.price, // Assuming this holds the total amount or quantity of the item
+      amt: data.amt, // Assuming this holds the total amount or quantity of the item
     };
-    doUpdate(!update);
-    console.log("-----()(updatedData)(updatedData)()---", updatedData);
 
     createAddtocart(updatedData); // Add item to Firebase
+    doUpdate(!update);
   };
 
   const createAddtocart = async (data) => {
@@ -88,9 +86,8 @@ function AlignItemsList({ menuDetails, isAdd }) {
         if (itemIndex !== -1) {
           // If item exists, update the total
           const updatedCart = [...currentCart];
-          updatedCart[itemIndex].total += data.total; // Increment the total quantity for the item
-          updatedCart[itemIndex].amt =
-            updatedCart[itemIndex].total * updatedCart[itemIndex].price;
+          updatedCart[itemIndex].total = data.total; // Increment the total quantity for the item
+          updatedCart[itemIndex].amt = data.amt;
 
           // Update the cart array with the new total for the item
           await updateDoc(userRef, {
@@ -107,11 +104,9 @@ function AlignItemsList({ menuDetails, isAdd }) {
               desc: data.desc,
               image: data.image,
               total: data.total,
-              amt: data.total * data.price,
+              amt: data.amt,
             },
           ];
-
-    
 
           // Update Firestore with the new cart and total amount
           await updateDoc(userRef, {
@@ -128,7 +123,6 @@ function AlignItemsList({ menuDetails, isAdd }) {
       {menuDetails.map((data, index) => {
         return (
           <>
- 
             <ListItem alignItems="flex-start">
               <ListItemAvatar>
                 <Avatar variant="rounded" src={data.image} />
@@ -153,7 +147,6 @@ function AlignItemsList({ menuDetails, isAdd }) {
                       >
                         {data.desc}
                       </Typography>
-                      {console.log(total)}
 
                       {data.availibity == "false" ? (
                         <label
@@ -207,54 +200,55 @@ function AlignItemsList({ menuDetails, isAdd }) {
 function AddBtn({ data, handleAddclick, cart }) {
   const [count, setCount] = React.useState(0);
   const [isHovered, setIsHovered] = React.useState(false);
+  const [isDisabled, setIsDisabled] = React.useState(true);
 
   React.useEffect(() => {
     getCount();
   }, [cart]);
 
-  
   const handleIncrement = () => {
+    console.log("------called----");
     if (data.availibity !== "false") {
-      console.log(data);
-      setCount((prev) => prev + 1); // Update count immediately
+      // setCount((prev) => prev + 1); // Update count immediately
+      setIsDisabled(true);
       const updatedData = {
         ...data,
-        amt: data.total * data.price,
-        total: data.total ? data.total + 1 : 1,
+        amt: (count ? count + 1 : 1) * data.price,
+        total: count ? count + 1 : 1,
       };
+      console.log(data, updatedData);
       handleAddclick(updatedData);
     }
   };
 
   const handleDecrement = () => {
+    console.log("------called----");
     if (count > 0) {
-      console.log("+++++++++++clicked+++++++++");
-      setCount((prev) => prev - 1); // Update count immediately
+      // setCount((prev) => prev - 1); // Update count immediately
+      setIsDisabled(true);
+
       const updatedData = {
         ...data,
-        total: data.total ? data.total - 1 : 1,
-        amt: Math.max(0, (data.total - 1) * data.price),
+        total: count ? count - 1 : 1,
+        amt: (count ? count - 1 : 1) * data.price,
       };
       // Ensure amt doesn't go negative
 
-      console.log("updated data ---->>>>", updatedData);
       handleAddclick(updatedData);
     }
   };
 
   const getCount = () => {
-    console.log("-----", cart);
     let x = cart.find(
       (item) =>
         item.itemname === data.itemname && item.category === data.category
     );
     if (x && x.total && x.total > 0) {
-      console.log("---777--", x);
-
       setCount(x.total);
     } else {
       setCount(0);
     }
+    setIsDisabled(false);
   };
 
   return (
@@ -268,10 +262,11 @@ function AddBtn({ data, handleAddclick, cart }) {
       >
         <button
           type="button"
+          disabled={isDisabled}
           class="btn btn-danger"
           style={{
             border: "none",
-            backgroundColor: isHovered ?  "#FF1B1C" : redcolor,
+            backgroundColor: isHovered ? "#FF1B1C" : redcolor,
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
           }}
@@ -284,9 +279,10 @@ function AddBtn({ data, handleAddclick, cart }) {
         <button
           type="button"
           class="btn btn-danger"
+          disabled={isDisabled}
           style={{
             border: "none",
-            backgroundColor: isHovered ?  "#FF1B1C" : redcolor,
+            backgroundColor: isHovered ? "#FF1B1C" : redcolor,
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
           }}
@@ -299,6 +295,7 @@ function AddBtn({ data, handleAddclick, cart }) {
         <button
           type="button"
           class="btn btn-danger"
+          disabled={isDisabled}
           style={{
             border: "none",
             backgroundColor: isHovered ? "#FF1B1C" : redcolor,

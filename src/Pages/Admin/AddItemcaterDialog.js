@@ -23,6 +23,7 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import { db } from "../../firebase-config";
+import CloseIcon from "@mui/icons-material/Close"; // Import Close Ico
 import {
   collection,
   getDocs,
@@ -226,26 +227,26 @@ function AddItemcaterDialog(props) {
 
   return (
     <Dialog
-      onClose={handleClose}
       open={open}
       PaperProps={{
         style: {
           margin: 0,
-          // width: "600px",
-          // height: "600px",
           maxWidth: "100%",
-          //overflow: "hidden",
           borderRadius: "12px", // Rounded corners
           boxShadow: "0px 8px 16px rgba(0,0,0,0.1)", // Soft shadow
         },
       }}
     >
-      <Container maxWidth="sm" style={{ padding: "40px 20px" }}>
+
+<IconButton onClick={handleClose} sx={{ color: redcolor ,position:"absolute", top:"8px",right:"8px"}}>
+          <CloseIcon />
+        </IconButton>
+      <Container maxWidth="sm" style={{ padding: "20px" }}>
         <Box
           sx={{
-            border: "2px solid #f57c00",
+    
             borderRadius: "8px",
-            padding: "30px",
+            padding: "20px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
           }}
         >
@@ -255,9 +256,10 @@ function AddItemcaterDialog(props) {
 
           {/* Catering Category Selection */}
           <Box mb={3}>
-            <FormControl fullWidth>
+            <FormControl required fullWidth>
               <InputLabel id="category-label">Catering Category</InputLabel>
               <Select
+                
                 labelId="category-label"
                 name="category"
                 label="Catering Category"
@@ -368,9 +370,9 @@ function AddItemcaterDialog(props) {
                 padding: "12px 0",
                 fontSize: "16px",
               }}
-              onClick={handleAddclick}
+              onClick={()=>{data.id ? handleUpdateClick(data.id) : handleAddclick()}}
             >
-              Add/Update Item
+              {data.id ? "Update Item" : "Add Item"}
             </Button>
           </Box>
         </Box>

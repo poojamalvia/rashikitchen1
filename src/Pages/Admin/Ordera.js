@@ -17,10 +17,6 @@ import { redcolor } from "../../Design";
 import {
   collection,
   getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
 } from "firebase/firestore";
 
 import {
@@ -34,7 +30,6 @@ import {
   Table,
   Typography,
 } from "@mui/material";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -57,7 +52,6 @@ function Ordera() {
   };
   const handleChange = (event) => {
     setSelectorder(event.target.value);
-    // {selectorder}
   };
   const [open, setOpen] = React.useState(false);
 
@@ -75,45 +69,6 @@ function Ordera() {
     { desc: "it is delecious food" },
   ]);
 
-  const [CustOrder, setCustOrder] = React.useState([
-    {
-      tokenid: "1",
-      datetime: "",
-      custname: "pooja malvia",
-      amount: "50",
-      review: "3.5",
-      orderstatus: "confirmed",
-    },
-    {
-      tokenid: "2",
-      custname: "Hitesh malvia",
-      amount: "100",
-      review: "2.5",
-      orderstatus: "In Process",
-    },
-    {
-      tokenid: "3",
-      custname: "sdfsodlfsdlcdsd;l",
-      amount: "250",
-      review: "3",
-      orderstatus: "canceled",
-    },
-    {
-      tokenid: "4",
-      custname: "Hdfgdfgvdflgm,;",
-      amount: "200",
-      review: "4",
-      orderstatus: "In Process",
-    },
-    {
-      tokenid: "5",
-      custname: "Hitesh malvia",
-      amount: "100",
-      review: "5",
-      orderstatus: "In Process",
-    },
-  ]);
-
   const getorderdata = async () => {
     const data = await getDocs(AorderCollectionRef);
     setOrderadmindata(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -122,6 +77,7 @@ function Ordera() {
   useEffect(() => {
     getorderdata();
   }, []);
+  
   function AddStatusbtn() {
     return (
       <div>
@@ -159,13 +115,13 @@ function Ordera() {
             onChange={handleChange1}
             sx={{
               "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "red", // Change border color here
+                borderColor: redcolor, // Change border color here
               },
               "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "red", // Change border color on hover
+                borderColor: redcolor, // Change border color on hover
               },
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "red", // Change border color on focus
+                borderColor: redcolor, // Change border color on focus
               },
               width: "50%",
               "&.MuiFormLabel-root": {
@@ -288,7 +244,7 @@ function Ordera() {
               top: 8,
               color: "white",
               "&:hover": {
-                backgroundColor: "#f57c00",
+                backgroundColor:redcolor,
               },
             }}
           >
@@ -304,7 +260,7 @@ function Ordera() {
             </Typography>
 
             <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel id="order-status" style={{ color: "red" }}>
+              <InputLabel id="order-status" style={{ color: redcolor }}>
                 Select Orders
               </InputLabel>
               <Select
@@ -315,13 +271,13 @@ function Ordera() {
                 onChange={handleChange}
                 sx={{
                   "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "red", // Change border color here
+                    borderColor: redcolor, // Change border color here
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "red", // Change border color on hover
+                    borderColor: redcolor, // Change border color on hover
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "red", // Change border color on focus
+                    borderColor: redcolor, // Change border color on focus
                   },
 
                   "&.MuiFormLabel-root": {

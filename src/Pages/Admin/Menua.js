@@ -3,7 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import NoMealsIcon from "@mui/icons-material/NoMeals";
-
 import { db } from "../../firebase-config";
 
 import {
@@ -30,8 +29,7 @@ import {
   DialogTitle,
   Switch,
 } from "@mui/material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { styled } from "@mui/material/styles";
+
 import {
   collection,
   getDocs,
@@ -70,11 +68,6 @@ function Menua() {
     }
   }, [open]);
 
-
-
-
-
-  
   const handleDeleteClick = (id) => {
     setUpdateid(id);
     setDeleteDialogOpen(true); // Open the delete confirmation dialog

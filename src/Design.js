@@ -1,4 +1,5 @@
-export const redcolor = "#840708",
+export const redcolor = "#830005",
+//#840708
   //"#BC0C1C"
   background = "#f4f4f4",
   fontcolor = "white";

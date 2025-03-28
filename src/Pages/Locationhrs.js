@@ -7,7 +7,7 @@ import Dialog from "@mui/material/Dialog";
 import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
-import logo from "../Rashi.png";
+import logo from "../images/Rashi.png";
 import { background, redcolor } from "../Design";
 
 function SimpleDialog(props) {
