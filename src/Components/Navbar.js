@@ -20,6 +20,16 @@ import Avatar from "@mui/material/Avatar";
 import { styled } from "@mui/system";
 import "../Pages/Main.css";
 import Tabs from "@mui/material/Tabs";
+import sliderimg1 from "../images/sliderimg1.jpg";
+import sliderimg2 from "../images/sliderimg2.jpg";
+import sliderimg3 from "../images/sliderimg3.jpg";
+import sliderimg4 from "../images/sliderimg4.jpg";
+import sliderimg5 from "../images/sliderimg5.jpg";
+import sliderimg6 from "../images/sliderimg6.jpg";
+import sliderimg7 from "../images/sliderimg7.jpg";
+import sliderimg8 from "../images/sliderimg8.jpg";
+import panipuri from "../images/panipuri.jpg"
+import chole from "../images/chole.JPG";
 
 import {
   Drawer,
@@ -31,8 +41,7 @@ import {
   ListItemButton,
 } from "@mui/material";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import Carouselimg from "../Pages/Admin/Carouselimg";
-import { Login } from "@mui/icons-material";
+
 import Logo from "../images/Rashi.png";
 import { collection, getDocs, getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase-config";
@@ -42,8 +51,8 @@ import pic1 from "../images/pic1.jpg";
 import pic2 from "../images/pic2.jpg";
 import pic3 from "../images/pic3.jpg";
 import pic4 from "../images/pic4.jpg";
+import logo1 from "../images/Rashilogo.png"
 import Tab from "@mui/material/Tab";
-import { red } from "@mui/material/colors";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 
@@ -65,6 +74,7 @@ function Navbar(props) {
   const [cartCount, setCartCount] = React.useState(4);
   const [checkadminlogin] = React.useState(true);
   const [image, setImage] = React.useState([]);
+  let isAuthenticated = !!localStorage.getItem("token");
 
   function a11yProps(index) {
     return {
@@ -152,89 +162,107 @@ function Navbar(props) {
                 ) : (
                   ""
                 )}
-
+                <img
+                  src={logo1} // Replace with your actual logo path or import
+                alt="Rashi's Kitchen Logo"
+                style={{
+                 height: 40,
+                 marginRight: 10,
+      borderRadius: "12px", // curved corners
+    }}
+  />
                 <Typography
                   variant="h5"
-                  className="dancing-script"
-                  //</Toolbar>  style={{
-                  //   color: "white",
-                  // fontFamily: "'Dancing Script', cursive",
-                  //  fontWeight: "bold",
-                  //  }}
+                  //  className="dancing-script"
+                  style={{
+                    color: "white",
+                    fontFamily: "'Dancing Script', cursive",
+                    fontWeight: "bold",
+                  }}
                   component="div"
                   sx={{ flexGrow: 1 }}
                 >
                   Rashi’s Kitchen Indian Cuisine
                 </Typography>
 
-                {checkadminlogin
-                  ? auth && (
-                      <div>
-                        <IconButton
-                          size="large"
-                          aria-label="account of current user"
-                          aria-controls="menu-appbar"
-                          aria-haspopup="true"
-                          onClick={handleMenu}
-                          color="inherit"
-                          sx={{
-                            mr: 2,
-                            "&:hover": {
-                              backgroundColor: "#FF5722",
-                              transform: "scale(1.1)",
-                            },
-                            transition:
-                              "transform 0.3s ease, background-color 0.3s ease",
-                          }}
-                        >
-                          <AccountCircle />
-                        </IconButton>
-                        <Menu
-                          id="menu-appbar"
-                          anchorEl={anchorEl}
-                          anchorOrigin={{
-                            vertical: "top",
-                            horizontal: "right",
-                          }}
-                          keepMounted
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "right",
-                          }}
-                          open={Boolean(anchorEl)}
-                          onClose={handleClose}
-                        >
-                          {checkadmin ? (
-                            <MenuItem
-                              onClick={() => {
-                                navigate("/Admin/Carouselimg");
-                              }}
-                            >
-                              Profile
-                            </MenuItem>
-                          ) : (
-                            <MenuItem
-                              onClick={() => {
-                                navigate("/User/Registration");
-                              }}
-                            >
-                              Profile
-                            </MenuItem>
-                          )}
+                {isAuthenticated && checkadminlogin ? (
+                  auth && (
+                    <div>
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={handleMenu}
+                        color="inherit"
+                        sx={{
+                          mr: 2,
+                          "&:hover": {
+                            backgroundColor: "#FF5722",
+                            transform: "scale(1.1)",
+                          },
+                          transition:
+                            "transform 0.3s ease, background-color 0.3s ease",
+                        }}
+                      >
+                        <AccountCircle />
+                      </IconButton>
+                      <Menu
+                        id="menu-appbar"
+                        anchorEl={anchorEl}
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                      >
+                        {checkadmin ? (
                           <MenuItem
                             onClick={() => {
-                              navigate("/User/home");
-                              handleClose();
+                              navigate("/Admin/Carouselimg");
                             }}
                           >
-                            Log Out
+                            Profile
                           </MenuItem>
-                        </Menu>
-                      </div>
-                    )
-                  : ""}
+                        ) : (
+                          <MenuItem
+                            onClick={() => {
+                              navigate("/User/Registration");
+                            }}
+                          >
+                            Profile
+                          </MenuItem>
+                        )}
+                        <MenuItem
+                          onClick={() => {
+                            navigate("/User/login");
+                            localStorage.removeItem("token");
+                            handleClose();
+                          }}
+                        >
+                          Log Out
+                        </MenuItem>
+                      </Menu>
+                    </div>
+                  )
+                ) : (
+                  <button
+                    type="button"
+                    style={{ color: "#ffffff" }}
+                    class="btn"
+                    onClick={() => navigate("/User/login")}
+                  >
+                    Log In
+                  </button>
+                )}
 
-                {!checkadmin ? (
+                {isAuthenticated && !checkadmin ? (
                   <IconButton
                     size="large"
                     edge="start"
@@ -283,81 +311,273 @@ function Navbar(props) {
                     justifyContent: "center",
                   }}
                 >
-                  <Tabs>
-                    <Tab
-                      label="Home"
-                      {...a11yProps(0)}
-                      style={{ color: redcolor, textTransform: "unset" }}
-                      sx={{ fontSize: "1.2rem" }}
-                      onClick={() => {
-                        navigate("/User/home");
-                      }}
-                    />
-                    <Tab
-                      label="Menu"
-                      {...a11yProps(1)}
-                      style={{ color: redcolor, textTransform: "unset" }}
-                      sx={{ fontSize: "1.2rem" }}
-                      onClick={() => {
-                        navigate("/User/DiningMenu");
-                      }}
-                    />
-                    <Tab
-                      label="Catering"
-                      {...a11yProps(2)}
-                      style={{ color: redcolor, textTransform: "unset" }}
-                      sx={{ fontSize: "1.2rem" }}
-                      onClick={() => {
-                        navigate("/User/CateringMenu");
-                      }}
-                    />
-                    <Box sx={{ width: "50px" }}></Box>
-                    <Typography
-                      variant="h6"
-                      component="div"
-                      sx={{ flexGrow: 1 }}
-                    >
-                      {" "}
-                      <img
-                        // className="rounded-circle img-fluid"
-                        style={{ width: "100px", borderRadius: "10px" }}
-                        src={Logo}
-                      ></img>
-                    </Typography>
+                  {checkadmin ? (
+                    <Tabs>
+                      <Box sx={{ width: "50px" }}></Box>
+                      <Typography
+                        variant="h6"
+                        component="div"
+                        sx={{ flexGrow: 1 }}
+                      >
+                        {" "}
+                        <img
+                          // className="rounded-circle img-fluid"
+                          style={{ width: "100px", borderRadius: "10px" }}
+                          src={Logo}
+                        ></img>
+                      </Typography>
 
-                    <Box sx={{ width: "50px" }}></Box>
-                    <Tab
-                      label="Orders"
-                      {...a11yProps(3)}
-                      style={{ color: redcolor, textTransform: "unset" }}
-                      sx={{ fontSize: "1.2rem" }}
-                      onClick={() => {
-                        navigate("/User/orders");
-                      }}
-                    />
-                    <Tab
-                      label="Location & Hours"
-                      {...a11yProps(4)}
-                      style={{ color: redcolor, textTransform: "unset" }}
-                      sx={{ fontSize: "1.2rem" }}
-                      onClick={() => {
-                        navigate("/User/Locationhours");
-                      }}
-                    />
-                    <Tab
-                      label="Contact Us"
-                      {...a11yProps(5)}
-                      style={{ color: redcolor, textTransform: "unset" }}
-                      sx={{ fontSize: "1.2rem" }}
-                      onClick={() => {
-                        navigate("/User/contactus");
-                      }}
-                    />
-                  </Tabs>
+                      <Box sx={{ width: "50px" }}></Box>
+                      <Tab
+                        label="Dining Menu"
+                        {...a11yProps(3)}
+                        style={{ textTransform: "unset" }}
+                        sx={{
+                          color: redcolor,
+                          fontSize: "1.2rem",
+                          "&:hover": {
+                            color: "#ffffff", // Replace with your desired hover color
+                          },
+                        }}
+                        onClick={() => {
+                          navigate("/Admin/DiningMenu");
+                        }}
+                      />
+                      <Tab
+                        label="Catering Menu"
+                        {...a11yProps(4)}
+                        style={{ color: redcolor, textTransform: "unset" }}
+                        sx={{ fontSize: "1.2rem" }}
+                        onClick={() => {
+                          navigate("/Admin/CateringMenu");
+                        }}
+                      />
+                      <Tab
+                        label="Orders"
+                        {...a11yProps(5)}
+                        style={{ color: redcolor, textTransform: "unset" }}
+                        sx={{ fontSize: "1.2rem" }}
+                        onClick={() => {
+                          navigate("/Admin/UserOrder");
+                        }}
+                      />
+                    </Tabs>
+                  ) : (
+                    <Tabs>
+                      <Tab
+                        label="Home"
+                        {...a11yProps(0)}
+                        sx={{
+                          color: redcolor,
+                          textTransform: "unset",
+                          fontSize: "1.2rem",
+                          "&:hover": {
+                            color: "#333",
+                          },
+                        }}
+                        onClick={() => {
+                          navigate("/User/home");
+                        }}
+                      />
+                      <Tab
+                        label="Menu"
+                        {...a11yProps(1)}
+                        sx={{
+                          color: redcolor,
+                          textTransform: "unset",
+                          fontSize: "1.2rem",
+                          "&:hover": {
+                            color: "#333",
+                          },
+                        }}
+                        onClick={() => {
+                          navigate("/User/DiningMenu");
+                        }}
+                      />
+                      <Tab
+                        label="Catering"
+                        {...a11yProps(2)}
+                        sx={{
+                          color: redcolor,
+                          textTransform: "unset",
+                          fontSize: "1.2rem",
+                          "&:hover": {
+                            color: "#333",
+                          },
+                        }}
+                        onClick={() => {
+                          navigate("/User/CateringMenu");
+                        }}
+                      />
+                      <Box sx={{ width: "50px" }}></Box>
+                      <Typography
+                        variant="h6"
+                        component="div"
+                        sx={{ flexGrow: 1 }}
+                      >
+                        {" "}
+                        <img
+                          // className="rounded-circle img-fluid"
+                          style={{ width: "100px", borderRadius: "10px" }}
+                          src={Logo}
+                        ></img>
+                      </Typography>
+
+                      <Box sx={{ width: "50px" }}></Box>
+                      <Tab
+                        label="Orders"
+                        {...a11yProps(3)}
+                        sx={{
+                          color: redcolor,
+                          textTransform: "unset",
+                          fontSize: "1.2rem",
+                          "&:hover": {
+                            color: "#333",
+                          },
+                        }}
+                        onClick={() => {
+                          navigate("/User/orders");
+                        }}
+                      />
+                      <Tab
+                        label="Location & Hours"
+                        {...a11yProps(4)}
+                        sx={{
+                          color: redcolor,
+                          textTransform: "unset",
+                          fontSize: "1.2rem",
+                          "&:hover": {
+                            color: "#333",
+                          },
+                        }}
+                        onClick={() => {
+                          navigate("/User/Locationhours");
+                        }}
+                      />
+                      <Tab
+                        label="Contact Us"
+                        {...a11yProps(5)}
+                        sx={{
+                          color: redcolor,
+                          textTransform: "unset",
+                          fontSize: "1.2rem",
+                          "&:hover": {
+                            color: "#333",
+                          },
+                        }}
+                        onClick={() => {
+                          navigate("/User/contactus");
+                        }}
+                      />
+                    </Tabs>
+                  )}
                 </Box>
 
-                {checkadminlogin
-                  ? auth && (
+                {isAuthenticated ? (
+                  <div>
+                    <IconButton
+                      size="large"
+                      aria-label="account of current user"
+                      aria-controls="menu-appbar"
+                      aria-haspopup="true"
+                      onClick={handleMenu}
+                      color={redcolor}
+                      sx={{
+                        mr: 2,
+                        "&:hover": {
+                          backgroundColor: redcolor,
+                          transform: "scale(1.1)",
+                        },
+                        transition:
+                          "transform 0.3s ease, background-color 0.3s ease",
+                      }}
+                    >
+                      <AccountCircle sx={{ color: redcolor }} />
+                    </IconButton>
+
+                    <Menu
+                      id="menu-appbar"
+                      anchorEl={anchorEl}
+                      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                      keepMounted
+                      transformOrigin={{ vertical: "top", horizontal: "right" }}
+                      open={Boolean(anchorEl)}
+                      onClose={handleClose}
+                    >
+                      <MenuItem
+                        onClick={() => {
+                          navigate(
+                            checkadmin
+                              ? "/Admin/Carouselimg"
+                              : "/User/Registration"
+                          );
+                        }}
+                      >
+                        Profile
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          navigate("/User/login");
+                          localStorage.removeItem("token");
+                          handleClose();
+                        }}
+                      >
+                        Log Out
+                      </MenuItem>
+                    </Menu>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    style={{ color: redcolor }}
+                    class="btn btn-light"
+                    onClick={() => navigate("/User/login")}
+                  >
+                    Log In
+                  </button>
+                )}
+
+                {/* ShoppingCart button */}
+
+                {isAuthenticated && !checkadmin && (
+                  <IconButton
+                    size="large"
+                    edge="start"
+                    color={redcolor}
+                    aria-label="menu"
+                    sx={{
+                      mr: 2,
+                      "&:hover": {
+                        backgroundColor: redcolor,
+                        transform: "scale(1.1)",
+                      },
+                      transition:
+                        "transform 0.3s ease, background-color 0.3s ease",
+                    }}
+                    onClick={() => {
+                      navigate("/User/Cart");
+                    }}
+                  >
+                    <Badge
+                      badgeContent={cartCount}
+                      sx={{
+                        ".MuiBadge-dot": {
+                          backgroundColor: "purple",
+                        },
+                      }}
+                    >
+                      <ShoppingCartIcon sx={{ color: redcolor }} />
+                    </Badge>
+                  </IconButton>
+                )}
+              </Toolbar>
+            </AppBar>
+          </div>
+        )}
+
+        {/* {checkadminlogin
+                  ?
+                   auth && (
                       <div>
                         <IconButton
                           size="large"
@@ -412,7 +632,8 @@ function Navbar(props) {
                           )}
                           <MenuItem
                             onClick={() => {
-                              navigate("/User/home");
+                              navigate("/User/login");
+                              localStorage.removeItem("token")
                               handleClose();
                             }}
                           >
@@ -421,48 +642,9 @@ function Navbar(props) {
                         </Menu>
                       </div>
                     )
-                  : ""}
+                  : ""} */}
 
-                {!checkadmin ? (
-                  <IconButton
-                    size="large"
-                    edge="start"
-                    color={redcolor}
-                    aria-label="menu"
-                    sx={{
-                      mr: 2,
-                      "&:hover": {
-                        backgroundColor: redcolor,
-                        transform: "scale(1.1)",
-                      },
-                      transition:
-                        "transform 0.3s ease, background-color 0.3s ease",
-                    }}
-                    onClick={() => {
-                      navigate("/User/Cart");
-                    }}
-                  >
-                    <Badge
-                      badgeContent={cartCount} // Show the number of items in the cart
-                      // color="secondary" // Red badge color
-                      // dot
-                      sx={{
-                        ".MuiBadge-dot": {
-                          backgroundColor: "purple", // Change the secondary badge color to purple
-                        },
-                      }}
-                    >
-                      <ShoppingCartIcon sx={{ color: redcolor }} />
-                    </Badge>
-                  </IconButton>
-                ) : (
-                  ""
-                )}
-              </Toolbar>
-            </AppBar>
-          </div>
-        )}
-
+        {/* carousel images */}
         {!checkadmin ? (
           <div
             // style={{ marg }}
@@ -471,8 +653,109 @@ function Navbar(props) {
             data-bs-ride="carousel"
           >
             <div className="carousel-inner">
+              <div className="carousel-item active" data-bs-interval="5000">
+                <img
+                  src={sliderimg1}
+                  className="d-block w-100"
+                  style={{
+                    maxHeight: "550px",
+                    objectFit: "fill",
+                  }}
+                  alt="slide 1"
+                />
+              </div>
+              <div className="carousel-item" data-bs-interval="2000">
+                <img
+                  src={sliderimg2}
+                  className="d-block w-100"
+                  style={{
+                    maxHeight: "550px",
+                    objectFit: "fill",
+                  }}
+                  alt="slide 2"
+                />
+              </div>
+              <div className="carousel-item" data-bs-interval="2000">
+                <img
+                  src={sliderimg3}
+                  className="d-block w-100"
+                  style={{
+                    maxHeight: "550px",
+                    objectFit: "fill",
+                  }}
+                  alt="slide 3"
+                />
+              </div>
+              <div className="carousel-item" data-bs-interval="2000">
+                <img
+                  src={sliderimg4}
+                  className="d-block w-100"
+                  style={{
+                    maxHeight: "550px",
+                    objectFit: "fill",
+                  }}
+                  alt="slide 4"
+                />
+              </div>
+
+              <div className="carousel-item" data-bs-interval="2000">
+                <img
+                  src={sliderimg5}
+                  className="d-block w-100"
+                  style={{
+                    maxHeight: "550px",
+                    objectFit: "fill",
+                  }}
+                  alt="slide 5"
+                />
+              </div>
+              <div className="carousel-item" data-bs-interval="2000">
+                <img
+                  src={sliderimg6}
+                  className="d-block w-100"
+                  style={{
+                    maxHeight: "550px",
+                    objectFit: "fill",
+                  }}
+                  alt="slide 6"
+                />
+              </div>
+              <div className="carousel-item" data-bs-interval="2000">
+                <img
+                  src={sliderimg7}
+                  className="d-block w-100"
+                  style={{
+                    maxHeight: "550px",
+                    objectFit: "fill",
+                  }}
+                  alt="slide 7"
+                />
+              </div>
+              <div className="carousel-item" data-bs-interval="2000">
+                <img
+                  src={panipuri}
+                  className="d-block w-100"
+                  style={{
+                    maxHeight: "550px",
+                    objectFit: "fill",
+                  }}
+                  alt="slide 9"
+                />
+              </div>
+              <div className="carousel-item" data-bs-interval="2000">
+                <img
+                  src={sliderimg8}
+                  className="d-block w-100"
+                  style={{
+                    maxHeight: "550px",
+                    objectFit: "fill",
+                  }}
+                  alt="slide 8"
+                />
+              </div>
+
               {/* Map through the images array and render each image in the carousel */}
-              {image.map((val, index) => (
+              {/* {image.map((val, index) => (
                 <div
                   key={index}
                   className={`carousel-item ${index === 0 ? "active" : ""}`} // Set the first item as active
@@ -493,7 +776,7 @@ function Navbar(props) {
                     alt={`carousel-item-${index}`}
                   />
                 </div>
-              ))}
+              ))} */}
             </div>
 
             {/* Carousel Controls */}
@@ -525,6 +808,8 @@ function Navbar(props) {
         ) : (
           ""
         )}
+
+        {/* avtar images */}
         <div
           style={{
             display: "flex",
@@ -534,10 +819,10 @@ function Navbar(props) {
             flexWrap: "wrap",
           }}
         >
-          <Avatar src={pic1} style={avatarStyle} />
-          <Avatar src={pic2} style={avatarStyle} />
-          <Avatar src={pic3} style={avatarStyle} />
-          <Avatar src={pic4} style={avatarStyle} />
+<Avatar src={pic1} style={avatarStyle} className="avatar-hover" />
+  <Avatar src={pic2} style={avatarStyle} className="avatar-hover" />
+  <Avatar src={pic3} style={avatarStyle} className="avatar-hover" />
+  <Avatar src={pic4} style={avatarStyle} className="avatar-hover" />
         </div>
 
         <Drawer

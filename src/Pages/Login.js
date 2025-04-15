@@ -5,6 +5,8 @@ import Paper from "@mui/material/Paper";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { db } from "../firebase-config";
+import { auth } from "../firebase-config";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import {
   collection,
   getDocs,
@@ -18,12 +20,16 @@ import { redcolor } from "../Design";
 function Login() {
   const handleChange = (e) => {};
 
-  const [adminid, setAdminid] = React.useState();
-  const [adminpswd, setAdminpswd] = React.useState();
-  const AdminCollectionRef = collection(db, "Admincredential");
+  const [email, setEmail] = React.useState();
+  const [password, setPassword] = React.useState();
+  const AdminCollectionRef = collection(db, "Userdetails");
   const [admindata, setAdmindata] = React.useState();
   const [errorMessage, setErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
+
+  const isAdmin = () => {
+    return window.location.pathname.toLowerCase().includes("admin");
+  };
 
   const handleClicksnack = () => {
     setOpen(true);
@@ -50,26 +56,49 @@ function Login() {
     getadmindata();
   }, []);
 
-  const handleClick = () => {
-    // Loop through fetched admin data to check if credentials match
-    const foundAdmin = admindata.find(
-      (admin) => admin.loginid === adminid && admin.pswd === adminpswd
-    );
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
 
-    //vbfcvbfcgb
-    //dvdfvbdfvbcd
-    //
+      // Get Firebase token
+      const token = await user.getIdTokenResult();
+      console.log("Firebase Token:", token.token);
 
-    if (foundAdmin) {
-      // If credentials match, navigate to the next page (e.g., admin dashboard)
-      // localStorage.setItem('token', )
-      navigate("/Admin/Menua");
-    } else {
-      // If credentials don't match, show error message.
-      setErrorMessage("Invalid login credentials. Please try again.");
-      handleClicksnack();
+      // Store token in localStorage (optional)
+      localStorage.setItem("token", token.token);
+
+      isAdmin() ? navigate("/Admin/DiningMenu") : navigate("/User/DiningMenu");
+    } catch (error) {
+      setErrorMessage("Invalid credentials. Please try again.");
+      setOpen(true);
     }
   };
+
+  // const handleClick = () => {
+  //   // Loop through fetched admin data to check if credentials match
+  //   const foundAdmin = admindata.find(
+  //     (admin) => admin.loginid === adminid && admin.pswd === adminpswd
+  //   );
+
+  //   //vbfcvbfcgb
+  //   //dvdfvbdfvbcd
+  //   //
+
+  //   if (foundAdmin) {
+  //     // If credentials match, navigate to the next page (e.g., admin dashboard)
+  //     // localStorage.setItem('token', )
+  //     navigate("/Admin/Menua");
+  //   } else {
+  //     // If credentials don't match, show error message.
+  //     setErrorMessage("Invalid login credentials. Please try again.");
+  //     handleClicksnack();
+  //   }
+  // };
 
   return (
     <div style={{ margin: "5%", display: "flex", justifyContent: "center" }}>
@@ -100,7 +129,7 @@ function Login() {
               label="Your Email"
               type="text"
               variant="outlined"
-              onChange={(e) => setAdminid(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -113,7 +142,7 @@ function Login() {
               label="Your Password"
               type="password"
               variant="outlined"
-              onChange={(e) => setAdminpswd(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
@@ -169,7 +198,7 @@ function Login() {
             }}
             type="button"
             className="btn"
-            onClick={handleClick}
+            onClick={handleLogin}
           >
             Log In
           </button>
@@ -183,7 +212,7 @@ function Login() {
                   href=""
                   onClick={() => navigate("/User/Registration")}
                   style={{
-                    color: "#f57c00",
+                    color: redcolor,
                     fontWeight: "bold",
                     textDecoration: "none",
                   }}

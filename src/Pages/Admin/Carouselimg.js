@@ -4,6 +4,7 @@ import { Button, IconButton, Typography, Box, Paper } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { blueGrey } from "@mui/material/colors";
+import EditIcon from "@mui/icons-material/Edit";
 import { useEffect } from "react";
 import {
   collection,
@@ -30,7 +31,18 @@ function Carouselimg() {
     whiteSpace: "nowrap",
     width: 1,
   });
+  useEffect(() => {
+    const getCarouselImages = async () => {
+      try {
+        const data = await getDocs(imgCollectionRef);
+        setImage(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      } catch (error) {
+        console.error("Error fetching images: ", error);
+      }
+    };
 
+    getCarouselImages();
+  }, []);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -55,9 +67,55 @@ function Carouselimg() {
     }
   };
 
-  const handleDelete = (index) => {
-     const newImages = image.filter((item, i) => i !== index);
-     setImage(newImages);
+  
+  // const handleDelete = (index) => {
+  //    const newImages = image.filter((item, i) => i !== index);
+  //    setImage(newImages);
+  // };
+  const handleDelete = async (id) => {
+    try {
+      // Remove image from Firestore
+      await deleteDoc(doc(db, "carouselimage", id));
+  
+      // Remove from state
+      setImage((prevImages) => prevImages.filter((image) => image.id !== id));
+    } catch (error) {
+      console.error("Error deleting image: ", error);
+    }
+  };
+
+  const handleEdit = (id) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    
+    input.onchange = async (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = async function () {
+          const imageData = reader.result;
+  
+          try {
+            // Update Firestore with new image
+            const imageRef = doc(db, "carouselimage", id);
+            await updateDoc(imageRef, { image: imageData });
+  
+            // Update state
+            setImage((prevImages) =>
+              prevImages.map((img) =>
+                img.id === id ? { ...img, image: imageData } : img
+              )
+            );
+          } catch (error) {
+            console.error("Error updating image: ", error);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+  
+    input.click();
   };
 
   //const addcarouselimage = async (data) => {
@@ -75,13 +133,7 @@ function Carouselimg() {
   //     ]);
   // };
 
-  useEffect(() => {
-    // const getCarouselimage = async () => {
-    //   const data = await getDocs(imgCollectionRef);
-    //   setImage(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    // };
-    // getCarouselimage();
-  }, []);
+  
 
   return (
     <div style={{ padding: "30px", backgroundColor: "#f0f0f0" }}>
@@ -132,7 +184,7 @@ function Carouselimg() {
                 <td>
                   <Box textAlign="center" mb={4}>
                     <img
-                      src={val}
+                      src={val.image}
                       alt="Preview"
                       style={{
                         maxWidth: "80%",
@@ -156,10 +208,13 @@ function Carouselimg() {
                   {" "}
                   <IconButton
                     color="error"
-                    onClick={() => handleDelete(index)}
+                    onClick={() => handleDelete(val.id)}
                     sx={{ marginLeft: 1 }}
                   >
                     <DeleteIcon />
+                  </IconButton>
+                  <IconButton color="primary" onClick={() => handleEdit(val.id)} sx={{ marginRight: 1 }}>
+                  <EditIcon />
                   </IconButton>
                 </td>
               </tr>

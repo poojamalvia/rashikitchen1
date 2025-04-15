@@ -16,20 +16,26 @@ import Menua from "./Pages/Admin/Menua";
 import Cateringa from "./Pages/Admin/Cateringa";
 import Ordera from "./Pages/Admin/Ordera";
 import Carouselimg from "./Pages/Admin/Carouselimg";
+import PrivateRoute from "./PrivateRoutes";
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <NavBar />
+
         <Routes>
           <Route path="/User/home" Component={Homepage} />
-          <Route path="/User/DiningMenu" Component={MenuPage} />
-          <Route path="/User/CateringMenu" Component={CateringPage} />
-          <Route path="/User/orders" Component={OrderPage} />
+
+          <Route element={<PrivateRoute />}>
+            <Route path="/User/DiningMenu" Component={MenuPage} />
+            <Route path="/User/CateringMenu" Component={CateringPage} />
+            <Route path="/User/orders" Component={OrderPage} />
+          </Route>
+
           <Route path="/User/Locationhours" Component={Locationhours} />
           <Route path="/User/contactus" Component={ContactPage} />
-          
+
           <Route path="/User/login" Component={Loginpage} />
           <Route path="/User/Registration" Component={Registration} />
           <Route path="/User/cart" Component={CartPage} />
@@ -43,9 +49,6 @@ function App() {
         </Routes>
         <Footer />
       </BrowserRouter>
-      {/* <Menua/>  */}
-      {/* <Ordera/>  */}
-      {/* <Cateringa />  */}
     </div>
   );
 }

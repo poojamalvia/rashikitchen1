@@ -4,7 +4,9 @@ import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import { redcolor } from "../Design";
 import { db } from "../firebase-config";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { auth } from "../firebase-config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 function Registration() {
   const RegCollectionref = collection(db, "Userdetails");
@@ -22,43 +24,69 @@ function Registration() {
       data.fname && data.lname && data.email && data.password && data.mobileno
     );
   };
-  const handleAddClick = (e) => {
+  const handleAddClick = async (e) => {
+    e.preventDefault();
     if (!validateFields()) {
       alert("Please fill in all dining fields before adding.");
       return; // Prevent further execution if fields are not valid
     }
 
-    createuserregistration(data);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      const user = userCredential.user;
+      console.log(user);
+      console.log("user registered successfully");
+      await createuserregistration(user.uid, data);
 
-    setData({
-      fname: "",
-      lname: "",
-      email: "",
-      password: "",
-      mobileno: "",
-    });
+      // Clear form fields after successful registration
+      setData({
+        fname: "",
+        lname: "",
+        email: "",
+        password: "",
+        mobileno: "",
+      });
+
+      alert("Registration successful!");
+
+      // Navigate to login page after signup
+      navigate("/User/login");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const createuserregistration = async (data) => {
-    await addDoc(RegCollectionref, {
-      fname: data.fname,
-      lname: data.lname,
-      email: data.email,
-      password: data.password,
-      mobileno: data.mobileno,
-    });
-    setRegistrationdata([
-      ...registrationdata,
-      {
+
+  const createuserregistration = async (userId, data) => {
+    try {
+      await setDoc(doc(db, "Userdetails", userId), {
+        uid: userId, // Store Firebase Authentication user ID
         fname: data.fname,
         lname: data.lname,
         email: data.email,
-        password: data.password,
         mobileno: data.mobileno,
-      },
-    ]);
-  };
+      });
 
+      setRegistrationdata([
+        ...registrationdata,
+        {
+          uid: userId,
+          fname: data.fname,
+          lname: data.lname,
+          email: data.email,
+          mobileno: data.mobileno,
+        },
+      ]);
+
+      console.log("User details saved to Firestore.");
+    } catch (error) {
+      console.error("Error saving user data:", error.message);
+    }
+  };
   return (
     <div style={{ margin: "5%" }}>
       <Paper
@@ -170,11 +198,11 @@ function Registration() {
               <a
                 href="#"
                 style={{
-                  color: "#f57c00",
+                  color: redcolor,
                   textDecoration: "none",
                   fontWeight: "bold",
                 }}
-                onClick={() => navigate("/Login")}
+                onClick={() => navigate("/user/Login")}
               >
                 Log In
               </a>

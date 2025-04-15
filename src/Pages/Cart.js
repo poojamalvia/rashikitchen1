@@ -245,23 +245,45 @@ function Cart({}) {
                 <td style={{ padding: "10px" }}>Taxes:</td>
                 <td style={{ padding: "10px", fontWeight: "bold" }}>${tax}</td>
               </tr>
+
               <tr>
-                <td style={{ padding: "10px" }}>Tip:</td>
-                <td style={{ padding: "10px", fontWeight: "bold" }}>
-                  <a
-                    href="#"
-                    style={{
-                      fontSize: "16px",
-                      color: "seagreen",
-                      textDecoration: "none",
-                      fontWeight: "bold",
-                    }}
-                    onClick={handleClickOpen}
-                  >
-                    Set Tip
-                  </a>
-                </td>
-              </tr>
+  <td style={{ padding: "10px" }}>Tip:</td>
+  <td style={{ padding: "10px", fontWeight: "bold", display: "flex", alignItems: "center" }}>
+    {/* Show the selected tip if available, else show "Set Tip" */}
+    {tip==0.00 ? (
+      <a
+        href="#"
+        style={{
+          fontSize: "16px",
+          color: "seagreen",
+          textDecoration: "none",
+          fontWeight: "bold",
+        }}
+        onClick={handleClickOpen}
+      >
+        Set Tip
+      </a>
+    )  :(
+      <>
+        <span style={{ marginRight: "10px", color: "seagreen", fontSize: "16px", fontWeight: "bold" }}>
+          ${tip}
+        </span>
+        <a
+          href="#"
+          style={{
+            fontSize: "16px",
+            color: "seagreen",
+            textDecoration: "none",
+            fontWeight: "bold",
+          }}
+          onClick={handleClickOpen}
+        >
+          Edit Tip
+        </a>
+      </>
+    )}
+  </td>
+</tr>
               <tr style={{ borderTop: "2px solid #ddd" }}>
                 <td style={{ padding: "10px" }}>Total:</td>
                 <td
