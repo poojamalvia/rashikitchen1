@@ -28,7 +28,7 @@ import sliderimg5 from "../images/sliderimg5.jpg";
 import sliderimg6 from "../images/sliderimg6.jpg";
 import sliderimg7 from "../images/sliderimg7.jpg";
 import sliderimg8 from "../images/sliderimg8.jpg";
-import panipuri from "../images/panipuri.jpg"
+import panipuri from "../images/panipuri.jpg";
 import chole from "../images/chole.JPG";
 
 import {
@@ -51,7 +51,7 @@ import pic1 from "../images/pic1.jpg";
 import pic2 from "../images/pic2.jpg";
 import pic3 from "../images/pic3.jpg";
 import pic4 from "../images/pic4.jpg";
-import logo1 from "../images/Rashilogo.png"
+import logo1 from "../images/Rashilogo.png";
 import Tab from "@mui/material/Tab";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
@@ -77,7 +77,6 @@ function Navbar(props) {
   let isAuthenticated = !!localStorage.getItem("token");
 
   const uid = localStorage.getItem("uid");
-
 
   function a11yProps(index) {
     return {
@@ -167,13 +166,13 @@ function Navbar(props) {
                 )}
                 <img
                   src={logo1} // Replace with your actual logo path or import
-                alt="Rashi's Kitchen Logo"
-                style={{
-                 height: 40,
-                 marginRight: 10,
-      borderRadius: "12px", // curved corners
-    }}
-  />
+                  alt="Rashi's Kitchen Logo"
+                  style={{
+                    height: 40,
+                    marginRight: 10,
+                    borderRadius: "12px", // curved corners
+                  }}
+                />
                 <Typography
                   variant="h5"
                   //  className="dancing-script"
@@ -246,7 +245,7 @@ function Navbar(props) {
                           onClick={() => {
                             navigate("/User/login");
                             localStorage.removeItem("token");
-                            localStorage.removeItem("uid")
+                            localStorage.removeItem("uid");
                             handleClose();
                           }}
                         >
@@ -256,14 +255,16 @@ function Navbar(props) {
                     </div>
                   )
                 ) : (
-                  <button
-                    type="button"
-                    style={{ color: "#ffffff" }}
-                    class="btn"
-                    onClick={() => navigate("/User/login")}
-                  >
-                    Log In
-                  </button>
+                  <div style={{ display: "flex", flexWrap: "nowrap" }}>
+                    <button
+                      type="button"
+                      style={{ color: "#ffffff" }}
+                      className="btn"
+                      onClick={() => navigate("/User/login")}
+                    >
+                      Login
+                    </button>
+                  </div>
                 )}
 
                 {isAuthenticated && !checkadmin ? (
@@ -274,10 +275,10 @@ function Navbar(props) {
                     aria-label="menu"
                     sx={{
                       mr: 2,
-                     "&:hover": {
-                     backgroundColor: "#FF1B1C", // A nice "Slate Blue" color
-                     color: "#FFFFFF",           // Icon turns white on hover
-                     transform: "scale(1.1)",
+                      "&:hover": {
+                        backgroundColor: "#FF1B1C", // A nice "Slate Blue" color
+                        color: "#FFFFFF", // Icon turns white on hover
+                        transform: "scale(1.1)",
                       },
                       transition:
                         "transform 0.3s ease, background-color 0.3s ease",
@@ -488,17 +489,20 @@ function Navbar(props) {
                       sx={{
                         mr: 2,
                         "&:hover": {
-                          backgroundColor:redcolor,
-                          color:"#FFFFFF",
+                          backgroundColor: redcolor,
+                          color: "#FFFFFF",
                           transform: "scale(1.1)",
                         },
                         transition:
                           "transform 0.3s ease, background-color 0.3s ease",
                       }}
                     >
-                      <AccountCircle sx={{ color: redcolor ,
-                        "&:hover":{ color:"#FFFFFF",},
-                      }} />
+                      <AccountCircle
+                        sx={{
+                          color: redcolor,
+                          "&:hover": { color: "#FFFFFF" },
+                        }}
+                      />
                     </IconButton>
 
                     <Menu
@@ -572,9 +576,12 @@ function Navbar(props) {
                         },
                       }}
                     >
-                      <ShoppingCartIcon sx={{ color: redcolor ,
-                         "&:hover":{ color:"#FFFFFF"},
-                      }} />
+                      <ShoppingCartIcon
+                        sx={{
+                          color: redcolor,
+                          "&:hover": { color: "#FFFFFF" },
+                        }}
+                      />
                     </Badge>
                   </IconButton>
                 )}
@@ -827,10 +834,10 @@ function Navbar(props) {
             flexWrap: "wrap",
           }}
         >
-<Avatar src={pic1} style={avatarStyle} className="avatar-hover" />
-  <Avatar src={pic2} style={avatarStyle} className="avatar-hover" />
-  <Avatar src={pic3} style={avatarStyle} className="avatar-hover" />
-  <Avatar src={pic4} style={avatarStyle} className="avatar-hover" />
+          <Avatar src={pic1} style={avatarStyle} className="avatar-hover" />
+          <Avatar src={pic2} style={avatarStyle} className="avatar-hover" />
+          <Avatar src={pic3} style={avatarStyle} className="avatar-hover" />
+          <Avatar src={pic4} style={avatarStyle} className="avatar-hover" />
         </div>
 
         <Drawer
