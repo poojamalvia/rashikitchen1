@@ -145,6 +145,7 @@ function Homepage() {
               autoPlay
               loop
               muted
+              playsInline
             >
               <source src={homevideo} type="video/mp4" />
               Your browser does not support the video tag.
