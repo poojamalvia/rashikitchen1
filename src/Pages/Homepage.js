@@ -2,24 +2,24 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useEffect } from "react";
-import {  redcolor } from "../Design";
+import { redcolor } from "../Design";
 import homeimage1 from "../images/homeimage1.jpg";
 import caterimg1 from "../images/cateringimg1.JPG";
 import caterimg2 from "../images/cateringimg2.JPG";
 import caterimg3 from "../images/cateringimg3.JPG";
 import homevideo from "../images/homepagevideo.MP4";
-import highlight1 from "../images/highlight1.JPG"
-import highlight2 from "../images/highlight2.jpg"
-import highlight3 from "../images/highlight3.JPG"
-import highlight4 from "../images/highlight4.jpg"
-import gulabjamun from "../images/gulabjamun.jpg"
-import chole1 from "../images/chole1.jpg"
-import dalbati from "../images/sliderimg7.jpg"
+import highlight1 from "../images/highlight1.JPG";
+import highlight2 from "../images/highlight2.jpg";
+import highlight3 from "../images/highlight3.JPG";
+import highlight4 from "../images/highlight4.jpg";
+import gulabjamun from "../images/gulabjamun.jpg";
+import chole1 from "../images/chole1.jpg";
+import dalbati from "../images/sliderimg7.jpg";
 
 import "../Pages/Main.css";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-function Homepage(){
+function Homepage() {
   const [currentDateTime, setCurrentDateTime] = React.useState("");
   let navigate = useNavigate();
   useEffect(() => {
@@ -59,23 +59,17 @@ function Homepage(){
         className="row d-flex align-items-center justify-content-center"
         style={{ margin: "5%" }}
       >
-         <Box
-          className="col-md-6"
+        <Box
+          className="col-md-6 row align-items-start"
           sx={{
             padding: { xs: "20px", md: "40px" },
             textAlign: "center",
           }}
         >
-          <h3 className="heading">
-
-  
-            Welcome to Rashi's Kitchen - Longwood
-          </h3>
+          <h3 className="heading">Welcome to Rashi's Kitchen - Longwood</h3>
           <Typography variant="h6" sx={{ marginBottom: "20px", color: "#888" }}>
             {currentDateTime}
           </Typography>
-          {/* <Box sx={{ marginBottom: "20px" }}>
-        <Typography variant="body1" sx={{ color: "#333" }}> */}
           Rashi's Kitchen offers healthy and delicious tasting Chinese and
           Indian cuisines in Longwood, FL. Rashi's Kitchen's convenient location
           and affordable prices make our restaurant a natural choice for dine-in
@@ -83,8 +77,6 @@ function Homepage(){
           2024, the restaurant is known for its variety of tastes and freshest
           ingredients. Come and experience our friendly atmosphere and excellent
           service.
-          {/* </Typography>
-      </Box> */}
           <h4
             style={{
               marginTop: "20px",
@@ -97,9 +89,9 @@ function Homepage(){
           </h4>
           <Typography
             variant="body1"
-            sx={{ 
-          
-               marginBottom: "20px" }}
+            sx={{
+              marginBottom: "20px",
+            }}
           >
             Start ordering online by clicking login above. Simply select the
             menu items you want, add them to your cart, and checkout. Your order
@@ -111,13 +103,16 @@ function Homepage(){
         <div className="col-md-6 text-center">
           <img
             src={homeimage1}
+            alt="Restuarant"
             style={{
               width: "100%",
               maxWidth: "400px",
               borderRadius: "10px",
               marginBottom: "10px",
             }}
-          ></img>
+          >
+            
+          </img>
         </div>
       </div>
 
@@ -125,39 +120,39 @@ function Homepage(){
         className="row d-flex align-items-center justify-content-center"
         style={{ margin: "5%" }}
       >
-       <div className="col-md-6 text-center">
-  <div style={{
-    width: "100%",
-    maxWidth: "400px",
-    margin: "0 auto",
-    position: "relative",
-    paddingTop: "100%", // 1:1 Aspect Ratio
-    borderRadius: "10px",
-    overflow: "hidden",
-  }}>
-    <video
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-      }}
-      controls
-      autoPlay
-      loop
-      muted
-    >
-      <source src={homevideo} type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
-  </div>
-</div>
+        <div className="col-md-6 text-center">
+          <div
+            style={{
+              width: "100%",
+              maxWidth: "400px",
+              margin: "0 auto",
+              position: "relative",
+              paddingTop: "100%", // 1:1 Aspect Ratio
+              borderRadius: "10px",
+              overflow: "hidden",
+            }}
+          >
+            <video
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+              controls
+              autoPlay
+              loop
+              muted
+            >
+              <source src={homevideo} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
         <Box className="col-md-6" sx={{ padding: { xs: "20px", md: "40px" } }}>
-          <h4 className="fw-bold  mb-3 menu-title">
-            Our Menus
-          </h4>
+          <h4 className="fw-bold  mb-3 menu-title">Our Menus</h4>
 
           <Typography
             variant="body1"
@@ -199,7 +194,7 @@ function Homepage(){
 
           <Button
             variant="contained"
-            onClick={()=>{
+            onClick={() => {
               navigate("/User/DiningMenu");
             }}
             sx={{
@@ -221,25 +216,21 @@ function Homepage(){
         style={{ margin: "5%" }}
       >
         <Box className="col-md-6" sx={{ padding: { xs: "20px", md: "40px" } }}>
-          <h4 className="fw-bold  mb-3 menu-title" >
-            Catering
-
-
-  </h4>
-          <Typography variant="h6" sx={{color:"#333" ,}}>
-          For All Occasions
+          <h4 className="fw-bold  mb-3 menu-title">Catering</h4>
+          <Typography variant="h6" sx={{ color: "#333" }}>
+            For All Occasions
           </Typography>
 
           <Typography
             variant="body1"
             sx={{ color: "#555", marginBottom: "10px" }}
           >
-            
-            Make your events special with Rashi kitchen’s catering services, perfect for weddings, private events, and conventions.
-            Explore our 100% vegetarian menu, crafted with love and fresh
-            ingredients. Whether you're in the mood for comforting Indian
-            classics or flavorful Indo-Chinese fusion, we have something
-            delicious for everyone.
+            Make your events special with Rashi kitchen’s catering services,
+            perfect for weddings, private events, and conventions. Explore our
+            100% vegetarian menu, crafted with love and fresh ingredients.
+            Whether you're in the mood for comforting Indian classics or
+            flavorful Indo-Chinese fusion, we have something delicious for
+            everyone.
           </Typography>
 
           <ul style={{ color: "#444", lineHeight: 1.8, paddingLeft: "20px" }}>
@@ -265,11 +256,9 @@ function Homepage(){
             </li>
           </ul>
 
-        
-
           <Button
             variant="contained"
-            onClick={()=>{
+            onClick={() => {
               navigate("/User/CateringMenu");
             }}
             sx={{
@@ -286,20 +275,20 @@ function Homepage(){
           </Button>
         </Box>
         <div className="col-md-6 text-center">
-           <div id="carouselExample" class="carousel slide">
-          {/* style={{ width: '500px',   // You can adjust width
+          <div id="carouselExample" class="carousel slide">
+            {/* style={{ width: '500px',   // You can adjust width
       height: '500px',  // You can adjust height
       overflow: 'hidden',
       margin: '0 auto'}}> */}
-      
-            <div class="carousel-inner"style={{ height: '100%' }}>
-              <div class="carousel-item active"style={{ height: '100%' }}>
+
+            <div class="carousel-inner" style={{ height: "100%" }}>
+              <div class="carousel-item active" style={{ height: "100%" }}>
                 <img src={caterimg1} class="d-block w-100" alt="..." />
               </div>
-              <div class="carousel-item"style={{ height: '100%' }}>
+              <div class="carousel-item" style={{ height: "100%" }}>
                 <img src={caterimg2} class="d-block w-100" alt="..." />
               </div>
-              <div class="carousel-item"style={{ height: '100%' }}>
+              <div class="carousel-item" style={{ height: "100%" }}>
                 <img src={caterimg3} class="d-block w-100" alt="..." />
               </div>
             </div>
@@ -336,15 +325,13 @@ function Homepage(){
           {/* Text & Small Images */}
           <div className="col-lg-8 mb-4">
             <div className="mb-3">
-            <h4 className="fw-bold  mb-3 menu-title">
-            Our special
-          </h4>
-           
+              <h4 className="fw-bold  mb-3 menu-title">Our special</h4>
+
               <p className="text-muted">
-              Experience the essence of Rashi's kitchen with our signature dishes—each plate a
-              celebration of flavor, tradition, and creativity. From sizzling tandoori
-              delights to rich, aromatic gravies, our specials are curated to leave a
-              lasting impression.
+                Experience the essence of Rashi's kitchen with our signature
+                dishes—each plate a celebration of flavor, tradition, and
+                creativity. From sizzling tandoori delights to rich, aromatic
+                gravies, our specials are curated to leave a lasting impression.
               </p>
             </div>
 
@@ -368,7 +355,7 @@ function Homepage(){
                   src={highlight1}
                   style={{
                     height: "250px",
-                    objectFit:"cover"
+                    objectFit: "cover",
                   }}
                 />
                 <div className="image-label">Sandwish</div>
