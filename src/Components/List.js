@@ -17,6 +17,9 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 
+const isAuthenticated = !!localStorage.getItem("token"); // Check if token exists
+
+const uid = localStorage.getItem("uid");
 function AlignItemsList({ menuDetails, isAdd }) {
   const [isHovered1, setIsHovered1] = React.useState(
     new Array(menuDetails.length).fill(false)
@@ -36,7 +39,7 @@ function AlignItemsList({ menuDetails, isAdd }) {
   }, [update]);
 
   const getCartData = async () => {
-    const userRef = doc(db, "Userdetails", "6ORHSPh1yeA7mywPVdOJ");
+    const userRef = doc(db, "Userdetails", uid);
 
     // Get the current cart data to find if the item already exists
     const userDoc = await getDoc(userRef);
@@ -70,7 +73,7 @@ function AlignItemsList({ menuDetails, isAdd }) {
 
   const createAddtocart = async (data) => {
     try {
-      const userRef = doc(db, "Userdetails", "6ORHSPh1yeA7mywPVdOJ");
+      const userRef = doc(db, "Userdetails", uid);
 
       // Get the current cart data to find if the item already exists
       const userDoc = await getDoc(userRef);
@@ -177,7 +180,7 @@ function AlignItemsList({ menuDetails, isAdd }) {
                         justifyContent: "end",
                       }}
                     >
-                      {isAdd && (
+                      {isAdd && isAuthenticated && (
                         <AddBtn
                           data={data}
                           handleAddclick={handleAddclick}
@@ -204,10 +207,9 @@ function AddBtn({ data, handleAddclick, cart }) {
 
   React.useEffect(() => {
     getCount();
-  }, [cart]);
+  }, [cart, count]);
 
   const handleIncrement = () => {
-    console.log("------called----");
     if (data.availibity !== "false") {
       // setCount((prev) => prev + 1); // Update count immediately
       setIsDisabled(true);
@@ -222,7 +224,6 @@ function AddBtn({ data, handleAddclick, cart }) {
   };
 
   const handleDecrement = () => {
-    console.log("------called----");
     if (count > 0) {
       // setCount((prev) => prev - 1); // Update count immediately
       setIsDisabled(true);
@@ -266,6 +267,7 @@ function AddBtn({ data, handleAddclick, cart }) {
           class="btn btn-danger"
           style={{
             border: "none",
+            maxHeight: "40px",
             backgroundColor: isHovered ? "#FF1B1C" : redcolor,
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
@@ -282,6 +284,7 @@ function AddBtn({ data, handleAddclick, cart }) {
           disabled={isDisabled}
           style={{
             border: "none",
+            maxHeight: "40px",
             backgroundColor: isHovered ? "#FF1B1C" : redcolor,
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
@@ -298,6 +301,7 @@ function AddBtn({ data, handleAddclick, cart }) {
           disabled={isDisabled}
           style={{
             border: "none",
+            maxHeight: "40px",
             backgroundColor: isHovered ? "#FF1B1C" : redcolor,
             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items

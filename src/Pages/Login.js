@@ -71,6 +71,10 @@ function Login() {
 
       // Store token in localStorage (optional)
       localStorage.setItem("token", token.token);
+      localStorage.setItem("uid", user.uid);
+
+      console.log("userid",user.uid)
+      
 
       isAdmin() ? navigate("/Admin/DiningMenu") : navigate("/User/DiningMenu");
     } catch (error) {

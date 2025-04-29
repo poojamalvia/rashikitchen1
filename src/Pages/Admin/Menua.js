@@ -4,6 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import NoMealsIcon from "@mui/icons-material/NoMeals";
 import { db } from "../../firebase-config";
+import "../../css/Heading.css"
 
 import {
   TextField,
@@ -103,9 +104,9 @@ function Menua() {
 
   return (
     <div style={{ margin: "2%" }}>
-      <Typography variant="h4" align="center" gutterBottom>
+      <h3 className="heading">
         Update Dining Menu Item
-      </Typography>
+      </h3>
 
       <div>
         <Box display="flex" alignItems="center" marginBottom="20px">

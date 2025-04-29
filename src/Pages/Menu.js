@@ -12,6 +12,7 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+import { redcolor } from "../Design";
 const AdiningCollectionRef = collection(db, "Diningmenu");
 
 function Menu() {
@@ -40,19 +41,10 @@ function Menu() {
   }, []);
   return (
     <div style={{ margin: "3%" }}>
-      <Typography
-        variant="h4"
-        style={{
-          color: "",
-          fontFamily: "open sans",
-          fontWeight: "bold",
-        }}
-        component="div"
-        sx={{ flexGrow: 1 }}
-      >
-        {" "}
-        Menu
-      </Typography>
+      <h4 className="heading">
+        
+        Dining Menu
+      </h4>
 
       {Object.keys(diningdata).map((fld) => {
         return (

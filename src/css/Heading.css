@@ -1,0 +1,9 @@
+.heading {
+    margin-bottom: 20px;
+    font-weight: bold;
+    color:  #830005; /* You can use a variable or pass it via props in React */
+     text-align: center;/* centers the text */
+    /* font-family: 'Open Sans', sans-serif; */
+    font-Family:"dancing-script ,cursive";
+  }
+  

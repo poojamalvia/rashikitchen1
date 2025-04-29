@@ -42,8 +42,11 @@ function Contact() {
           sx={{ p: 2 }}
         >
           {" "}
-          <h3>
-            <b> Contact Rashi's Kitchen - Longwood</b>{" "}
+           <h3
+                     
+                     className="heading"
+                   >
+             Contact Rashi's Kitchen - Longwood{" "}
           </h3>
           <br />
           If you would like to contact Rashi's Kitchen - Longwood, such as to
@@ -62,7 +65,7 @@ function Contact() {
           <div className="row">
             <div className="col-md-2"></div>
             <div className="col-md-7">
-              <h3>Rashi's Kitchen - Longwood</h3>
+              <h4>Rashi's Kitchen - Longwood</h4>
             </div>
             <div className="col-md-3">
               <IconButton

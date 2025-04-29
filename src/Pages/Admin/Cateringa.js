@@ -119,9 +119,9 @@ function Cateringa() {
 
   return (
     <div style={{ margin: "2%" }}>
-      <Typography variant="h4" align="center" gutterBottom>
+      <h3 className="heading">
         Update Catering Menu Item
-      </Typography>
+      </h3>
 
       <Box display="flex" alignItems="center">
         <Button

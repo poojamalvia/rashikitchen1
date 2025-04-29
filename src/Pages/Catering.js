@@ -123,18 +123,12 @@ function Catering() {
 
   return (
     <div style={{ margin: "3%" }}>
-      <Typography
-        variant="h4"
-        style={{
-          color: "",
-          fontFamily: "open sans",
-          fontWeight: "bold",
-        }}
-        component="div"
+      <h4 className="heading"
+
         sx={{ flexGrow: 1 }}
       >
         Catering Menu
-      </Typography>
+      </h4>
 
       {Object.keys(cateringdata).map((fld) => {
         console.log("Fld", fld);

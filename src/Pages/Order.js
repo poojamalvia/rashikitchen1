@@ -12,7 +12,8 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Rating from "@mui/material/Rating";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
-import CommentIcon from '@mui/icons-material/Comment';
+import CommentIcon from "@mui/icons-material/Comment";
+
 import {
   Button,
   TableBody,
@@ -37,7 +38,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 
 import { redcolor } from "../Design";
-import {db} from "../firebase-config"
+import { db } from "../firebase-config";
 import firebase from "firebase/compat/app";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -59,19 +60,17 @@ item3 : Crispy veg     -$20,
 
 function Order() {
   const [age, setAge] = React.useState("");
-  const [CustOrder,setCustOrder]=React.useState([])
-   const orderRef = collection(db, "Userorders");
+  const [CustOrder, setCustOrder] = React.useState([]);
+  const orderRef = collection(db, "Userorders");
 
-   const getuserorder =async()=>{
+  const getuserorder = async () => {
     const data = await getDocs(orderRef);
-    setCustOrder(data.docs.map((doc)=>({...doc.data(),id:doc.id})))
+    setCustOrder(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
 
-   }
-
-   useEffect(()=>{
-    getuserorder()
-    
-   })
+  useEffect(() => {
+    getuserorder();
+  });
 
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -85,40 +84,7 @@ function Order() {
     setOpen(false);
   };
 
-  // const [CustOrder, setCustOrder] = React.useState([
-  //   {
-  //     tokenid: "1",
-  //     amount: "50",
-  //     review: "3.5",
-  //     orderstatus: "confirmed",
-  //   },
-  //   {
-  //     tokenid: "2",
-  //     amount: "100",
-  //     review: "2.5",
-  //     orderstatus: "In Process",
-  //   },
-  //   {
-  //     tokenid: "3",
-  //     amount: "250",
-  //     review: "3",
-  //     orderstatus: "canceled",
-  //   },
-  //   {
-  //     tokenid: "4",
-  //     amount: "200",
-  //     review: "4",
-  //     orderstatus: "In Process",
-  //   },
-  //   {
-  //     tokenid: "5",
-  //     amount: "100",
-  //     review: "5",
-  //     orderstatus: "In Process",
-  //   },
-  // ]);
-
-
+ 
   const [item, setItem] = React.useState([
     { name: "Manchurian" },
     { name: "Paneer Chily" },
@@ -134,21 +100,25 @@ function Order() {
   }
   return (
     <Box>
-      <Typography variant="h4" align="center" gutterBottom>
-        Customer Order Details
-      </Typography>
+      <h3 className="heading"> Customer Order Records
+      </h3>
 
       <TableContainer component={Paper}>
-        <Table aria-label="customer order table">
+        <Table
+          aria-label="customer order table"
+         
+        >
           <TableHead>
-            <TableRow sx={{
-                            backgroundColor: redcolor, // Background color for the header
-                            "& th": {
-                              fontWeight: "bold", // Bold font weight for header cells
-                              fontSize: "16px",
-                              color: "#ffffff",
-                            },
-                          }}>
+            <TableRow
+              sx={{
+                backgroundColor: redcolor, // Background color for the header
+                "& th": {
+                  fontWeight: "bold", // Bold font weight for header cells
+                  fontSize: "16px",
+                  color: "#ffffff",
+                },
+              }}
+            >
               <TableCell>Token Number</TableCell>
               <TableCell>Order Date</TableCell>
               <TableCell>Ordered Items</TableCell>
@@ -210,21 +180,13 @@ function Order() {
                   ></Rating>
                 </TableCell>
                 <TableCell>
-                  <TextField
-                   fullWidth
-                   type="text"
-                  >
-
-                  </TextField>
-                  
-
-
+                  <TextField fullWidth type="text"></TextField>
                 </TableCell>
-                <TableCell>               
-                       <IconButton>
-                  <CommentIcon style={{color:redcolor}}/>
+                <TableCell>
+                  <IconButton>
+                    <CommentIcon style={{ color: redcolor }} />
                   </IconButton>
-                  </TableCell>
+                </TableCell>
 
                 <TableCell>
                   <Button

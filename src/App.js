@@ -28,11 +28,12 @@ function App() {
           <Route path="/User/home" Component={Homepage} />
 
           <Route element={<PrivateRoute />}>
-            <Route path="/User/DiningMenu" Component={MenuPage} />
-            <Route path="/User/CateringMenu" Component={CateringPage} />
+           
             <Route path="/User/orders" Component={OrderPage} />
           </Route>
-
+          <Route path="/User/DiningMenu" Component={MenuPage} />
+           
+          <Route path="/User/CateringMenu" Component={CateringPage} />
           <Route path="/User/Locationhours" Component={Locationhours} />
           <Route path="/User/contactus" Component={ContactPage} />
 

@@ -18,9 +18,10 @@ import dalbati from "../images/sliderimg7.jpg"
 
 import "../Pages/Main.css";
 import { Button } from "@mui/material";
-function Homepage() {
+import { useNavigate } from "react-router-dom";
+function Homepage(){
   const [currentDateTime, setCurrentDateTime] = React.useState("");
-
+  let navigate = useNavigate();
   useEffect(() => {
     // Function to fetch current date and time
     const updateDateTime = () => {
@@ -36,7 +37,6 @@ function Homepage() {
 
       setCurrentDateTime(formattedDate);
     };
-
     // Set an interval to update the date and time every second
     const intervalId = setInterval(updateDateTime, 1000);
 
@@ -59,22 +59,18 @@ function Homepage() {
         className="row d-flex align-items-center justify-content-center"
         style={{ margin: "5%" }}
       >
-        <Box
+         <Box
           className="col-md-6"
           sx={{
             padding: { xs: "20px", md: "40px" },
             textAlign: "center",
           }}
         >
-          <Typography
-            variant="h4"
-            component="h1"
-            //className="dancing-script"
-           
-            sx={{ marginBottom: "20px",fontWeight: "bold", color: redcolor,fontFamily:"dancing-script ,cursive" }}
-          >
+          <h3 className="heading">
+
+  
             Welcome to Rashi's Kitchen - Longwood
-          </Typography>
+          </h3>
           <Typography variant="h6" sx={{ marginBottom: "20px", color: "#888" }}>
             {currentDateTime}
           </Typography>
@@ -89,21 +85,20 @@ function Homepage() {
           service.
           {/* </Typography>
       </Box> */}
-          <Typography
-            variant="h5"
-            sx={{
+          <h4
+            style={{
               marginTop: "20px",
               marginBottom: "20px",
-              color: "#333",
+              color: "#333333",
               fontWeight: "bold",
             }}
           >
             Registration Required To Order Online!
-          </Typography>
+          </h4>
           <Typography
             variant="body1"
             sx={{ 
-              color: "#333",
+          
                marginBottom: "20px" }}
           >
             Start ordering online by clicking login above. Simply select the
@@ -160,25 +155,9 @@ function Homepage() {
   </div>
 </div>
         <Box className="col-md-6" sx={{ padding: { xs: "20px", md: "40px" } }}>
-          <Typography
-            variant="h4"
-            
-        
-            sx={{
-              fontWeight: "bold",
-              color:redcolor ,
-              marginBottom: "20px",
-              fontFamily: "'Dancing Script', cursive",
-              fontSize: "2.5rem",
-              transition: "all 0.3s ease-in-out",
-              "&:hover": {
-                color:"#333" ,
-                transform: "scale(1.05)"
-              }
-            }}
-          >
+          <h4 className="fw-bold  mb-3 menu-title">
             Our Menus
-          </Typography>
+          </h4>
 
           <Typography
             variant="body1"
@@ -220,7 +199,9 @@ function Homepage() {
 
           <Button
             variant="contained"
-            href="/menu"
+            onClick={()=>{
+              navigate("/User/DiningMenu");
+            }}
             sx={{
               marginTop: "20px",
               borderRadius: "8px",
@@ -240,26 +221,11 @@ function Homepage() {
         style={{ margin: "5%" }}
       >
         <Box className="col-md-6" sx={{ padding: { xs: "20px", md: "40px" } }}>
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: "bold",
-              color:redcolor ,
-              marginBottom: "20px",
-              fontFamily: "'Dancing Script', cursive",
-              fontSize: "2.5rem",
-              transition: "all 0.3s ease-in-out",
-              "&:hover": {
-                color:"#333" ,
-                transform: "scale(1.05)"
-              }
-            }}
-      
-          >
+          <h4 className="fw-bold  mb-3 menu-title" >
             Catering
 
 
-          </Typography >
+  </h4>
           <Typography variant="h6" sx={{color:"#333" ,}}>
           For All Occasions
           </Typography>
@@ -303,7 +269,9 @@ function Homepage() {
 
           <Button
             variant="contained"
-            href="/menu"
+            onClick={()=>{
+              navigate("/User/CateringMenu");
+            }}
             sx={{
               marginTop: "20px",
               borderRadius: "8px",
@@ -318,15 +286,20 @@ function Homepage() {
           </Button>
         </Box>
         <div className="col-md-6 text-center">
-          <div id="carouselExample" class="carousel slide">
-            <div class="carousel-inner">
-              <div class="carousel-item active">
+           <div id="carouselExample" class="carousel slide">
+          {/* style={{ width: '500px',   // You can adjust width
+      height: '500px',  // You can adjust height
+      overflow: 'hidden',
+      margin: '0 auto'}}> */}
+      
+            <div class="carousel-inner"style={{ height: '100%' }}>
+              <div class="carousel-item active"style={{ height: '100%' }}>
                 <img src={caterimg1} class="d-block w-100" alt="..." />
               </div>
-              <div class="carousel-item">
+              <div class="carousel-item"style={{ height: '100%' }}>
                 <img src={caterimg2} class="d-block w-100" alt="..." />
               </div>
-              <div class="carousel-item">
+              <div class="carousel-item"style={{ height: '100%' }}>
                 <img src={caterimg3} class="d-block w-100" alt="..." />
               </div>
             </div>
@@ -363,24 +336,10 @@ function Homepage() {
           {/* Text & Small Images */}
           <div className="col-lg-8 mb-4">
             <div className="mb-3">
-            <Typography
-            variant="h4"
-            sx={{
-              fontWeight: "bold",
-              color:redcolor ,
-              marginBottom: "20px",
-              fontFamily: "'Dancing Script', cursive",
-              fontSize: "2.5rem",
-              transition: "all 0.3s ease-in-out",
-              "&:hover": {
-                color:"#333" ,
-                transform: "scale(1.05)"
-              }
-            }}
-      
-          >
-                Our special
-                </Typography>
+            <h4 className="fw-bold  mb-3 menu-title">
+            Our special
+          </h4>
+           
               <p className="text-muted">
               Experience the essence of Rashi's kitchen with our signature dishes—each plate a
               celebration of flavor, tradition, and creativity. From sizzling tandoori

@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
 
 
+
 .dancing-script {
     font-family: 'Dancing Script', cursive;
     font-weight: bold;
@@ -65,4 +66,36 @@
     border-radius: 8px;
     font-weight: 500;
     font-family: 'Dancing Script', cursive;
+  }
+
+  .menu-title {
+  
+    color: #830005; /* your redcolor */
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.5rem;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .menu-title:hover {
+    color: #333 !important;
+    transform: scale(1.05);
+  }
+
+  .custom-red-btn {
+    border: none;
+    background-color: #830005;
+    color: #ffffff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-weight: bold;
+  }
+  
+  .custom-red-btn:hover {
+    background-color: #FF1B1C;
+  
+  }
+  
+  .disabled-btn {
+    cursor: not-allowed !important;
+    opacity: 0.6;
+    pointer-events: none;
   }

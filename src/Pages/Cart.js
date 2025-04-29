@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
@@ -22,10 +23,10 @@ import { redcolor, fontcolor } from "../Design";
 import { db } from "../firebase-config";
 import {
   collection,
-  query,
-  where,
   addDoc,
   getDoc,
+  deleteDoc,
+  deleteField,
   doc,
   updateDoc,
   getDocs,
@@ -54,6 +55,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
+const uid = localStorage.getItem("uid");
 const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: 600,
   textTransform: "none",
@@ -76,15 +78,18 @@ function Cart({}) {
 
   const [open, setOpen] = React.useState(false);
   const [tip, setTip] = React.useState((0.0).toFixed(2));
-  const userRef = doc(db, "Userdetails", "6ORHSPh1yeA7mywPVdOJ");
+  const userRef = doc(db, "Userdetails", uid);
   const orderRef = collection(db, "Userorders");
+
+
+  
 
   const getusercartdetails = async () => {
     try {
       const docSnap = await getDoc(userRef);
 
       if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data()); // Log to inspect the structure
+       // console.log("Document data:", docSnap.data()); // Log to inspect the structure
         const cartData = docSnap.data().cart;
 
         // setSubtotal(docSnap.data().totalamt || 0); // Get the existing total amount
@@ -115,9 +120,10 @@ function Cart({}) {
       image: data.image,
       total: data.total, // Assuming this holds the total amount or quantity of the item
     };
-    doUpdate(!update);
+  
 
     createAddtocart(updatedData); // Add item to Firebase
+    doUpdate(!update);
   };
 
   const createAddtocart = async (data) => {
@@ -137,25 +143,29 @@ function Cart({}) {
           // If item exists, update the total
           const updatedCart = [...currentCart];
           updatedCart[itemIndex].total += data.total; // Increment the total quantity for the item
+          updatedCart[itemIndex].amt = data.amt;
 
           // Update the cart array with the new total for the item
           await updateDoc(userRef, {
             cart: updatedCart,
           });
         } else {
-          // If item does not exist, add it to the cart array
-          await updateDoc(userRef, {
-            cart: [
-              ...currentCart,
-              {
-                itemname: data.itemname,
-                price: data.price,
-                category: data.category,
-                desc: data.desc,
-                image: data.image,
-                total: data.total,
-              },
-            ],
+            const newCart = [
+                      ...currentCart,
+                      {
+                        itemname: data.itemname,
+                        price: data.price,
+                        category: data.category,
+                        desc: data.desc,
+                        image: data.image,
+                        total: data.total,
+                        amt: data.amt,
+                      },
+                    ];
+          
+                    // Update Firestore with the new cart and total amount
+                    await updateDoc(userRef, {
+                      cart: newCart,
           });
         }
       }
@@ -181,17 +191,27 @@ function Cart({}) {
   };
   const handleOrderAddclick = async () => {
     const orderData = {
-      //  items: cartdetails.itemname, // Save all items in the order
       totalAmount: finalamt,
       status: "pending",
       timestamp: currentDateTime,
     };
-
-    await addDoc(orderRef, orderData);
-
-    navigate("/Checkout");
+  
+    try {
+      // Add the order
+      await addDoc(orderRef, orderData);
+  
+      // Delete the entire 'cart' map field from the user document
+      const userDocRef = doc(db, "Userdetails", uid);
+      await updateDoc(userDocRef, {
+        cart: deleteField(), // This removes the whole cart map
+      });
+  
+      // Navigate to checkout
+      navigate("/Checkout");
+    } catch (error) {
+      console.error("Error processing order:", error);
+    }
   };
-
   useEffect(() => {
     getusercartdetails();
     updateDatetime();
@@ -216,7 +236,7 @@ function Cart({}) {
     setOpen(false);
   };
   let navigate = useNavigate();
-  console.log("Tip", tip);
+  //console.log("Tip", tip);
   return (
     <div style={{ margin: "5%" }}>
       <div style={{ margin: "5%", fontFamily: "Arial, sans-serif" }}>
@@ -636,6 +656,7 @@ function AddBtn({ data, handleAddclick, cartdetails }) {
            class="btn btn-danger"
            style={{
              border: "none",
+             maxHeight:"40px",
              backgroundColor: isHovered ? "#FF1B1C" : redcolor,
              cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
              opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
@@ -652,6 +673,7 @@ function AddBtn({ data, handleAddclick, cartdetails }) {
            disabled={isDisabled}
            style={{
              border: "none",
+             maxHeight:"40px",
              backgroundColor: isHovered ? "#FF1B1C" : redcolor,
              cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
              opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
@@ -668,6 +690,7 @@ function AddBtn({ data, handleAddclick, cartdetails }) {
            disabled={isDisabled}
            style={{
              border: "none",
+             maxHeight:"40px",
              backgroundColor: isHovered ? "#FF1B1C" : redcolor,
              cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
              opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items

@@ -1,0 +1,33 @@
+.custom-red-btn {
+  background-color: #830005;
+  color: #fff;
+  margin-top: 20px;
+  border-radius: 8px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: none;
+}
+
+.custom-red-btn:hover {
+  background-color: #FF1B1C;
+}
+  /* Disabled state */
+  .disabled-btn {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+    pointer-events: none;
+  }
+  
+  /* Optional: right-rounded only for + button */
+  .rounded-right {
+    border-top-right-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+  }
+  
+  /* Optional: styling the button group itself */
+  .quantity-btn-group {
+    display: inline-flex;
+    border-radius: 3px;
+  }

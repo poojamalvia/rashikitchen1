@@ -173,8 +173,11 @@ function Locationhrs() {
 
   return (
     <div style={{ margin: "5%" }}>
-      <h4>Location and Hours</h4>
+      
+      <h3 className="heading">Location and Hours</h3>
+
       <br />
+
 
       <div
         className="container"

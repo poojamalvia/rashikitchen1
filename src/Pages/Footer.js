@@ -10,7 +10,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import { redcolor } from "../Design";
 
 function Footer() {
-  const [value, setValue] = React.useState(3.5);
+  const [value, setValue] = React.useState(4.5);
   const handleClickfb = () => {
     window.open(
       'https://www.facebook.com/share/1GuGfQUntk/?mibextid=LQQJ4d".com/your-profile',
@@ -40,14 +40,13 @@ function Footer() {
         style={{
           borderTop: "1px solid black",
           borderTopLeftRadius: "50% 20px",
-    borderTopRightRadius: "50% 20px",
+          borderTopRightRadius: "50% 20px",
           backgroundColor: redcolor,
           color: "white",
           padding: "10px",
           textAlign: "center",
         }}
       >
-        
         <div className="row">
           <div
             className="col-md-3"
@@ -108,7 +107,7 @@ function Footer() {
                 </IconButton>{" "}
                 3260 N US Hwy 17 92 #100 Longwood, FL 32750
               </div>
-              <div >
+              <div>
                 <EmailIcon style={{ color: "#FFFFFF" }} />{" "}
                 Rashikitchen23@gmail.com
               </div>

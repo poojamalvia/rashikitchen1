@@ -76,6 +76,9 @@ function Navbar(props) {
   const [image, setImage] = React.useState([]);
   let isAuthenticated = !!localStorage.getItem("token");
 
+  const uid = localStorage.getItem("uid");
+
+
   function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,
@@ -90,7 +93,7 @@ function Navbar(props) {
     };
     const getTotalCount = async () => {
       try {
-        const userRef = doc(db, "Userdetails", "6ORHSPh1yeA7mywPVdOJ"); // Replace with dynamic user ID if necessary
+        const userRef = doc(db, "Userdetails", uid); // Replace with dynamic user ID if necessary
         const userDoc = await getDoc(userRef);
 
         if (userDoc.exists()) {
@@ -198,7 +201,7 @@ function Navbar(props) {
                         sx={{
                           mr: 2,
                           "&:hover": {
-                            backgroundColor: "#FF5722",
+                            backgroundColor: "#FF1B1C",
                             transform: "scale(1.1)",
                           },
                           transition:
@@ -243,6 +246,7 @@ function Navbar(props) {
                           onClick={() => {
                             navigate("/User/login");
                             localStorage.removeItem("token");
+                            localStorage.removeItem("uid")
                             handleClose();
                           }}
                         >
@@ -270,9 +274,10 @@ function Navbar(props) {
                     aria-label="menu"
                     sx={{
                       mr: 2,
-                      "&:hover": {
-                        backgroundColor: "#FF5722",
-                        transform: "scale(1.1)",
+                     "&:hover": {
+                     backgroundColor: "#FF1B1C", // A nice "Slate Blue" color
+                     color: "#FFFFFF",           // Icon turns white on hover
+                     transform: "scale(1.1)",
                       },
                       transition:
                         "transform 0.3s ease, background-color 0.3s ease",
@@ -283,8 +288,6 @@ function Navbar(props) {
                   >
                     <Badge
                       badgeContent={cartCount} // Show the number of items in the cart
-                      // color="secondary" // Red badge color
-                      // dot
                       sx={{
                         ".MuiBadge-dot": {
                           backgroundColor: "purple", // Change the secondary badge color to purple
@@ -485,14 +488,17 @@ function Navbar(props) {
                       sx={{
                         mr: 2,
                         "&:hover": {
-                          backgroundColor: redcolor,
+                          backgroundColor:redcolor,
+                          color:"#FFFFFF",
                           transform: "scale(1.1)",
                         },
                         transition:
                           "transform 0.3s ease, background-color 0.3s ease",
                       }}
                     >
-                      <AccountCircle sx={{ color: redcolor }} />
+                      <AccountCircle sx={{ color: redcolor ,
+                        "&:hover":{ color:"#FFFFFF",},
+                      }} />
                     </IconButton>
 
                     <Menu
@@ -566,7 +572,9 @@ function Navbar(props) {
                         },
                       }}
                     >
-                      <ShoppingCartIcon sx={{ color: redcolor }} />
+                      <ShoppingCartIcon sx={{ color: redcolor ,
+                         "&:hover":{ color:"#FFFFFF"},
+                      }} />
                     </Badge>
                   </IconButton>
                 )}
