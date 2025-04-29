@@ -255,16 +255,14 @@ function Navbar(props) {
                     </div>
                   )
                 ) : (
-                  <div style={{ display: "flex", flexWrap: "nowrap" }}>
-                    <button
-                      type="button"
-                      style={{ color: "#ffffff" }}
-                      className="btn"
-                      onClick={() => navigate("/User/login")}
-                    >
-                      Login
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    style={{ color: "#ffffff", whiteSpace: "nowrap" }}
+                    className="btn"
+                    onClick={() => navigate("/User/login")}
+                  >
+                    Log In
+                  </button>
                 )}
 
                 {isAuthenticated && !checkadmin ? (
