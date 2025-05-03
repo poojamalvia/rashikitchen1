@@ -77,7 +77,7 @@ function Homepage() {
           2024, the restaurant is known for its variety of tastes and freshest
           ingredients. Come and experience our friendly atmosphere and excellent
           service.
-          <h4
+          <h5
             style={{
               marginTop: "20px",
               marginBottom: "20px",
@@ -86,7 +86,7 @@ function Homepage() {
             }}
           >
             Registration Required To Order Online!
-          </h4>
+          </h5>
           <Typography
             variant="body1"
             sx={{
