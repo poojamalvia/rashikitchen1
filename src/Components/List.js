@@ -128,74 +128,76 @@ function AlignItemsList({ menuDetails, isAdd }) {
           <>
             <ListItem alignItems="flex-start">
               <div className="col-md-2">
-              <ListItemAvatar>
-                <Avatar variant="rounded" src={data.image}
-                 sx={{ width:150, height:150}} // adjust size as needed
+                <ListItemAvatar>
+                  <Avatar
+                    variant="rounded"
+                    src={data.image}
+                    sx={{ width: 120, height: 120 }} // adjust size as needed
                   />
-              </ListItemAvatar>
+                </ListItemAvatar>
               </div>
               <div className="col-md-10">
-              <ListItemText
-                primary={data.itemname}
-                secondary={
-                  <div className="row">
-                    <div className="col-md-9">
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        sx={{ color: "text.primary", display: "inline" }}
-                      >
-                        {isAdd && " - $" + data.price}
-                      </Typography>
-                      <br />
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        sx={{ color: "text.primary", display: "inline" }}
-                      >
-                        {data.desc}
-                      </Typography>
-
-                      {data.availibity == "false" ? (
-                        <label
-                          style={{
-                            top: "30px", // Center it vertically for better alignment
-                            left: "50%", // Center it horizontally as well
-                            // transform: "rotate(45deg)", // Make the label centered and rotated
-                            backgroundColor: "rgba(243, 158, 158, 0.7)", // Slight transparency for a cleaner look
-                            color: "white",
-                            fontWeight: "bold",
-                            padding: "5px 25px",
-                            position: "absolute",
-                            borderRadius: "5px", // Slightly rounded corners for smoother design
-                            fontSize: "14px", // Make the text smaller for elegance
-                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Optional shadow for depth
-                          }}
+                <ListItemText
+                  primary={data.itemname}
+                  secondary={
+                    <div className="row">
+                      <div className="col-md-9">
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          sx={{ color: "text.primary", display: "inline" }}
                         >
-                          UNAVAILABLE
-                        </label>
-                      ) : (
-                        ""
-                      )}
+                          {isAdd && " - $" + data.price}
+                        </Typography>
+                        <br />
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          sx={{ color: "text.primary", display: "inline" }}
+                        >
+                          {data.desc}
+                        </Typography>
+
+                        {data.availibity == "false" ? (
+                          <label
+                            style={{
+                              top: "30px", // Center it vertically for better alignment
+                              left: "50%", // Center it horizontally as well
+                              // transform: "rotate(45deg)", // Make the label centered and rotated
+                              backgroundColor: "rgba(243, 158, 158, 0.7)", // Slight transparency for a cleaner look
+                              color: "white",
+                              fontWeight: "bold",
+                              padding: "5px 25px",
+                              position: "absolute",
+                              borderRadius: "5px", // Slightly rounded corners for smoother design
+                              fontSize: "14px", // Make the text smaller for elegance
+                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Optional shadow for depth
+                            }}
+                          >
+                            UNAVAILABLE
+                          </label>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      <div
+                        className="col-md-3"
+                        style={{
+                          display: "flex",
+                          justifyContent: "end",
+                        }}
+                      >
+                        {isAdd && isAuthenticated && (
+                          <AddBtn
+                            data={data}
+                            handleAddclick={handleAddclick}
+                            cart={cart}
+                          />
+                        )}{" "}
+                      </div>
                     </div>
-                    <div
-                      className="col-md-3"
-                      style={{
-                        display: "flex",
-                        justifyContent: "end",
-                      }}
-                    >
-                      {isAdd && isAuthenticated && (
-                        <AddBtn
-                          data={data}
-                          handleAddclick={handleAddclick}
-                          cart={cart}
-                        />
-                      )}{" "}
-                    </div>
-                  </div>
-                }
-              />
+                  }
+                />
               </div>
             </ListItem>
             <Divider variant="inset" component="li" />
