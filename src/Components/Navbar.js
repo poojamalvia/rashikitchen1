@@ -143,7 +143,7 @@ function Navbar(props) {
                     sx={{
                       mr: 2,
                       "&:hover": {
-                        backgroundColor: "#FF5722",
+                        backgroundColor: "#FF1B1C",
                         transform: "scale(1.1)",
                       },
                       transition:
