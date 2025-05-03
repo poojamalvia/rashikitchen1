@@ -127,22 +127,18 @@ function AlignItemsList({ menuDetails, isAdd }) {
         return (
           <>
             <ListItem alignItems="flex-start">
-              <div className="col-md-2">
+              <div className="col-md-4">
                 <ListItemAvatar>
                   <Avatar
                     variant="rounded"
                     src={data.image}
-                    sx={{ width: 120, height: 120, borderRadius: "16px"  }} // adjust size as needed
+                    sx={{ width: 120, height: 120, borderRadius: "16px" , objectFit: "cover" }} // adjust size as needed
                   />
                 </ListItemAvatar>
               </div>
-              <div className="col-md-10">
+              <div className="col-md-8">
                 <ListItemText
-                  primary={
-                    <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                      {data.itemname}
-                    </Typography>
-                  }
+                  primary={<b>{data.itemname}</b>}
                   secondary={
                     <div className="row">
                       <div className="col-md-9">

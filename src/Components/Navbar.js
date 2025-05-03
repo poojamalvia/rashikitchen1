@@ -118,8 +118,9 @@ function Navbar(props) {
   };
 
   const avatarStyle = {
-    width: "130px",
-    height: "130px",
+    width: { xs: 70, sm: 100, md: 130 },
+  height: { xs: 70, sm: 100, md: 130 },
+
     borderRadius: "50%",
     boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
     border: "3px solid #ddd",
@@ -832,10 +833,10 @@ function Navbar(props) {
             flexWrap: "wrap",
           }}
         >
-          <Avatar src={pic1} style={avatarStyle} className="avatar-hover" />
-          <Avatar src={pic2} style={avatarStyle} className="avatar-hover" />
-          <Avatar src={pic3} style={avatarStyle} className="avatar-hover" />
-          <Avatar src={pic4} style={avatarStyle} className="avatar-hover" />
+          <Avatar src={pic1} sx={avatarStyle} className="avatar-hover" />
+          <Avatar src={pic2} sx={avatarStyle} className="avatar-hover" />
+          <Avatar src={pic3} sx={avatarStyle} className="avatar-hover" />
+          <Avatar src={pic4} sx={avatarStyle} className="avatar-hover" />
         </div>
 
         <Drawer
