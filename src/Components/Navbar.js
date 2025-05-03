@@ -118,8 +118,8 @@ function Navbar(props) {
   };
 
   const avatarStyle = {
-    width: { xs: 70, sm: 100, md: 130 },
-  height: { xs: 70, sm: 100, md: 130 },
+    width: { xs: 60, sm: 100, md: 130 },
+  height: { xs: 60, sm: 100, md: 130 },
 
     borderRadius: "50%",
     boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
@@ -174,7 +174,7 @@ function Navbar(props) {
                     borderRadius: "12px", // curved corners
                   }}
                 />
-                <Typography
+                {/* <Typography
                   variant="h5"
                   //  className="dancing-script"
                   style={{
@@ -186,8 +186,10 @@ function Navbar(props) {
                   sx={{ flexGrow: 1 }}
                 >
                   Rashi’s Kitchen Indian Cuisine
-                </Typography>
+                </Typography> */}
 
+
+<Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
                 {isAuthenticated && checkadminlogin ? (
                   auth && (
                     <div>
@@ -300,6 +302,7 @@ function Navbar(props) {
                 ) : (
                   ""
                 )}
+                </Box>
               </Toolbar>
             </AppBar>
           </div>
