@@ -127,9 +127,14 @@ function AlignItemsList({ menuDetails, isAdd }) {
         return (
           <>
             <ListItem alignItems="flex-start">
+              <div className="col-md-2">
               <ListItemAvatar>
-                <Avatar variant="rounded" src={data.image} />
+                <Avatar variant="rounded" src={data.image}
+                 sx={{ width:150, height:150}} // adjust size as needed
+                  />
               </ListItemAvatar>
+              </div>
+              <div className="col-md-10">
               <ListItemText
                 primary={data.itemname}
                 secondary={
@@ -191,6 +196,7 @@ function AlignItemsList({ menuDetails, isAdd }) {
                   </div>
                 }
               />
+              </div>
             </ListItem>
             <Divider variant="inset" component="li" />
           </>
