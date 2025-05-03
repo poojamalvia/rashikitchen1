@@ -132,13 +132,17 @@ function AlignItemsList({ menuDetails, isAdd }) {
                   <Avatar
                     variant="rounded"
                     src={data.image}
-                    sx={{ width: 120, height: 120 }} // adjust size as needed
+                    sx={{ width: 120, height: 120, borderRadius: "16px"  }} // adjust size as needed
                   />
                 </ListItemAvatar>
               </div>
               <div className="col-md-10">
                 <ListItemText
-                  primary={data.itemname}
+                  primary={
+                    <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                      {data.itemname}
+                    </Typography>
+                  }
                   secondary={
                     <div className="row">
                       <div className="col-md-9">
