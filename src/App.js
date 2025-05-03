@@ -28,11 +28,16 @@ function App() {
           <Route path="/User/home" Component={Homepage} />
 
           <Route element={<PrivateRoute />}>
-           
+          <Route path="/Admin/DiningMenu" Component={Menua} />
+          <Route path="/Admin/CateringMenu" Component={Cateringa} />
+          <Route path="/Admin/UserOrder" Component={Ordera} />
+          <Route path="/Admin/Carouselimg" Component={Carouselimg} />
             <Route path="/User/orders" Component={OrderPage} />
           </Route>
-          <Route path="/User/DiningMenu" Component={MenuPage} />
-           
+
+
+
+          <Route path="/User/DiningMenu" Component={MenuPage} /> 
           <Route path="/User/CateringMenu" Component={CateringPage} />
           <Route path="/User/Locationhours" Component={Locationhours} />
           <Route path="/User/contactus" Component={ContactPage} />
@@ -42,10 +47,6 @@ function App() {
           <Route path="/User/cart" Component={CartPage} />
           <Route path="/Checkout" Component={Checkout} />
 
-          <Route path="/Admin/DiningMenu" Component={Menua} />
-          <Route path="/Admin/CateringMenu" Component={Cateringa} />
-          <Route path="/Admin/UserOrder" Component={Ordera} />
-          <Route path="/Admin/Carouselimg" Component={Carouselimg} />
           <Route path="/Admin/Login" Component={Loginpage} />
         </Routes>
         <Footer />
