@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
@@ -21,6 +20,7 @@ import { styled } from "@mui/material/styles";
 import { InputAdornment } from "@mui/material";
 import { redcolor, fontcolor } from "../Design";
 import { db } from "../firebase-config";
+import useCart from "../useCart";
 import {
   collection,
   addDoc,
@@ -80,16 +80,14 @@ function Cart({}) {
   const [tip, setTip] = React.useState((0.0).toFixed(2));
   const userRef = doc(db, "Userdetails", uid);
   const orderRef = collection(db, "Userorders");
-
-
-  
+  const { total, items, handleItemsChange } = useCart();
 
   const getusercartdetails = async () => {
     try {
       const docSnap = await getDoc(userRef);
 
       if (docSnap.exists()) {
-       // console.log("Document data:", docSnap.data()); // Log to inspect the structure
+        // console.log("Document data:", docSnap.data()); // Log to inspect the structure
         const cartData = docSnap.data().cart;
 
         // setSubtotal(docSnap.data().totalamt || 0); // Get the existing total amount
@@ -120,7 +118,6 @@ function Cart({}) {
       image: data.image,
       total: data.total, // Assuming this holds the total amount or quantity of the item
     };
-  
 
     createAddtocart(updatedData); // Add item to Firebase
     doUpdate(!update);
@@ -150,22 +147,22 @@ function Cart({}) {
             cart: updatedCart,
           });
         } else {
-            const newCart = [
-                      ...currentCart,
-                      {
-                        itemname: data.itemname,
-                        price: data.price,
-                        category: data.category,
-                        desc: data.desc,
-                        image: data.image,
-                        total: data.total,
-                        amt: data.amt,
-                      },
-                    ];
-          
-                    // Update Firestore with the new cart and total amount
-                    await updateDoc(userRef, {
-                      cart: newCart,
+          const newCart = [
+            ...currentCart,
+            {
+              itemname: data.itemname,
+              price: data.price,
+              category: data.category,
+              desc: data.desc,
+              image: data.image,
+              total: data.total,
+              amt: data.amt,
+            },
+          ];
+
+          // Update Firestore with the new cart and total amount
+          await updateDoc(userRef, {
+            cart: newCart,
           });
         }
       }
@@ -195,23 +192,29 @@ function Cart({}) {
       status: "pending",
       timestamp: currentDateTime,
     };
-  
+
     try {
       // Add the order
       await addDoc(orderRef, orderData);
-  
+
       // Delete the entire 'cart' map field from the user document
       const userDocRef = doc(db, "Userdetails", uid);
       await updateDoc(userDocRef, {
         cart: deleteField(), // This removes the whole cart map
       });
-  
+
       // Navigate to checkout
       navigate("/Checkout");
     } catch (error) {
       console.error("Error processing order:", error);
     }
   };
+
+  useEffect(() => {
+    console.log("items from useCart updated:", handleItemsChange(items));
+    console.log(items);
+  }, [items]);
+
   useEffect(() => {
     getusercartdetails();
     updateDatetime();
@@ -267,43 +270,57 @@ function Cart({}) {
               </tr>
 
               <tr>
-  <td style={{ padding: "10px" }}>Tip:</td>
-  <td style={{ padding: "10px", fontWeight: "bold", display: "flex", alignItems: "center" }}>
-    {/* Show the selected tip if available, else show "Set Tip" */}
-    {tip==0.00 ? (
-      <a
-        href="#"
-        style={{
-          fontSize: "16px",
-          color: "seagreen",
-          textDecoration: "none",
-          fontWeight: "bold",
-        }}
-        onClick={handleClickOpen}
-      >
-        Set Tip
-      </a>
-    )  :(
-      <>
-        <span style={{ marginRight: "10px", color: "seagreen", fontSize: "16px", fontWeight: "bold" }}>
-          ${tip}
-        </span>
-        <a
-          href="#"
-          style={{
-            fontSize: "16px",
-            color: "seagreen",
-            textDecoration: "none",
-            fontWeight: "bold",
-          }}
-          onClick={handleClickOpen}
-        >
-          Edit Tip
-        </a>
-      </>
-    )}
-  </td>
-</tr>
+                <td style={{ padding: "10px" }}>Tip:</td>
+                <td
+                  style={{
+                    padding: "10px",
+                    fontWeight: "bold",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  {/* Show the selected tip if available, else show "Set Tip" */}
+                  {tip == 0.0 ? (
+                    <a
+                      href="#"
+                      style={{
+                        fontSize: "16px",
+                        color: "seagreen",
+                        textDecoration: "none",
+                        fontWeight: "bold",
+                      }}
+                      onClick={handleClickOpen}
+                    >
+                      Set Tip
+                    </a>
+                  ) : (
+                    <>
+                      <span
+                        style={{
+                          marginRight: "10px",
+                          color: "seagreen",
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ${tip}
+                      </span>
+                      <a
+                        href="#"
+                        style={{
+                          fontSize: "16px",
+                          color: "seagreen",
+                          textDecoration: "none",
+                          fontWeight: "bold",
+                        }}
+                        onClick={handleClickOpen}
+                      >
+                        Edit Tip
+                      </a>
+                    </>
+                  )}
+                </td>
+              </tr>
               <tr style={{ borderTop: "2px solid #ddd" }}>
                 <td style={{ padding: "10px" }}>Total:</td>
                 <td
@@ -593,119 +610,119 @@ function AddBtn({ data, handleAddclick, cartdetails }) {
   const [isDisabled, setIsDisabled] = React.useState(true);
 
   React.useEffect(() => {
-     getCount();
-   }, [cartdetails]);
- 
-   const handleIncrement = () => {
-     console.log("------called----");
-     if (data.availibity !== "false") {
-       // setCount((prev) => prev + 1); // Update count immediately
-       setIsDisabled(true);
-       const updatedData = {
-         ...data,
-         amt: (count ? count + 1 : 1) * data.price,
-         total: count ? count + 1 : 1,
-       };
-       console.log(data, updatedData);
-       handleAddclick(updatedData);
-     }
-   };
- 
-   const handleDecrement = () => {
-     console.log("------called----");
-     if (count > 0) {
-       // setCount((prev) => prev - 1); // Update count immediately
-       setIsDisabled(true);
- 
-       const updatedData = {
-         ...data,
-         total: count ? count - 1 : 1,
-         amt: (count ? count - 1 : 1) * data.price,
-       };
-       // Ensure amt doesn't go negative
- 
-       handleAddclick(updatedData);
-     }
-   };
- 
-   const getCount = () => {
-     let x = cartdetails.find(
-       (item) =>
-         item.itemname === data.itemname && item.category === data.category
-     );
-     if (x && x.total && x.total > 0) {
-       setCount(x.total);
-     } else {
-       setCount(0);
-     }
-     setIsDisabled(false);
-   };
- 
-   return (
-     <>
-       {" "}
-       <div
-         class="btn-group"
-         role="group"
-         aria-label="Button group with nested dropdown"
-         style={{ display: "inline-flex", borderRadius: "3px" }}
-       >
-         <button
-           type="button"
-           disabled={isDisabled}
-           class="btn btn-danger"
-           style={{
-             border: "none",
-             maxHeight:"40px",
-             backgroundColor: isHovered ? "#FF1B1C" : redcolor,
-             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
-             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
-           }}
-           onMouseEnter={() => setIsHovered(true)}
-           onMouseLeave={() => setIsHovered(false)}
-           onClick={handleDecrement}
-         >
-           -
-         </button>
-         <button
-           type="button"
-           class="btn btn-danger"
-           disabled={isDisabled}
-           style={{
-             border: "none",
-             maxHeight:"40px",
-             backgroundColor: isHovered ? "#FF1B1C" : redcolor,
-             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
-             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
-           }}
-           onMouseEnter={() => setIsHovered(true)}
-           onMouseLeave={() => setIsHovered(false)}
-         >
-           {count}
-         </button>
- 
-         <button
-           type="button"
-           class="btn btn-danger"
-           disabled={isDisabled}
-           style={{
-             border: "none",
-             maxHeight:"40px",
-             backgroundColor: isHovered ? "#FF1B1C" : redcolor,
-             cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
-             opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
-             borderTopRightRadius: "5px", // Apply radius to top-right corner
-             borderBottomRightRadius: "5px", // Apply radius to bottom-right corner
-           }}
-           onMouseEnter={() => setIsHovered(true)}
-           onMouseLeave={() => setIsHovered(false)}
-           onClick={handleIncrement}
-         >
-           +
-         </button>
-         <br></br>
-       </div>
-     </>
-   );
- }
+    getCount();
+  }, [cartdetails]);
+
+  const handleIncrement = () => {
+    console.log("------called----");
+    if (data.availibity !== "false") {
+      // setCount((prev) => prev + 1); // Update count immediately
+      setIsDisabled(true);
+      const updatedData = {
+        ...data,
+        amt: (count ? count + 1 : 1) * data.price,
+        total: count ? count + 1 : 1,
+      };
+      console.log(data, updatedData);
+      handleAddclick(updatedData);
+    }
+  };
+
+  const handleDecrement = () => {
+    console.log("------called----");
+    if (count > 0) {
+      // setCount((prev) => prev - 1); // Update count immediately
+      setIsDisabled(true);
+
+      const updatedData = {
+        ...data,
+        total: count ? count - 1 : 1,
+        amt: (count ? count - 1 : 1) * data.price,
+      };
+      // Ensure amt doesn't go negative
+
+      handleAddclick(updatedData);
+    }
+  };
+
+  const getCount = () => {
+    let x = cartdetails.find(
+      (item) =>
+        item.itemname === data.itemname && item.category === data.category
+    );
+    if (x && x.total && x.total > 0) {
+      setCount(x.total);
+    } else {
+      setCount(0);
+    }
+    setIsDisabled(false);
+  };
+
+  return (
+    <>
+      {" "}
+      <div
+        class="btn-group"
+        role="group"
+        aria-label="Button group with nested dropdown"
+        style={{ display: "inline-flex", borderRadius: "3px" }}
+      >
+        <button
+          type="button"
+          disabled={isDisabled}
+          class="btn btn-danger"
+          style={{
+            border: "none",
+            maxHeight: "40px",
+            backgroundColor: isHovered ? "#FF1B1C" : redcolor,
+            cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
+            opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
+          }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onClick={handleDecrement}
+        >
+          -
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          disabled={isDisabled}
+          style={{
+            border: "none",
+            maxHeight: "40px",
+            backgroundColor: isHovered ? "#FF1B1C" : redcolor,
+            cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
+            opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
+          }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {count}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          disabled={isDisabled}
+          style={{
+            border: "none",
+            maxHeight: "40px",
+            backgroundColor: isHovered ? "#FF1B1C" : redcolor,
+            cursor: data.availibity === "false" ? "not-allowed" : "pointer", // Change cursor when unavailable
+            opacity: data.availibity === "false" ? 0.6 : 1, // Reduce opacity for unavailable items
+            borderTopRightRadius: "5px", // Apply radius to top-right corner
+            borderBottomRightRadius: "5px", // Apply radius to bottom-right corner
+          }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onClick={handleIncrement}
+        >
+          +
+        </button>
+        <br></br>
+      </div>
+    </>
+  );
+}
 export default Cart;

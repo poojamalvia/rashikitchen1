@@ -298,6 +298,21 @@ function AddItemcaterDialog(props) {
               value={data.itemname}
               style={{ backgroundColor: "#f5f5f5" }}
               onChange={handleChange}
+              sx={{
+                backgroundColor: "#f5f5f5",
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: redcolor, // Apply your variable here
+                  },
+                  "&:hover fieldset": {
+                    borderColor: redcolor,
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: redcolor,
+                  },
+                },
+              }}
+          
             />
           </Box>
 
@@ -315,6 +330,21 @@ function AddItemcaterDialog(props) {
               style={{ backgroundColor: "#f5f5f5" }}
               value={data.desc}
               onChange={handleChange}
+              sx={{
+                backgroundColor: "#f5f5f5",
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: redcolor, // Apply your variable here
+                  },
+                  "&:hover fieldset": {
+                    borderColor: redcolor,
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: redcolor,
+                  },
+                },
+              }}
+          
             />
           </Box>
 

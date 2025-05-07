@@ -188,7 +188,7 @@ function AddItemDialog(props) {
           {/* Catering Category Selection */}
           <Box mb={3}>
             <FormControl fullWidth required>
-              <InputLabel id="category-label">Catering Category</InputLabel>
+              <InputLabel id="category-label"  style={{  color: redcolor }}>Dining Category</InputLabel>
               <Select
                 labelId="category-label"
                 name="category"
@@ -196,6 +196,21 @@ function AddItemDialog(props) {
                 fullWidth
                 onChange={handleChange}
                 value={data.category}
+                   sx={{
+                            
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                  borderColor: redcolor,
+                                },
+                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                  borderColor: redcolor,
+                                },
+                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                  borderColor: redcolor,
+                                },
+                                "&.MuiFormLabel-root": {
+                                  color: "red !important",
+                                },
+                              }}
                 
               >
                 <MenuItem value="">
@@ -214,7 +229,7 @@ function AddItemDialog(props) {
           </Box>
 
           {/* Item Name Field */}
-          <Box mb={3}>
+          <Box mb={3} >
             <TextField
               required
               fullWidth
@@ -225,6 +240,22 @@ function AddItemDialog(props) {
               value={data.itemname}
               style={{ backgroundColor: "#f5f5f5" }}
               onChange={handleChange}
+               sx={{
+      backgroundColor: "#f5f5f5",
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          borderColor: redcolor, // Apply your variable here
+        },
+        "&:hover fieldset": {
+          borderColor: redcolor,
+        },
+        "&.Mui-focused fieldset": {
+          borderColor: redcolor,
+        },
+      },
+    }}
+
+            
             />
           </Box>
 
@@ -241,6 +272,21 @@ function AddItemDialog(props) {
                 value={data.price}
                 style={{ backgroundColor: "#f5f5f5" }}
                 onChange={handleChange}
+                 sx={{
+      backgroundColor: "#f5f5f5",
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          borderColor: redcolor, // Apply your variable here
+        },
+        "&:hover fieldset": {
+          borderColor: redcolor,
+        },
+        "&.Mui-focused fieldset": {
+          borderColor: redcolor,
+        },
+      },
+    }}
+
               />
             </Box>
           ) : (
@@ -261,6 +307,21 @@ function AddItemDialog(props) {
               style={{ backgroundColor: "#f5f5f5" }}
               value={data.desc}
               onChange={handleChange}
+               sx={{
+      backgroundColor: "#f5f5f5",
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          borderColor: redcolor, // Apply your variable here
+        },
+        "&:hover fieldset": {
+          borderColor: redcolor,
+        },
+        "&.Mui-focused fieldset": {
+          borderColor: redcolor,
+        },
+      },
+    }}
+
             />
           </Box>
 
