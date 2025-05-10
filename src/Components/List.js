@@ -23,12 +23,11 @@ const isAuthenticated = !!localStorage.getItem("token"); // Check if token exist
 const uid = localStorage.getItem("uid");
 function AlignItemsList({ menuDetails, isAdd }) {
   const [cart, setCart] = React.useState([]);
-  const [update, doUpdate] = React.useState(true);
   const { handleItemsChange } = useCart();
 
   React.useEffect(() => {
     getCartData();
-  }, [cart]);
+  }, []);
 
   const getCartData = async () => {
     const userRef = doc(db, "Userdetails", uid);
@@ -61,7 +60,7 @@ function AlignItemsList({ menuDetails, isAdd }) {
         if (index === itemIndex) {
           return {
             ...val,
-            amt:  data.amt,
+            amt: data.amt,
             total: data.total,
           };
         }
@@ -174,13 +173,10 @@ function AddBtn({ data, handleAddclick, cart }) {
   const [isDisabled, setIsDisabled] = React.useState(true);
 
   React.useEffect(() => {
-  
     getCount();
   }, [cart]);
 
   const handleIncrement = () => {
-    
-
     if (data.availibity !== "false") {
       // setCount((prev) => prev + 1); // Update count immediately
       // setIsDisabled(true);

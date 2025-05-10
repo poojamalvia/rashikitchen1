@@ -20,7 +20,7 @@ import {
 const isAuthenticated = !!localStorage.getItem("token"); // Check if token exists
 
 const uid = localStorage.getItem("uid");
-function AlignItemsList({ menuDetails, isAdd }) {
+function AlignItemsList1({ menuDetails, isAdd }) {
   const [isHovered1, setIsHovered1] = React.useState(
     new Array(menuDetails.length).fill(false)
   );
@@ -334,4 +334,4 @@ function AddBtn({ data, handleAddclick, cart }) {
   );
 }
 
-export default React.memo(AlignItemsList);
+export default React.memo(AlignItemsList1);

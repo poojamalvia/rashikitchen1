@@ -1,11 +1,11 @@
 import React from "react";
 
 function useCart() {
-  const [total, setTotal] = React.useState();
+  const total = React.useRef(null);
   const [items, setItems] = React.useState([]);
 
   const handleItemsChange = (x) => {
-    console.log("in items change", Array.isArray(x) && x.length >= 1, x);
+    // console.log("in items change", Array.isArray(x) && x.length >= 1, x);
     setItems(x);
     if (Array.isArray(x) && x.length >= 1) {
       let count = 0;
@@ -14,12 +14,12 @@ function useCart() {
         count = count + fld.total;
       });
       console.log("in hook", count);
-      setTotal(count);
+      total.current = count;
     }
   };
- // console.log("Total", total);
+  // console.log("Total", total);
   return {
-    total,
+    total: total.current,
     items,
     handleItemsChange,
   };
