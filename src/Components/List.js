@@ -16,14 +16,13 @@ import {
   getDoc,
   arrayUnion,
 } from "firebase/firestore";
-import useCart from "../useCart";
+import { handleItemsChange } from "../useCart";
 
 const isAuthenticated = !!localStorage.getItem("token"); // Check if token exists
 
 const uid = localStorage.getItem("uid");
 function AlignItemsList({ menuDetails, isAdd }) {
   const [cart, setCart] = React.useState([]);
-  const { handleItemsChange } = useCart();
 
   React.useEffect(() => {
     getCartData();

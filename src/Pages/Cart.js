@@ -80,7 +80,7 @@ function Cart({}) {
   const [tip, setTip] = React.useState((0.0).toFixed(2));
   const userRef = doc(db, "Userdetails", uid);
   const orderRef = collection(db, "Userorders");
-  const { total, items, handleItemsChange } = useCart();
+  //const { total, items, handleItemsChange } = useCart();
 
   const getusercartdetails = async () => {
     try {
@@ -211,9 +211,9 @@ function Cart({}) {
   };
 
   useEffect(() => {
-    console.log("items from useCart updated:", handleItemsChange(items));
-    console.log(items);
-  }, [items]);
+   // console.log("items from useCart updated:", handleItemsChange(items));
+  //  console.log(items);
+  }, []);
 
   useEffect(() => {
     getusercartdetails();

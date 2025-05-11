@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -55,7 +55,7 @@ import logo1 from "../images/Rashilogo.png";
 import Tab from "@mui/material/Tab";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import useCart from "../useCart";
+import { total } from "../useCart";
 
 const isAdmin = () => {
   return window.location.pathname.toLowerCase().includes("admin");
@@ -73,14 +73,25 @@ function Navbar(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   // const [cartCount, setCartCount] = React.useState(4);
-  const { total } = useCart();
   const [checkadminlogin] = React.useState(true);
   const [image, setImage] = React.useState([]);
+  const [totalItems, setTotalItems] = useState(0);
   let isAuthenticated = !!localStorage.getItem("token");
 
   const uid = localStorage.getItem("uid");
 
-  console.log("----->>>>>>>>>>total in navbar", total);
+  useEffect(() => {
+    setInterval(() => {
+      console.log(
+        "----->>>>>>>>>>total in navbar",
+        localStorage.getItem("count")
+      );
+      let x = parseInt(localStorage.getItem("count"));
+      if (totalItems != x) {
+        setTotalItems(x);
+      }
+    }, 1000);
+  }, []);
 
   function a11yProps(index) {
     return {
@@ -271,7 +282,7 @@ function Navbar(props) {
                       }}
                     >
                       <Badge
-                        badgeContent={total} // Show the number of items in the cart
+                        badgeContent={totalItems} // Show the number of items in the cart
                         sx={{
                           ".MuiBadge-dot": {
                             backgroundColor: "purple", // Change the secondary badge color to purple
@@ -553,7 +564,7 @@ function Navbar(props) {
                     }}
                   >
                     <Badge
-                      badgeContent={total}
+                      badgeContent={totalItems}
                       sx={{
                         ".MuiBadge-dot": {
                           backgroundColor: "purple",
