@@ -8,6 +8,7 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { redcolor } from "../Design";
 import { db } from "../firebase-config";
+import { Tooltip } from '@mui/material';
 import {
   collection,
   addDoc,
@@ -81,18 +82,36 @@ function AlignItemsList({ menuDetails, isAdd }) {
         return (
           <>
             <ListItem alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar
-                  variant="rounded"
-                  src={data.image}
-                  sx={{
-                    width: 120,
-                    height: 120,
-                    borderRadius: "16px",
-                    objectFit: "cover",
-                  }} // adjust size as needed
-                />
-              </ListItemAvatar>
+          <Tooltip
+  title={
+    <img
+      src={data.image}
+      alt="preview"
+      style={{
+        width: 500,
+        height: 500,
+        objectFit: 'cover',
+        borderRadius: '16px',
+      }}
+    />
+  }
+ placement="right"
+  //arrow
+>
+  <ListItemAvatar>
+    <Avatar
+      variant="rounded"
+      src={data.image}
+      sx={{
+        width: 120,
+        height: 120,
+        borderRadius: '16px',
+        objectFit: 'cover',
+        cursor: 'pointer',
+      }}
+    />
+  </ListItemAvatar>
+</Tooltip>
 
               <ListItemText
                 primary={<b>{data.itemname}</b>}

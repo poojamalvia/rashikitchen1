@@ -43,7 +43,7 @@ function Footer() {
           borderTopRightRadius: "50% 20px",
           backgroundColor: redcolor,
           color: "white",
-          padding: "10px",
+          padding: "50px",
           textAlign: "center",
         }}
       >
