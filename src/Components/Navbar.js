@@ -661,18 +661,15 @@ function Navbar(props) {
             id="carouselExampleInterval"
             className="carousel slide"
             data-bs-ride="carousel"
-             style={{ maxHeight: "550px", overflow: "hidden" }} // Optional: hide overflow
           >
-            <div className="carousel-inner"
-             style={{
-                    height: "550px"}}>
+            <div className="carousel-inner">
               <div className="carousel-item active" data-bs-interval="5000">
                 <img
                   src={sliderimg1}
                   className="d-block w-100"
                   style={{
-                    height: "550px",
-                    objectFit: "cover",
+                    maxHeight: "550px",
+                    objectFit: "fill",
                   }}
                   alt="slide 1"
                 />
@@ -682,8 +679,8 @@ function Navbar(props) {
                   src={sliderimg2}
                   className="d-block w-100"
                   style={{
-                    height: "550px",
-                    objectFit: "cover",
+                    maxHeight: "550px",
+                    objectFit: "fill",
                   }}
                   alt="slide 2"
                 />
@@ -693,8 +690,8 @@ function Navbar(props) {
                   src={sliderimg3}
                   className="d-block w-100"
                   style={{
-                    height: "550px",
-                    objectFit: "cover",
+                    maxHeight: "550px",
+                    objectFit: "fill",
                   }}
                   alt="slide 3"
                 />
@@ -704,8 +701,8 @@ function Navbar(props) {
                   src={sliderimg4}
                   className="d-block w-100"
                   style={{
-                    height: "550px",
-                    objectFit: "cover",
+                    maxHeight: "550px",
+                    objectFit: "fill",
                   }}
                   alt="slide 4"
                 />
