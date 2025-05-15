@@ -8,10 +8,15 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { redcolor } from "../Design";
 import { db } from "../firebase-config";
-import { Tooltip ,  useMediaQuery,
-  useTheme, Dialog,
-  DialogContent, IconButton} from '@mui/material';
-  import CloseIcon from '@mui/icons-material/Close';
+import {
+  Tooltip,
+  useMediaQuery,
+  useTheme,
+  Dialog,
+  DialogContent,
+  IconButton,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   collection,
   addDoc,
@@ -30,6 +35,7 @@ function AlignItemsList({ menuDetails, isAdd }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = React.useState(false);
+  const [selectedImage, setSelectedImage] = React.useState(null);
 
   React.useEffect(() => {
     getCartData();
@@ -88,52 +94,60 @@ function AlignItemsList({ menuDetails, isAdd }) {
         return (
           <>
             <ListItem alignItems="flex-start">
-           {isMobile? <ListItemAvatar>
-      <Avatar
-        variant="rounded"
-        src={data.image}
-        sx={{
-          width: 120,
-          height: 120,
-          borderRadius: '16px',
-          objectFit: 'cover',
-          cursor: 'pointer',
-        }}
-        onClick={() => {
-          if (isMobile) setOpen(true); // open dialog on mobile
-        }}
-      />
-    </ListItemAvatar>:  <Tooltip
-  title={
-    <img
-      src={data.image}
-      alt="preview"
-      style={{
-        width: 500,
-        height: 500,
-        objectFit: 'cover',
-        borderRadius: '16px',
-      }}
-    />
-  }
-  placement="right"
- // arrow
->
-  <ListItemAvatar>
-    <Avatar
-      variant="rounded"
-      src={data.image}
-      sx={{
-        width: 120,
-        height: 120,
-        borderRadius: '16px',
-        objectFit: 'cover',
-        cursor: 'pointer',
-      }}
-    />
-  </ListItemAvatar>
-</Tooltip>}
-        
+              {isMobile ? (
+                <ListItemAvatar>
+                  <Avatar
+                    variant="rounded"
+                    src={data.image}
+                    sx={{
+                      width: 120,
+                      height: 120,
+                      borderRadius: "16px",
+                      objectFit: "cover",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      if (isMobile) 
+                        {
+                           setSelectedImage(data.image); 
+                          setOpen(true)
+                         // open dialog on mobile
+                        }
+                    }}
+                  />
+                </ListItemAvatar>
+              ) : (
+                <Tooltip
+                  title={
+                    <img
+                      src={data.image}
+                      alt="preview"
+                      style={{
+                        width: 500,
+                        height: 500,
+                        objectFit: "cover",
+                        borderRadius: "16px",
+                      }}
+                    />
+                  }
+                  placement="right"
+                  // arrow
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      variant="rounded"
+                      src={data.image}
+                      sx={{
+                        width: 120,
+                        height: 120,
+                        borderRadius: "16px",
+                        objectFit: "cover",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </ListItemAvatar>
+                </Tooltip>
+              )}
 
               <ListItemText
                 primary={<b>{data.itemname}</b>}
@@ -199,30 +213,30 @@ function AlignItemsList({ menuDetails, isAdd }) {
               />
             </ListItem>
             <Divider variant="inset" component="li" />
-             <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md">
-        <DialogContent sx={{ position: 'relative', p: 0 }}>
-          <IconButton
-            onClick={() => setOpen(false)}
-            sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1 }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <img
-            src={data.image}
-            alt="preview"
-            style={{
-              width: '100%',
-              height: 'auto',
-              display: 'block',
-              borderRadius: '16px',
-            }}
-          />
-        </DialogContent>
-      </Dialog>
+          <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md">
+  <DialogContent sx={{ position: "relative", p: 0 }}>
+    <IconButton
+      onClick={() => setOpen(false)}
+      sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}
+    >
+      <CloseIcon />
+    </IconButton>
+    {selectedImage && (
+      <img
+        src={selectedImage}
+        alt="preview"
+        style={{
+          width: "100%",
+          height: "auto",
+          display: "block",
+          borderRadius: "16px",
+        }}
+      />
+    )}
+  </DialogContent>
+</Dialog>
           </>
-       
-      );
-       
+        );
       })}
     </List>
   );
