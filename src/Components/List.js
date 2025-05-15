@@ -199,9 +199,7 @@ function AlignItemsList({ menuDetails, isAdd }) {
               />
             </ListItem>
             <Divider variant="inset" component="li" />
-          </>
-        );
-        <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md">
+             <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md">
         <DialogContent sx={{ position: 'relative', p: 0 }}>
           <IconButton
             onClick={() => setOpen(false)}
@@ -221,6 +219,10 @@ function AlignItemsList({ menuDetails, isAdd }) {
           />
         </DialogContent>
       </Dialog>
+          </>
+       
+      );
+       
       })}
     </List>
   );
