@@ -25,7 +25,7 @@ function App() {
         <NavBar />
           
         <Routes>
-          <Route path="/User/home" Component={Homepage} />
+          <Route path="/" Component={Homepage} />
 
           <Route element={<PrivateRoute />}>
             <Route path="/Admin/DiningMenu" Component={Menua} />

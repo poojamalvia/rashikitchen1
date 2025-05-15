@@ -375,7 +375,7 @@ function Navbar(props) {
                           },
                         }}
                         onClick={() => {
-                          navigate("/User/home");
+                          navigate("/");
                         }}
                       />
                       <Tab
@@ -869,6 +869,7 @@ const RenderList = ({ setDrawerOpen, checkadmin }) => {
       return <DomainVerificationIcon style={{ color: redcolor }} />;
     } else if (val == "Location & Hours") {
       return <WatchLaterIcon style={{ color: redcolor }} />;
+      
     } else {
       return null;
     }
