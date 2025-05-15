@@ -107,12 +107,11 @@ function AlignItemsList({ menuDetails, isAdd }) {
                       cursor: "pointer",
                     }}
                     onClick={() => {
-                      if (isMobile) 
-                        {
-                           setSelectedImage(data.image); 
-                          setOpen(true)
-                         // open dialog on mobile
-                        }
+                      if (isMobile) {
+                        setSelectedImage(data.image);
+                        setOpen(true);
+                        // open dialog on mobile
+                      }
                     }}
                   />
                 </ListItemAvatar>
@@ -213,28 +212,28 @@ function AlignItemsList({ menuDetails, isAdd }) {
               />
             </ListItem>
             <Divider variant="inset" component="li" />
-          <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md">
-  <DialogContent sx={{ position: "relative", p: 0 }}>
-    <IconButton
-      onClick={() => setOpen(false)}
-      sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}
-    >
-      <CloseIcon />
-    </IconButton>
-    {selectedImage && (
-      <img
-        src={selectedImage}
-        alt="preview"
-        style={{
-          width: "100%",
-          height: "auto",
-          display: "block",
-          borderRadius: "16px",
-        }}
-      />
-    )}
-  </DialogContent>
-</Dialog>
+            <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md">
+              <DialogContent sx={{ position: "relative", p: 0 }}>
+                <IconButton
+                  onClick={() => setOpen(false)}
+                  sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}
+                >
+                  <CloseIcon  sx={{color:"#ffffff"}}/>
+                </IconButton>
+                {selectedImage && (
+                  <img
+                    src={selectedImage}
+                    alt="preview"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      display: "block",
+                      borderRadius: "16px",
+                    }}
+                  />
+                )}
+              </DialogContent>
+            </Dialog>
           </>
         );
       })}
