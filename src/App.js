@@ -23,7 +23,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <NavBar />
-
+          
         <Routes>
           <Route path="/User/home" Component={Homepage} />
 
