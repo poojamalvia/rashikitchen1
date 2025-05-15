@@ -8,7 +8,10 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { redcolor } from "../Design";
 import { db } from "../firebase-config";
-import { Tooltip } from '@mui/material';
+import { Tooltip ,  useMediaQuery,
+  useTheme, Dialog,
+  DialogContent, IconButton} from '@mui/material';
+  import CloseIcon from '@mui/icons-material/Close';
 import {
   collection,
   addDoc,
@@ -24,6 +27,9 @@ const isAuthenticated = !!localStorage.getItem("token"); // Check if token exist
 const uid = localStorage.getItem("uid");
 function AlignItemsList({ menuDetails, isAdd }) {
   const [cart, setCart] = React.useState([]);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
     getCartData();
@@ -82,7 +88,22 @@ function AlignItemsList({ menuDetails, isAdd }) {
         return (
           <>
             <ListItem alignItems="flex-start">
-          <Tooltip
+           {isMobile? <ListItemAvatar>
+      <Avatar
+        variant="rounded"
+        src={data.image}
+        sx={{
+          width: 120,
+          height: 120,
+          borderRadius: '16px',
+          objectFit: 'cover',
+          cursor: 'pointer',
+        }}
+        onClick={() => {
+          if (isMobile) setOpen(true); // open dialog on mobile
+        }}
+      />
+    </ListItemAvatar>:  <Tooltip
   title={
     <img
       src={data.image}
@@ -95,8 +116,8 @@ function AlignItemsList({ menuDetails, isAdd }) {
       }}
     />
   }
- placement="right"
-  //arrow
+  placement="right"
+ // arrow
 >
   <ListItemAvatar>
     <Avatar
@@ -111,7 +132,8 @@ function AlignItemsList({ menuDetails, isAdd }) {
       }}
     />
   </ListItemAvatar>
-</Tooltip>
+</Tooltip>}
+        
 
               <ListItemText
                 primary={<b>{data.itemname}</b>}
@@ -179,6 +201,26 @@ function AlignItemsList({ menuDetails, isAdd }) {
             <Divider variant="inset" component="li" />
           </>
         );
+        <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md">
+        <DialogContent sx={{ position: 'relative', p: 0 }}>
+          <IconButton
+            onClick={() => setOpen(false)}
+            sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1 }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <img
+            src={data.image}
+            alt="preview"
+            style={{
+              width: '100%',
+              height: 'auto',
+              display: 'block',
+              borderRadius: '16px',
+            }}
+          />
+        </DialogContent>
+      </Dialog>
       })}
     </List>
   );
