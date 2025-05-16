@@ -100,7 +100,7 @@ function Footer() {
               </div>
             </div>
           </div>
-           <Divider style={{ border: "1px groove white" }} />
+           <Divider style={{ border: "1px ridge white" }} />
           <div className="col-md-5" style={{ textAlign: "center",padding:"20px" }}>
             <div
               style={{ display: "flex", flexDirection: "column", gap: "7px",padding:"20px" }}
@@ -125,12 +125,14 @@ function Footer() {
               </div>
             </div>
           </div>
-           <Divider style={{ border: "1px groove white" }} />
-          <div className="col-md-4" style={{padding:"20px"}} >
+           <Divider style={{ border: "1px ridge white" }} />
+          <div className="col-md-4" style={{textAlign:"center", padding:"20px"}} >
+            <div>
             <h5>Opening Hours</h5>
-            <br />
+            
             <WatchLaterIcon style={{ color: "#FFFFFF" }} />
             11.00 AM - 09.00 PM, Tuesday - Sunday
+            </div>
           </div>
         </div>
 :   <div className="row">
