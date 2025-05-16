@@ -216,9 +216,9 @@ function AlignItemsList({ menuDetails, isAdd }) {
               <DialogContent sx={{ position: "relative", p: 0 }}>
                 <IconButton
                   onClick={() => setOpen(false)}
-                  sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}
+                  sx={{ position: "absolute", top: 4, right: 8, zIndex: 1 }}
                 >
-                  <CloseIcon  sx={{color:"#ffffff"}}/>
+                  <CloseIcon sx={{ color: "#ffffff" }} />
                 </IconButton>
                 {selectedImage && (
                   <img
