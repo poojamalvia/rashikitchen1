@@ -55,7 +55,7 @@ function Footer() {
         {isMobile?  <div className="row">
           <div
             className="col-md-3"
-            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+            style={{ display: "flex", flexDirection: "column", gap: "10px",padding:"20px" }}
           >
             REVIEW
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -100,10 +100,10 @@ function Footer() {
               </div>
             </div>
           </div>
-           <Divider style={{ border: "1px solid white" }} />
-          <div className="col-md-5" style={{ textAlign: "center" }}>
+           <Divider style={{ border: "1px groove white" }} />
+          <div className="col-md-5" style={{ textAlign: "center",padding:"20px" }}>
             <div
-              style={{ display: "flex", flexDirection: "column", gap: "7px" }}
+              style={{ display: "flex", flexDirection: "column", gap: "7px",padding:"20px" }}
             >
               <h5>Contact Info</h5>
               <div onClick={handleClickmap} style={{ cursor: "pointer" }}>
@@ -125,8 +125,8 @@ function Footer() {
               </div>
             </div>
           </div>
-           <Divider style={{ border: "1px solid white" }} />
-          <div className="col-md-4">
+           <Divider style={{ border: "1px groove white" }} />
+          <div className="col-md-4" style={{padding:"20px"}} >
             <h5>Opening Hours</h5>
             <br />
             <WatchLaterIcon style={{ color: "#FFFFFF" }} />
