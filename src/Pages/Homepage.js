@@ -333,8 +333,8 @@ function Homepage() {
       <div className="container my-5">
         <div className="row align-items-center">
           {/* Text & Small Images */}
-          <div className="col-lg-8 mb-4" data-aos="zoom-in">
-            <div className="mb-3">
+          <div className="col-lg-8 mb-4" >
+            <div className="mb-3" data-aos="zoom-in">
               <h4 className="fw-bold  mb-3 menu-title">Our special</h4>
 
               <p className="text-muted">
@@ -346,7 +346,7 @@ function Homepage() {
             </div>
 
             {/* Large Banner Image */}
-            <div className="mb-3 image-container">
+            <div className="mb-3 image-container"data-aos="zoom-in">
               <img
                 className="hover-zoom"
                 src={dalbati}
@@ -359,7 +359,7 @@ function Homepage() {
 
             {/* Two Small Side-by-Side Images */}
             <div className="row">
-              <div className="col-md-6 mb-2 image-container">
+              <div className="col-md-6 mb-2 image-container" data-aos="zoom-in">
                 <img
                   className="hover-zoom"
                   src={highlight1}
@@ -371,7 +371,7 @@ function Homepage() {
                 <div className="image-label">Sandwish</div>
               </div>
 
-              <div className="col-md-6 mb-2 image-container">
+              <div className="col-md-6 mb-2 image-container"data-aos="zoom-in">
                 <img
                   className="hover-zoom"
                   src={highlight2}
@@ -386,7 +386,7 @@ function Homepage() {
 
           {/* Featured Vertical Images */}
           <div className="col-lg-4 d-flex flex-column gap-3">
-            <div className="image-container">
+            <div className="image-container"data-aos="zoom-in">
               <img
                 className="hover-zoom"
                 src={gulabjamun}
@@ -396,7 +396,7 @@ function Homepage() {
               />
               <div className="image-label">Gulab Jamun</div>
             </div>
-            <div className="image-container">
+            <div className="image-container"data-aos="zoom-in">
               <img
                 className="hover-zoom"
                 src={highlight3}
