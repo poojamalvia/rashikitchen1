@@ -15,6 +15,8 @@ import highlight4 from "../images/highlight4.jpg";
 import gulabjamun from "../images/gulabjamun.jpg";
 import chole1 from "../images/chole1.jpg";
 import dalbati from "../images/sliderimg7.jpg";
+import AOS from 'aos'
+//import ''
 
 import "../Pages/Main.css";
 import { Button } from "@mui/material";
@@ -44,6 +46,11 @@ function Homepage() {
     return () => clearInterval(intervalId);
   }, []);
 
+  useEffect(()=>{
+    AOS.init({duration:2000})
+
+  },[])
+
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -54,10 +61,11 @@ function Homepage() {
     autoplaySpeed: 3000,
   };
   return (
-    <div>
+    <div >
       <div
         className="row d-flex align-items-center justify-content-center"
         style={{ margin: "5%" }}
+       
       >
         <Box
           className="col-md-6 row align-items-start"
@@ -65,6 +73,7 @@ function Homepage() {
             padding: { xs: "20px", md: "40px" },
             textAlign: "center",
           }}
+           data-aos="zoom-in"
         >
           <h3 className="heading">Welcome to Rashi's Kitchen - Longwood</h3>
           <Typography variant="h6" sx={{ marginBottom: "20px", color: "#888" }}>
@@ -152,7 +161,7 @@ function Homepage() {
             </video>
           </div>
         </div>
-        <Box className="col-md-6" sx={{ padding: { xs: "20px", md: "40px" } }}>
+        <Box className="col-md-6" sx={{ padding: { xs: "20px", md: "40px" } }}  data-aos="zoom-in">
           <h4 className="fw-bold  mb-3 menu-title">Our Menus</h4>
 
           <Typography
