@@ -295,7 +295,7 @@ function Homepage() {
           </Button>
         </Box>
         <div className="col-md-6 text-center">
-          <div id="carouselExample" class="carousel slide" data-aos="zoom-in">
+          <div id="carouselExample" class="carousel slide"  data-aos="zoom-in-up">
             <div class="carousel-inner" style={{ height: "100%" }}>
               <div class="carousel-item active" style={{ height: "100%" }}>
                 <img src={caterimg1} class="d-block w-100" alt="..." />
@@ -351,7 +351,7 @@ function Homepage() {
             </div>
 
             {/* Large Banner Image */}
-            <div className="mb-3 image-container"data-aos="zoom-in">
+            <div className="mb-3 image-container" data-aos="fade-left">
               <img
                 className="hover-zoom"
                 src={dalbati}
@@ -391,7 +391,7 @@ function Homepage() {
 
           {/* Featured Vertical Images */}
           <div className="col-lg-4 d-flex flex-column gap-3">
-            <div className="image-container"data-aos="zoom-in">
+            <div className="image-container" data-aos="flip-up">
               <img
                 className="hover-zoom"
                 src={gulabjamun}
@@ -401,7 +401,7 @@ function Homepage() {
               />
               <div className="image-label">Gulab Jamun</div>
             </div>
-            <div className="image-container"data-aos="zoom-in">
+            <div className="image-container" data-aos="flip-down">
               <img
                 className="hover-zoom"
                 src={highlight3}
