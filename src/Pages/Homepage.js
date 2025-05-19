@@ -65,7 +65,7 @@ function Homepage() {
       <div
         className="row d-flex align-items-center justify-content-center"
         style={{ margin: "5%" }}
-       
+        
       >
         <Box
           className="col-md-6 row align-items-start"
@@ -73,7 +73,7 @@ function Homepage() {
             padding: { xs: "20px", md: "40px" },
             textAlign: "center",
           }}
-           data-aos="zoom-in"
+          data-aos="zoom-in"
         >
           <h3 className="heading">Welcome to Rashi's Kitchen - Longwood</h3>
           <Typography variant="h6" sx={{ marginBottom: "20px", color: "#888" }}>
@@ -109,7 +109,7 @@ function Homepage() {
           </Typography>
         </Box>
 
-        <div className="col-md-6 text-center">
+        <div className="col-md-6 text-center" data-aos="zoom-in">
           <img
             src={homeimage1}
             alt="Restuarant"
@@ -140,6 +140,7 @@ function Homepage() {
               borderRadius: "10px",
               overflow: "hidden",
             }}
+            data-aos="zoom-in"
           >
             <video
               style={{
@@ -161,7 +162,7 @@ function Homepage() {
             </video>
           </div>
         </div>
-        <Box className="col-md-6" sx={{ padding: { xs: "20px", md: "40px" } }}  data-aos="zoom-in">
+        <Box className="col-md-6" sx={{ padding: { xs: "20px", md: "40px" } }} data-aos="zoom-in">
           <h4 className="fw-bold  mb-3 menu-title">Our Menus</h4>
 
           <Typography
@@ -225,7 +226,7 @@ function Homepage() {
         className="row d-flex align-items-center justify-content-center"
         style={{ margin: "5%" }}
       >
-        <Box className="col-md-6" sx={{ padding: { xs: "20px", md: "40px" } }}>
+        <Box className="col-md-6" sx={{ padding: { xs: "20px", md: "40px" } }} data-aos="zoom-in">
           <h4 className="fw-bold  mb-3 menu-title">Catering</h4>
           <Typography variant="h6" sx={{ color: "#333" }}>
             For All Occasions
@@ -234,6 +235,7 @@ function Homepage() {
           <Typography
             variant="body1"
             sx={{ color: "#555", marginBottom: "10px" }}
+            
           >
             Make your events special with Rashi kitchen’s catering services,
             perfect for weddings, private events, and conventions. Explore our
@@ -285,11 +287,8 @@ function Homepage() {
           </Button>
         </Box>
         <div className="col-md-6 text-center">
-          <div id="carouselExample" class="carousel slide">
-            {/* style={{ width: '500px',   // You can adjust width
-      height: '500px',  // You can adjust height
-      overflow: 'hidden',
-      margin: '0 auto'}}> */}
+          <div id="carouselExample" class="carousel slide" data-aos="zoom-in">
+          
 
             <div class="carousel-inner" style={{ height: "100%" }}>
               <div class="carousel-item active" style={{ height: "100%" }}>
@@ -333,7 +332,7 @@ function Homepage() {
       <div className="container my-5">
         <div className="row align-items-center">
           {/* Text & Small Images */}
-          <div className="col-lg-8 mb-4">
+          <div className="col-lg-8 mb-4" data-aos="zoom-in">
             <div className="mb-3">
               <h4 className="fw-bold  mb-3 menu-title">Our special</h4>
 

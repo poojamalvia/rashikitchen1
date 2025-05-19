@@ -87,20 +87,15 @@ function Navbar(props) {
         localStorage.getItem("count")
       );
       let x = parseInt(localStorage.getItem("count"));
-      if(!isNaN(x) && x>0)
-      {
-      if (totalItems != x) {
-        setTotalItems(x);
-        
+      if (!isNaN(x) && x > 0) {
+        if (totalItems != x) {
+          setTotalItems(x);
+        } else {
+          setTotalItems("");
+        }
       }
-      else{
-        setTotalItems("")
-      }
-    }
     }, 1000);
   }, []);
-
-
 
   function a11yProps(index) {
     return {
@@ -251,10 +246,9 @@ function Navbar(props) {
                               navigate("/User/login");
                               localStorage.removeItem("token");
                               localStorage.removeItem("uid");
-                              localStorage.removeItem("count")
-                              localStorage.removeItem("item")
+                              localStorage.removeItem("count");
+                              localStorage.removeItem("item");
                               handleClose();
-
                             }}
                           >
                             Log Out
@@ -536,9 +530,9 @@ function Navbar(props) {
                         onClick={() => {
                           navigate("/User/login");
                           localStorage.removeItem("token");
-                          localStorage.removeItem("count")
-                          localStorage.removeItem("item")
-                          localStorage.removeItem("uid")
+                          localStorage.removeItem("count");
+                          localStorage.removeItem("item");
+                          localStorage.removeItem("uid");
                           handleClose();
                         }}
                       >
@@ -884,7 +878,6 @@ const RenderList = ({ setDrawerOpen, checkadmin }) => {
       return <DomainVerificationIcon style={{ color: redcolor }} />;
     } else if (val == "Location & Hours") {
       return <WatchLaterIcon style={{ color: redcolor }} />;
-      
     } else {
       return null;
     }
@@ -907,7 +900,7 @@ const RenderList = ({ setDrawerOpen, checkadmin }) => {
         {!checkadmin ? (
           <List>
             {[
-              { name: "Home", value: "home" },
+              { name: "Home", value: "Home" },
               { name: "Menu", value: "DiningMenu" },
               { name: "Catering", value: "CateringMenu" },
               { name: "Orders", value: "orders" },
@@ -918,7 +911,11 @@ const RenderList = ({ setDrawerOpen, checkadmin }) => {
                 key={val}
                 disablePadding
                 onClick={() => {
-                  navigate("/User/" + val.value);
+                  if (val.value == "Home") {
+                    navigate("/");
+                  } else {
+                    navigate("/User/" + val.value);
+                  }
                   setDrawerOpen(false);
                 }}
               >
