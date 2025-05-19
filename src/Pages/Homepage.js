@@ -15,7 +15,7 @@ import highlight4 from "../images/highlight4.jpg";
 import gulabjamun from "../images/gulabjamun.jpg";
 import chole1 from "../images/chole1.jpg";
 import dalbati from "../images/sliderimg7.jpg";
-import AOS from 'aos'
+import AOS from "aos";
 //import ''
 
 import "../Pages/Main.css";
@@ -46,10 +46,9 @@ function Homepage() {
     return () => clearInterval(intervalId);
   }, []);
 
-  useEffect(()=>{
-    AOS.init({duration:2000})
-
-  },[])
+  useEffect(() => {
+    AOS.init({ duration: 2000 });
+  }, []);
 
   const sliderSettings = {
     dots: true,
@@ -61,11 +60,10 @@ function Homepage() {
     autoplaySpeed: 3000,
   };
   return (
-    <div >
+    <div>
       <div
         className="row d-flex align-items-center justify-content-center"
         style={{ margin: "5%" }}
-        
       >
         <Box
           className="col-md-6 row align-items-start"
@@ -119,9 +117,7 @@ function Homepage() {
               borderRadius: "10px",
               marginBottom: "10px",
             }}
-          >
-            
-          </img>
+          ></img>
         </div>
       </div>
 
@@ -162,7 +158,11 @@ function Homepage() {
             </video>
           </div>
         </div>
-        <Box className="col-md-6" sx={{ padding: { xs: "20px", md: "40px" } }} data-aos="zoom-in">
+        <Box
+          className="col-md-6"
+          sx={{ padding: { xs: "20px", md: "40px" } }}
+          data-aos="zoom-in"
+        >
           <h4 className="fw-bold  mb-3 menu-title">Our Menus</h4>
 
           <Typography
@@ -226,7 +226,11 @@ function Homepage() {
         className="row d-flex align-items-center justify-content-center"
         style={{ margin: "5%" }}
       >
-        <Box className="col-md-6" sx={{ padding: { xs: "20px", md: "40px" } }} data-aos="zoom-in">
+        <Box
+          className="col-md-6"
+          sx={{ padding: { xs: "20px", md: "40px" } }}
+          data-aos="zoom-in"
+        >
           <h4 className="fw-bold  mb-3 menu-title">Catering</h4>
           <Typography variant="h6" sx={{ color: "#333" }}>
             For All Occasions
@@ -235,7 +239,6 @@ function Homepage() {
           <Typography
             variant="body1"
             sx={{ color: "#555", marginBottom: "10px" }}
-            
           >
             Make your events special with Rashi kitchen’s catering services,
             perfect for weddings, private events, and conventions. Explore our
@@ -288,8 +291,6 @@ function Homepage() {
         </Box>
         <div className="col-md-6 text-center">
           <div id="carouselExample" class="carousel slide" data-aos="zoom-in">
-          
-
             <div class="carousel-inner" style={{ height: "100%" }}>
               <div class="carousel-item active" style={{ height: "100%" }}>
                 <img src={caterimg1} class="d-block w-100" alt="..." />
