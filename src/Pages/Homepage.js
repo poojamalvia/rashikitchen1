@@ -47,7 +47,8 @@ function Homepage() {
   }, []);
 
   useEffect(() => {
-    AOS.init({ duration: 2000 });
+    AOS.init({ duration: 2000 ,once: true,});
+    
   }, []);
 
   const sliderSettings = {
@@ -71,10 +72,10 @@ function Homepage() {
             padding: { xs: "20px", md: "40px" },
             textAlign: "center",
           }}
-          data-aos="zoom-in"
+          data-aos="fade-right"
         >
-          <h3 className="heading">Welcome to Rashi's Kitchen - Longwood</h3>
-          <Typography variant="h6" sx={{ marginBottom: "20px", color: "#888" }}>
+          <h3 className="heading" data-aos="fade-up">Welcome to Rashi's Kitchen - Longwood</h3>
+          <Typography variant="h6" sx={{ marginBottom: "20px", color: "#888" }}  data-aos="fade-down">
             {currentDateTime}
           </Typography>
           Rashi's Kitchen offers healthy and delicious tasting Chinese and
@@ -136,7 +137,7 @@ function Homepage() {
               borderRadius: "10px",
               overflow: "hidden",
             }}
-            data-aos="zoom-in"
+            data-aos="flip-up"
           >
             <video
               style={{
@@ -208,6 +209,8 @@ function Homepage() {
             onClick={() => {
               navigate("/User/DiningMenu");
             }}
+             data-aos="fade-up"
+  data-aos-delay="200"
             sx={{
               marginTop: "20px",
               borderRadius: "8px",
@@ -276,6 +279,8 @@ function Homepage() {
             onClick={() => {
               navigate("/User/CateringMenu");
             }}
+             data-aos="fade-up"
+  data-aos-delay="200"
             sx={{
               marginTop: "20px",
               borderRadius: "8px",
