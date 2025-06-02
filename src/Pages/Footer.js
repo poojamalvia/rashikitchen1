@@ -11,11 +11,19 @@ import { redcolor } from "../Design";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import   Divider from "@mui/material/ListItemIcon"
+import { useEffect } from "react";
+import AOS from "aos";
 
 function Footer() {
   const [value, setValue] = React.useState(4.5);
   const theme = useTheme();
    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+   useEffect(() => {
+       AOS.init({ duration: 2000 ,once: true,});
+       
+     }, []);
+
   const handleClickfb = () => {
     window.open(
       'https://www.facebook.com/share/1GuGfQUntk/?mibextid=LQQJ4d".com/your-profile',
@@ -100,7 +108,7 @@ function Footer() {
               </div>
             </div>
           </div>
-           <Divider style={{ border: "1px ridge white" }} />
+           <Divider style={{ border: "1px ridge white" }}   data-aos="fade-right"/>
           <div className="col-md-5" style={{ textAlign: "center",padding:"20px" }}>
             <div
               style={{ display: "flex", flexDirection: "column", gap: "7px",padding:"20px" }}
@@ -125,7 +133,7 @@ function Footer() {
               </div>
             </div>
           </div>
-           <Divider style={{ border: "1px ridge white" }} />
+           <Divider style={{ border: "1px ridge white"  }} data-aos="fade-left" />
           <div className="col-md-4" style={{textAlign:"center", padding:"20px"}} >
             <div>
             <h5>Opening Hours</h5>

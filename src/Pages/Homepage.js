@@ -391,7 +391,9 @@ function Homepage() {
 
           {/* Featured Vertical Images */}
           <div className="col-lg-4 d-flex flex-column gap-3">
-            <div className="image-container" data-aos="flip-up">
+            <div className="image-container" data-aos="flip-up"  data-aos-delay="200"
+  data-aos-duration="1200"
+  data-aos-easing="ease-in-out">
               <img
                 className="hover-zoom"
                 src={gulabjamun}
