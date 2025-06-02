@@ -64,6 +64,7 @@ function Footer() {
           <div
             className="col-md-3"
             style={{ display: "flex", flexDirection: "column", gap: "10px",padding:"20px" }}
+            data-aos="fade-right"
           >
             REVIEW
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -109,7 +110,7 @@ function Footer() {
             </div>
           </div>
            <Divider style={{ border: "1px ridge white" }}   data-aos="fade-right"/>
-          <div className="col-md-5" style={{ textAlign: "center",padding:"20px" }}>
+          <div className="col-md-5" style={{ textAlign: "center",padding:"20px" }} data-aos="fade-left">
             <div
               style={{ display: "flex", flexDirection: "column", gap: "7px",padding:"20px" }}
             >
@@ -134,7 +135,8 @@ function Footer() {
             </div>
           </div>
            <Divider style={{ border: "1px ridge white"  }} data-aos="fade-left" />
-          <div className="col-md-4" style={{textAlign:"center", padding:"20px"}} >
+          <div className="col-md-4" style={{textAlign:"center", padding:"20px"}}
+          data-aos="fade-right" >
             <div>
             <h5>Opening Hours</h5>
             
